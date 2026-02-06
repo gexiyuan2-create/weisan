@@ -692,7 +692,7 @@
         },
         {
           id: "A_meet_4_heart",
-          text: "教室窗外是淡蓝的夜色，白澤凛司把你的企划纸张按在桌面，逐条对照。他的声音很低：“这段改完，流程就通了。”你心里忽然安静下来，像把乱线重新理顺。他停顿片刻，似乎在寻找合适的词：“{callName}……做得很好。”那句话很轻，却像落在心口。你抬眼看他，发现他的耳尖微红，却很快移开视线。你轻声说：“谢谢你一直在。”他回：“我只是做该做的。”",
+          text: "教室窗外是淡蓝的夜色，白澤凛司把你的企划纸张按在桌面，逐条对照。他的声音很低：“这段改完，流程就通了。”你心里忽然安静下来，像把乱线重新理顺。他停顿片刻，似乎在寻找合适的词：“{callName}—做得很好。”那句话很轻，却像落在心口。你抬眼看他，发现他的耳尖微红，却很快移开视线。你轻声说：“谢谢你一直在。”他回：“我只是做该做的。”",
           options: [
             { label: "认可他的认真，愿意一起扛。", tags: ["坦率", "守规矩"] },
             { label: "提醒他也要喘口气。", tags: ["尊重边界", "体贴"] },
@@ -802,7 +802,7 @@
         },
         {
           id: "C_meet_3",
-          text: "夜晚的广播站灯光昏暗，久世伶把耳机扣在你耳边，低声说：“你听，只有我们听得到。”他的声音像在缠绕你，语气温柔却不容置疑。他把你的名字在句尾拖长：“{callName}……”你心里一紧，意识到他的亲近不是单纯喜欢，而是带着占有与试探。你低声说：“别靠太近。”他笑：“那就更近一点，你会习惯的。”",
+          text: "夜晚的广播站灯光昏暗，久世伶把耳机扣在你耳边，低声说：“你听，只有我们听得到。”他的声音像在缠绕你，语气温柔却不容置疑。他把你的名字在句尾拉长：“{callName}—”你心里一紧，意识到他的亲近不是单纯喜欢，而是带着占有与试探。你低声说：“别靠太近。”他笑：“那就更近一点，你会习惯的。”",
           options: [
             { label: "让他继续念下去，告诉他你想听。", tags: ["占有", "试探"] },
             { label: "轻轻把耳机取下，说你需要一点空间。", tags: ["公开拒绝"] },
@@ -955,7 +955,10 @@
       forcedRest: false,
       flags: { firstDate: false, triangle: false, nameHintShown: false },
       settings: { showMainlineWarning: true },
-      gameOver: false
+      gameOver: false,
+      relationshipStatus: { A: "none", B: "none", C: "none" },
+      confessionTriggered: { A: false, B: false, C: false },
+      secondConfessionTriggered: { A: false, B: false, C: false }
     });
 
     let state = stateTemplate();
@@ -1012,14 +1015,14 @@
       if (guyId === "A") {
         if (affection < 20) return `${base}同学`;
         if (affection < 55) return base;
-        if (affection < 80) return `${base}…`;
-        return trust >= 70 ? `……${base}` : `${base}…`;
+        if (affection < 80) return `${base}—`;
+        return trust >= 70 ? `—${base}` : `${base}—`;
       }
       if (guyId === "C") {
         if (affection < 20) return base;
         if (affection < 55) return `${base}、${base}`;
-        if (affection < 80) return `${base}……`;
-        return trust >= 70 ? `${base}……过来` : `${base}……`;
+        if (affection < 80) return `${base}—`;
+        return trust >= 70 ? `${base}—过来` : `${base}—`;
       }
       return base;
     }
@@ -1147,6 +1150,13 @@
         const guy = state.guys[id];
         const storyProgress = guy.storyTier * 3 + guy.storyIndex;
         const locked = !guy.unlocked;
+        const statusLabel = state.relationshipStatus[id] === "dating"
+          ? "恋人"
+          : state.relationshipStatus[id] === "rejected"
+            ? "保持距离"
+            : "未确认";
+        const canTrigger = guy.affection >= 80 && guy.unlocked && state.relationshipStatus[id] === "none" && !state.confessionTriggered[id];
+        const canRetry = guy.affection >= 85 && guy.unlocked && state.relationshipStatus[id] === "rejected" && !state.secondConfessionTriggered[id];
         const lockText = id === "A"
           ? "第4周：流程/预算审核卡死，需要白澤凛司签字解锁"
           : "第6周：宣传位危机，需与久世伶合作解锁";
@@ -1156,6 +1166,9 @@
           <div class="stat">好感 ${guy.affection}<div class="bar"><span style="width:${guy.affection}%"></span></div></div>
           <div class="stat">信任 ${guy.trust}<div class="bar"><span style="width:${guy.trust}%"></span></div></div>
           <div class="small">背景故事解锁进度：${storyProgress}/9</div>`}
+          ${locked ? "" : `<div class="small">关系状态：${statusLabel}</div>`}
+          ${locked ? "" : canTrigger ? `<div class="small">关系事件可触发</div>` : ""}
+          ${locked ? "" : canRetry ? `<div class="small">关系事件可再次触发</div>` : ""}
         `;
         const element = document.getElementById(elId);
         element.innerHTML = text;
@@ -1301,7 +1314,7 @@
           if (Math.random() < 0.3) {
             gainItem(state, `clue${guyId}`);
           }
-          afterAction(`你做出了选择。`, "date");
+          afterAction(`你做出了选择。`, "date", guyId);
         }
       }));
       renderChoices(optionChoices);
@@ -1356,7 +1369,74 @@
       addTrust(state, guyId, trustChange);
     }
 
-    function afterAction(summary, actionId = "") {
+    function getConfessionEvent(guyId, isRetry) {
+      if (guyId === "B") {
+        return {
+          text: `夜色落在操场边的栏杆上，浅羽朔把手里的饮料轻轻放到你面前。他看着你，声音比平时更低，“{callName}，我想把话说清楚。”你心里一紧，想起他一路的陪伴与那些不说出口的偏心。他向前一步，指尖停在半空，“我不是只想陪你走这段校庆，我想走得更久。”你抬眼，看到他眼里的紧张和认真。他又补了一句：“如果你愿意，我会把这份关系当成真正的约定。”你轻轻吸气，心里翻涌着温热的回忆。`,
+          accept: "轻声答应他，确认关系。",
+          reject: "保持距离，告诉他先把校庆走完。"
+        };
+      }
+      if (guyId === "A") {
+        return {
+          text: `走廊的灯光冷白，白澤凛司把最后一页资料合上，语气依旧简短，“{callName}，我有件事要说。”你心里一跳，抬头看他。他的目光很稳，“我不擅长表达，但我对你的在意不是工作上的责任。”他停了停，指尖在纸角轻敲，“我想确认我们之间，能不能不只是同伴。”你听见自己的呼吸，感觉他的克制里藏着一点小心翼翼。他补了一句：“如果你愿意，我会认真对待。”你沉默了几秒，心里像被轻轻推到选择面前。`,
+          accept: "点头确认，接受他的心意。",
+          reject: "拒绝关系确认，保持距离。"
+        };
+      }
+      return {
+        text: `广播站的灯光偏暗，久世伶靠在桌边，指尖慢慢绕着你名字的便签。他温柔地说：“{callName}，我不想再只当合作。”你抬眼，他的声音低得像贴着耳边，“我想要你把我放到更近的位置。”你心里一紧，感受到他温柔里带着明显的占有。他向前半步，语气仍然轻，却不肯退，“你不需要给别人理由，只要告诉我你的选择。”你沉默片刻，心里明白这一次拒绝不会换来他的疏远，反而会让他靠得更近。`,
+        accept: "答应他，确认关系。",
+        reject: "温和拒绝，维持距离。"
+      };
+    }
+
+    function triggerConfession(guyId) {
+      if (!state.guys[guyId].unlocked) return false;
+      if (state.relationshipStatus[guyId] === "dating") return false;
+      const affection = state.guys[guyId].affection;
+      const isRetry = state.relationshipStatus[guyId] === "rejected" && affection >= 85 && !state.secondConfessionTriggered[guyId];
+      const isFirst = state.relationshipStatus[guyId] === "none" && affection >= 80 && !state.confessionTriggered[guyId];
+      if (!isFirst && !isRetry) return false;
+
+      if (isRetry) {
+        state.secondConfessionTriggered[guyId] = true;
+      } else {
+        state.confessionTriggered[guyId] = true;
+      }
+
+      const event = getConfessionEvent(guyId, isRetry);
+      const text = event.text.replace("{callName}", getCallName(guyId, affection, state.guys[guyId].trust));
+      state.storyLog.push(`【关系确认】${text}`);
+      renderChoices([
+        {
+          label: event.accept,
+          onClick: () => {
+            state.relationshipStatus[guyId] = "dating";
+            state.storyLog.push("你们的关系被轻轻确认，像把手指交握在灯光里。");
+            renderAll();
+          }
+        },
+        {
+          label: event.reject,
+          onClick: () => {
+            state.relationshipStatus[guyId] = "rejected";
+            if (guyId === "C") {
+              addTrust(state, "C", -2);
+              state.storyLog.push("他表面接受你的距离，却在眼神里把你的影子收得更紧。");
+            } else {
+              state.guys[guyId].affection = 50;
+              addTrust(state, guyId, -7);
+              state.storyLog.push("你们暂时保持距离，关系回到更稳妥的位置。");
+            }
+            renderAll();
+          }
+        }
+      ]);
+      return true;
+    }
+
+    function afterAction(summary, actionId = "", guyId = null) {
       state.storyLog.push(summary);
       state.actionsTaken += 1;
       if (state.daySummary) {
@@ -1364,6 +1444,11 @@
       }
       if (actionId) {
         triggerMiniEvent(actionId);
+      }
+      if (actionId === "date" && guyId) {
+        if (triggerConfession(guyId)) {
+          return;
+        }
       }
       triggerRandomEvent();
       checkAchievements();
@@ -1760,6 +1845,9 @@
         if (!state.flags) state.flags = { firstDate: false, triangle: false, nameHintShown: false };
         if (state.gameOver == null) state.gameOver = false;
         if (state.resources.clubEff == null) state.resources.clubEff = 0;
+        if (!state.relationshipStatus) state.relationshipStatus = { A: "none", B: "none", C: "none" };
+        if (!state.confessionTriggered) state.confessionTriggered = { A: false, B: false, C: false };
+        if (!state.secondConfessionTriggered) state.secondConfessionTriggered = { A: false, B: false, C: false };
         checkUnlocks();
         state.storyLog.push(`【读档】已读取存档位${slot}。`);
       } else {
