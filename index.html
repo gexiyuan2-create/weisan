@@ -221,6 +221,8 @@
     <button class="btn" id="loadGame">读档</button>
     <button class="btn" id="toTitle">返回标题</button>
     <button class="btn" id="openTutorial">帮助/教程</button>
+    <button class="btn" id="renamePlayer">修改名字</button>
+    <button class="btn" id="openSettings">设置</button>
   </header>
 
   <div class="container">
@@ -232,6 +234,7 @@
       <div class="stat">心情 <span id="moodValue">0</span><div class="bar"><span id="moodBar"></span></div></div>
       <div class="stat">学业 <span id="studyValue">0</span><div class="bar"><span id="studyBar"></span></div></div>
       <div class="stat">企划进度 <span id="projectValue">0</span><div class="bar"><span id="projectBar"></span></div></div>
+      <div class="small" id="projectHint">未达标将直接失败</div>
       <div class="small" id="weekGoal"></div>
       <hr />
       <h2>每日任务清单</h2>
@@ -288,12 +291,56 @@
     </div>
   </div>
 
+  <div class="modal" id="nameModal">
+    <div class="modal-content">
+      <h2>为女主命名</h2>
+      <div class="small">默认名：未散，可随时修改。</div>
+      <input id="nameInput" type="text" style="width:100%;padding:8px;margin:12px 0;border-radius:6px;border:1px solid #2d2033;background:#0d0a13;color:var(--text);" />
+      <div class="choices">
+        <button class="btn" id="confirmName">确认</button>
+        <button class="btn" id="skipName">跳过(使用未散)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="nameHintModal">
+    <div class="modal-content">
+      <h2>小提示</h2>
+      <p>建议改名增强代入感。</p>
+      <div class="choices">
+        <button class="btn" id="renameNow">现在改名</button>
+        <button class="btn" id="renameLater">稍后再说</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="mainlineWarningModal">
+    <div class="modal-content">
+      <h2>重要提示</h2>
+      <p>主线校庆企划必须完成，否则直接失败。建议优先推进主线，再安排约会。</p>
+      <div class="choices">
+        <button class="btn" id="ackWarning">我知道了</button>
+        <button class="btn" id="skipWarning">不再提示</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <h2>设置</h2>
+      <label class="small"><input type="checkbox" id="toggleMainlineWarning" /> 显示主线失败提醒</label>
+      <div style="margin-top:12px;">
+        <button class="btn" id="closeSettings">关闭</button>
+      </div>
+    </div>
+  </div>
+
   <footer>粉黑乙女风 · 现代校园 · 一天3次行动 · 12周一周目 Demo</footer>
 
   <script>
     const maxDay = 84;
     const maxWeek = 12;
-    const defaultName = "新同学";
+    const defaultName = "未散";
 
     const weekGoals = [
       "第1周：立项与分工，至少推进10%",
@@ -313,16 +360,43 @@
     const milestoneEvents = [
       { threshold: 10, text: "【主线】校庆企划正式立项，你被推为展台联络人。" },
       { threshold: 18, text: "【主线】主题确认：粉黑学院恋爱剧场。" },
-      { threshold: 26, text: "【主线】赞助谈判开局，A默默递来预算模板。" },
+      { threshold: 26, text: "【主线】赞助谈判开局，白澤凛司默默递来预算模板。" },
       { threshold: 34, text: "【主线】节目定案：三男主联动的校园舞台剧。" },
       { threshold: 50, text: "【主线】展台制作开工，材料清单排到爆。" },
-      { threshold: 58, text: "【主线】第一次彩排，B把气氛带得像派对。" },
+      { threshold: 58, text: "【主线】第一次彩排，浅羽朔把气氛带得像派对。" },
       { threshold: 66, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
-      { threshold: 74, text: "【主线】二轮彩排，C的台词改得更“贴近你”。" },
+      { threshold: 74, text: "【主线】二轮彩排，久世伶的台词改得更“贴近你”。" },
       { threshold: 82, text: "【主线】物资到位，展台初成型。" },
       { threshold: 90, text: "【主线】最终彩排，你站在舞台中央。" },
       { threshold: 100, text: "【主线】校庆当日，所有人都在等你的指挥。" }
     ];
+
+    const guyProfiles = {
+      B: {
+        name: "浅羽 朔",
+        roman: "Asaba Saku",
+        label: "竹马",
+        preferred: ["善良", "体贴", "坦率", "边界感"],
+        disliked: ["恶趣味", "操控", "冷漠"],
+        mild: true
+      },
+      A: {
+        name: "白澤 凛司",
+        roman: "Shirasawa Rinji",
+        label: "学霸",
+        preferred: ["守规矩", "上进", "坦率", "尊重边界", "效率"],
+        disliked: ["胡闹", "低效率", "恶趣味"],
+        mild: true
+      },
+      C: {
+        name: "久世 伶",
+        roman: "Kuze Rei",
+        label: "病娇",
+        preferred: ["试探", "恶趣味", "占有", "信息差", "小谎言"],
+        disliked: ["公开拒绝", "强调边界", "把他当外人"],
+        mild: false
+      }
+    };
 
     const items = {
       snack: { name: "能量小饼干", type: "补给", desc: "精力+15", effect: (state) => addResource(state, "energy", 15) },
@@ -330,9 +404,9 @@
       bento: { name: "便当盒", type: "补给", desc: "精力+30 心情+4", effect: (state) => { addResource(state, "energy", 30); addResource(state, "mood", 4); } },
       tonic: { name: "补给饮", type: "补给", desc: "精力+40 心情+2", effect: (state) => { addResource(state, "energy", 40); addResource(state, "mood", 2); } },
       note: { name: "灵感便笺", type: "补给", desc: "企划进度+6", effect: (state) => addResource(state, "project", 6) },
-      charm: { name: "黑桃发夹", type: "礼物", desc: "送给A，好感+6", effect: (state) => giftTo(state, "A", 6) },
-      soda: { name: "草莓汽水", type: "礼物", desc: "送给B，好感+6", effect: (state) => giftTo(state, "B", 6) },
-      ribbon: { name: "暗红丝带", type: "礼物", desc: "送给C，好感+6", effect: (state) => giftTo(state, "C", 6) },
+      charm: { name: "黑桃发夹", type: "礼物", desc: "送给白澤凛司，好感+6", effect: (state) => giftTo(state, "A", 6) },
+      soda: { name: "草莓汽水", type: "礼物", desc: "送给浅羽朔，好感+6", effect: (state) => giftTo(state, "B", 6) },
+      ribbon: { name: "暗红丝带", type: "礼物", desc: "送给久世伶，好感+6", effect: (state) => giftTo(state, "C", 6) },
       ticket: { name: "演出券", type: "纪念品", desc: "心情+10，随机男主信任+4", effect: (state) => { addResource(state, "mood", 10); randomTrust(state, 4); } },
       clueA: { name: "A的旧奖状", type: "线索", desc: "解锁A的背景故事", effect: (state) => addClue(state, "A") },
       clueB: { name: "B的旧照片", type: "线索", desc: "解锁B的背景故事", effect: (state) => addClue(state, "B") },
@@ -356,7 +430,7 @@
 
     const guyStories = {
       A: {
-        name: "冷淡学霸",
+        name: "白澤 凛司",
         layers: [
           ["他总在图书馆固定座位，像一条冷清的走廊。", "对社团活动不屑一顾，视社交为浪费。", "他拒绝合照，理由是“没必要”。"],
           ["家里对他“必须第一”的高压让他习惯把情绪压成静音。", "他暗中在做校庆赞助申请，却不愿说出口。", "他把忙碌当成防护罩，只留给你一丝温度。"],
@@ -364,7 +438,7 @@
         ]
       },
       B: {
-        name: "阳光竹马",
+        name: "浅羽 朔",
         layers: [
           ["他总能逗你笑，像春天的操场。", "小卖部新品第一口总想塞给你。", "对你转学回来特别上心，像在确认你还在。"],
           ["他对外像太阳，对内却自卑。", "他怕你越走越远，于是拼命跟上。", "他常替你挡流言，却装作不经意。"],
@@ -372,7 +446,7 @@
         ]
       },
       C: {
-        name: "阴湿病娇",
+        name: "久世 伶",
         layers: [
           ["他温柔、会记住你所有细节。", "总能“刚好路过”，像一阵精准的风。", "他把你的喜好写进广播台的片尾。"],
           ["他在学生会/广播站掌握信息。", "会用“为了你好”制造选择倾向。", "他给你安排“最佳路线”，不让别人靠近。"],
@@ -402,42 +476,93 @@
       { id: "volunteer", condition: () => true, text: "新生志愿者加入，任务被分担。", effect: (s) => addResource(s, "project", 2) }
     ];
 
-    const guyEvents = {
-      A: [
-        { id: "A1", text: "A把书签塞到你的笔记本里：“别漏掉重点。”", affection: 4, trust: 3 },
-        { id: "A2", text: "你在社团门口看见他默默递交赞助材料。", affection: 3, trust: 4 },
-        { id: "A3", text: "他冷冷说“别熬夜”，却把咖啡放下。", affection: 4, trust: 3 },
-        { id: "A4", text: "你帮他整理资料，他说：“谢谢…只有你。”", affection: 5, trust: 4 },
-        { id: "A5", text: "矛盾爆发：他指责你不够严谨，气氛僵住。", affection: -2, trust: -4, conflict: true },
-        { id: "A6", text: "和解：他承认压力太大，向你道歉。", affection: 6, trust: 6 },
-        { id: "A7", text: "高心动：图书馆关灯，他护着你穿过黑暗。", affection: 7, trust: 4 },
-        { id: "A8", text: "高心动：他在雨中撑伞，半边衣服湿透。", affection: 6, trust: 5 },
-        { id: "A9", text: "他把自制的时间表贴在你桌前。", affection: 3, trust: 5 },
-        { id: "A10", text: "他轻声说：“我愿意跟你一起承担。”", affection: 5, trust: 6 }
-      ],
+    const meetingEvents = {
       B: [
-        { id: "B1", text: "B递来新口味饮料：“你总会喜欢这个。”", affection: 4, trust: 3 },
-        { id: "B2", text: "他带你在操场慢跑，笑着说你没变。", affection: 3, trust: 4 },
-        { id: "B3", text: "他替你挡掉流言，拍拍你的肩。", affection: 4, trust: 4 },
-        { id: "B4", text: "你们一起分发传单，他突然握住你的手。", affection: 6, trust: 3 },
-        { id: "B5", text: "矛盾爆发：他误会你有意疏远，语气失控。", affection: -2, trust: -4, conflict: true },
-        { id: "B6", text: "和解：他道歉说自己太害怕失去你。", affection: 6, trust: 6 },
-        { id: "B7", text: "高心动：夜跑时他把耳机分你一半。", affection: 7, trust: 4 },
-        { id: "B8", text: "高心动：他在台阶上系好你的鞋带。", affection: 6, trust: 5 },
-        { id: "B9", text: "他认真询问你的梦想，然后说会帮你实现。", affection: 4, trust: 5 },
-        { id: "B10", text: "他悄悄准备彩排惊喜，让你成为中心。", affection: 5, trust: 6 }
+        {
+          id: "B_meet_1",
+          text: "操场晚风吹过，浅羽朔把运动外套搭在你肩上，嘴角带着惯常的笑。他说起你刚转来那天，自己跑遍整个教学楼帮你找教室，像是在确认你真的回来了。周围的灯光被夜色晕开，他却盯着你，不让你躲开。他轻声问：“{callName}，今天还好吗？”你发现他把心事藏得很深，却又总能在你需要时出现。",
+          options: [
+            { label: "认真道谢，说你很感激他的陪伴。", tags: ["善良", "体贴", "坦率"] },
+            { label: "笑着调侃他太黏人，提醒他也要照顾自己。", tags: ["边界感", "坦率"] },
+            { label: "假装无所谓，转而谈校庆任务。", tags: ["冷漠"] }
+          ]
+        },
+        {
+          id: "B_meet_2",
+          text: "小卖部的新品被他塞进你手里，塑料袋上凝着水珠。浅羽朔一边说今天排练顺利，一边把你推到有风的走廊尽头。你看见他背包夹层里掉出一张旧照片——你们小时候在校庆舞台下的合影。他立刻把照片收回，却没掩住那一瞬间的紧张：“{callName}，如果你不喜欢，我就不提过去了。”",
+          options: [
+            { label: "告诉他你也怀念过去，并愿意听他讲。", tags: ["善良", "坦率"] },
+            { label: "轻声说现在也很好，但希望彼此尊重边界。", tags: ["边界感", "体贴"] },
+            { label: "半开玩笑说照片太幼稚，想看新的合照。", tags: ["坦率", "体贴"] }
+          ]
+        },
+        {
+          id: "B_meet_3",
+          text: "排练结束的空教室里只剩你和浅羽朔，他把椅子拖到你身旁，声音压低：“我们以前，是不是也这样并肩？”他刻意把“以前”说得很轻，却又像刻在字里。你听得出他在用熟悉感拉住你，既温柔又有一点点小心机。他的眼神像在等你给答案，仿佛只要你叫一声“{callName}”就够。",
+          options: [
+            { label: "坦白告诉他你珍惜这份羁绊。", tags: ["坦率", "善良"] },
+            { label: "提醒他别靠过去绑住你们的现在。", tags: ["边界感"] },
+            { label: "调皮地说要用行动证明你们的现在。", tags: ["体贴", "坦率"] }
+          ]
+        }
+      ],
+      A: [
+        {
+          id: "A_meet_1",
+          text: "预算表摊在桌面上，白澤凛司的笔尖停在一条细小的数字偏差处。他不动声色地抬眼，视线冷而清晰：“这个位置要对齐。”你注意到他连纸边都整理得一丝不苟，像在守护某种规则。他把文件递给你时，指节微微发白，似乎在压住焦躁。你忽然听见他低低喊了一声“{callName}”，却没继续解释。",
+          options: [
+            { label: "认真记录并表示会马上修正。", tags: ["守规矩", "效率", "上进"] },
+            { label: "轻声说谢谢他的校对，同时询问他是否需要休息。", tags: ["体贴", "尊重边界"] },
+            { label: "笑着说格式无所谓，重点是内容。", tags: ["胡闹", "低效率"] }
+          ]
+        },
+        {
+          id: "A_meet_2",
+          text: "你在教室外等他签字，白澤凛司却先把你叫进办公室。他指向屏幕上的流程图：“如果不按规定走，整个校庆会卡死。”他的语气不高，却像刀锋一样干净。你看见他眼底的倦意——他在替很多人背规矩的压力，却依旧没有怨言。你想起他总一个人坐在图书馆的样子，这次也许该和他站在同一边。他停顿了一下，轻声叫你“{callName}”。",
+          options: [
+            { label: "表示理解并愿意配合流程优化。", tags: ["守规矩", "效率"] },
+            { label: "直白说你也不想拖累他，会更上进。", tags: ["坦率", "上进"] },
+            { label: "试图拉他去喝点东西放松。", tags: ["体贴", "尊重边界"] }
+          ]
+        },
+        {
+          id: "A_meet_3",
+          text: "晚自习后，白澤凛司把一份被折得很平整的资料递给你。他没有多解释，只说：“你会用得到。”走廊里灯光冷白，他的影子落在你脚边，像一条严谨却不动声色的线。你想起他被称作“漂亮脸”的时候，总把情绪藏起来。你试着轻声问他是不是也会觉得疲惫，他的回答只是一句：“没事，{callName}，先把事做好。”",
+          options: [
+            { label: "点头收下资料，并承诺按他的思路推进。", tags: ["守规矩", "效率"] },
+            { label: "说你会努力，但也希望他能照顾自己。", tags: ["尊重边界", "体贴"] },
+            { label: "开玩笑说他太死板，想看他失控一次。", tags: ["胡闹", "恶趣味"] }
+          ]
+        }
       ],
       C: [
-        { id: "C1", text: "C递给你一份“刚好顺路”的资料。", affection: 4, trust: 3 },
-        { id: "C2", text: "他在广播里念你的名字，语气温柔。", affection: 3, trust: 4 },
-        { id: "C3", text: "他提醒你某人动向：“为了你好。”", affection: 4, trust: 4 },
-        { id: "C4", text: "他帮你安排最优路线，效率爆表。", affection: 5, trust: 4 },
-        { id: "C5", text: "矛盾爆发：你发现他隐瞒信息，心里发冷。", affection: -2, trust: -5, conflict: true },
-        { id: "C6", text: "和解：他承认太害怕失去你，愿意坦白。", affection: 6, trust: 6 },
-        { id: "C7", text: "高心动：夜里他披上你的外套，怕你着凉。", affection: 7, trust: 4 },
-        { id: "C8", text: "高心动：他把广播站钥匙交给你。", affection: 6, trust: 5 },
-        { id: "C9", text: "他为你准备好所有备选方案。", affection: 4, trust: 5 },
-        { id: "C10", text: "他低声说：“你是我唯一的优先级。”", affection: 5, trust: 6 }
+        {
+          id: "C_meet_1",
+          text: "广播站的玻璃窗映着你的倒影，久世伶推开门时脚步轻得像没声音。他把一份宣传位的排班表递给你，语气温柔：“我帮你留了最佳时段。”你明白这不是无条件的好意，而是他掌握信息差后的“选择”。他的手指停在你名字旁边，像在确认你属于哪一格。他低声重复：“{callName}。”",
+          options: [
+            { label: "顺着他的安排，表示愿意配合。", tags: ["信息差", "小谎言"] },
+            { label: "试探他为什么愿意帮你。", tags: ["试探"] },
+            { label: "强调自己会按规则申请，不需要特殊照顾。", tags: ["强调边界"] }
+          ]
+        },
+        {
+          id: "C_meet_2",
+          text: "你在走廊拐角被久世伶“偶遇”，他递来一份匿名赞助线索，嘴角弧度恰到好处：“我只是不想看到你被别人抢走资源。”他总是把话说得很轻，却像一根线缠上你的手腕。你听见远处有人走近，他却故意站得更近，让你只能选择面对他。那份靠近里有温柔，也有不容拒绝的坚持，他在你耳边叫了声“{callName}”。",
+          options: [
+            { label: "半真半假地说只有他懂你。", tags: ["占有", "小谎言"] },
+            { label: "提醒他别太过度，合作就够了。", tags: ["公开拒绝", "强调边界"] },
+            { label: "轻声说想听他真正的目的。", tags: ["试探", "恶趣味"] }
+          ]
+        },
+        {
+          id: "C_meet_3",
+          text: "夜晚的广播站灯光昏暗，久世伶把耳机扣在你耳边，低声说：“你听，只有我们听得到。”他的声音像在缠绕你，语气温柔却不容置疑。他把你的名字在句尾拖长，像在确认归属：“{callName}……”你意识到，他的亲近并不是单纯的喜欢，而是带着一点占有与试探。你可以拒绝，但也知道拒绝会让他退得很远。",
+          options: [
+            { label: "让他继续念下去，告诉他你想听。", tags: ["占有", "试探"] },
+            { label: "轻轻把耳机取下，说你需要一点空间。", tags: ["公开拒绝"] },
+            { label: "用玩笑回应他的暧昧，保持模糊。", tags: ["恶趣味", "信息差"] }
+          ]
+        }
       ]
     };
 
@@ -450,7 +575,7 @@
         condition: () => true },
       { id: "rest", name: "休息", desc: "精力+35 心情+4（有概率额外+5）", effect: (s) => { addResource(s, "energy", 35); addResource(s, "mood", 4); if (Math.random() < 0.35) addResource(s, "mood", 5); s.stats.rest++; s.streaks.study = 0; },
         condition: () => true },
-      { id: "date", name: "约会", desc: "触发男主事件 好感/信任↑ 精力-8 心情+5", effect: (s) => { s.flags.firstDate = true; },
+      { id: "date", name: "见面", desc: "与男主互动 好感/信任↑ 精力-8 心情+5", effect: (s) => { s.flags.firstDate = true; },
         condition: (s) => s.day >= 3 },
       { id: "project", name: "校庆推进", desc: "企划+10 精力-12 心情-1", effect: (s) => { addResource(s, "project", 10); addResource(s, "energy", -12); addResource(s, "mood", -1); s.stats.projectTasks++; s.streaks.study = 0; },
         condition: () => true },
@@ -462,7 +587,7 @@
 
     const tutorialSteps = [
       "欢迎来到粉黑乙女校园！左侧是资源面板、任务与成就入口。",
-      "一天有3次行动：学习/社团/打工/休息/约会/校庆推进等。",
+      "一天有3次行动：学习/社团/打工/休息/见面/校庆推进等。",
       "主线目标是3个月内完成校庆企划，进度条与周目标会提示你。",
       "右侧是男主好感与信任，提升后可解锁背景故事层层秘密。",
       "顶部可存档/读档，成就会奖励道具或回溯券。",
@@ -470,7 +595,7 @@
     ];
 
     const stateTemplate = () => ({
-      name: defaultName,
+      playerName: defaultName,
       day: 1,
       week: 1,
       actionsPerDay: 3,
@@ -480,22 +605,24 @@
       inventory: ["snack", "meal"],
       achievements: [],
       guys: {
-        A: { affection: 20, trust: 20, storyTier: 0, storyIndex: 0 },
-        B: { affection: 20, trust: 20, storyTier: 0, storyIndex: 0 },
-        C: { affection: 20, trust: 20, storyTier: 0, storyIndex: 0 }
+        A: { affection: 20, trust: 20, storyTier: 0, storyIndex: 0, unlocked: false },
+        B: { affection: 20, trust: 20, storyTier: 0, storyIndex: 0, unlocked: true },
+        C: { affection: 20, trust: 20, storyTier: 0, storyIndex: 0, unlocked: false }
       },
       stats: { projectTasks: 0, partTime: 0, club: 0, rest: 0 },
       streaks: { study: 0 },
-      flags: { firstDate: false, triangle: false },
       milestoneIndex: 0,
       extremeChoices: 0,
       lowTrustDays: 0,
       rewindTokens: 1,
       daySummary: null,
-      forcedRest: false
+      forcedRest: false,
+      flags: { firstDate: false, triangle: false, nameHintShown: false },
+      settings: { showMainlineWarning: true }
     });
 
     let state = stateTemplate();
+    let nameModalMode = "newgame";
     initDaySummary();
 
     const storyEl = document.getElementById("story");
@@ -511,6 +638,10 @@
     const tutorialModal = document.getElementById("tutorialModal");
     const tutorialBody = document.getElementById("tutorialBody");
     const tutorialControls = document.getElementById("tutorialControls");
+    const nameModal = document.getElementById("nameModal");
+    const nameHintModal = document.getElementById("nameHintModal");
+    const mainlineWarningModal = document.getElementById("mainlineWarningModal");
+    const settingsModal = document.getElementById("settingsModal");
     const achievementList = document.getElementById("achievementList");
     const inventoryList = document.getElementById("inventoryList");
 
@@ -530,6 +661,33 @@
     };
 
     const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+    function getCallName(guyId, affection, trust) {
+      const base = state.playerName;
+      if (guyId === "B") {
+        if (affection < 20) return `${base}同学`;
+        if (affection < 55) return base;
+        if (affection < 80) return `${base}酱`;
+        return trust >= 70 ? base : `${base}酱`;
+      }
+      if (guyId === "A") {
+        if (affection < 20) return `${base}同学`;
+        if (affection < 55) return base;
+        if (affection < 80) return `${base}…`;
+        return trust >= 70 ? `……${base}` : `${base}…`;
+      }
+      if (guyId === "C") {
+        if (affection < 20) return base;
+        if (affection < 55) return `${base}、${base}`;
+        if (affection < 80) return `${base}……`;
+        return trust >= 70 ? `${base}……过来` : `${base}……`;
+      }
+      return base;
+    }
+
+    function getGuyDisplayName(guyId) {
+      return `${guyProfiles[guyId].name} (${guyProfiles[guyId].roman})`;
+    }
 
     function cloneGuyStats(guys) {
       return Object.fromEntries(Object.entries(guys).map(([id, g]) => [id, { affection: g.affection, trust: g.trust }]));
@@ -633,13 +791,20 @@
       const renderGuy = (id, elId) => {
         const guy = state.guys[id];
         const storyProgress = guy.storyTier * 3 + guy.storyIndex;
+        const locked = !guy.unlocked;
+        const lockText = id === "A"
+          ? "第4周：流程/预算审核卡死，需要白澤凛司签字解锁"
+          : "第6周：宣传位危机，需与久世伶合作解锁";
         const text = `
-          <h3>${guyStories[id].name}</h3>
+          <h3>${getGuyDisplayName(id)}</h3>
+          ${locked ? `<div class="small">🔒 未解锁：${lockText}</div>` : `
           <div class="stat">好感 ${guy.affection}<div class="bar"><span style="width:${guy.affection}%"></span></div></div>
           <div class="stat">信任 ${guy.trust}<div class="bar"><span style="width:${guy.trust}%"></span></div></div>
-          <div class="small">背景故事解锁进度：${storyProgress}/9</div>
+          <div class="small">背景故事解锁进度：${storyProgress}/9</div>`}
         `;
-        document.getElementById(elId).innerHTML = text;
+        const element = document.getElementById(elId);
+        element.innerHTML = text;
+        element.style.opacity = locked ? "0.5" : "1";
       };
       renderGuy("A", "charA");
       renderGuy("B", "charB");
@@ -692,17 +857,6 @@
       }
     }
 
-    function triggerGuyEvent(guyId) {
-      const pool = guyEvents[guyId];
-      const event = pool[Math.floor(Math.random() * pool.length)];
-      state.storyLog.push(`【${guyStories[guyId].name}事件】${event.text}`);
-      addAffection(state, guyId, event.affection);
-      addTrust(state, guyId, event.trust);
-      if (event.conflict) {
-        state.extremeChoices += 1;
-      }
-    }
-
     function runTask(taskId) {
       const task = tasks.find((t) => t.id === taskId);
       if (!task) return;
@@ -712,33 +866,114 @@
       }
       if (taskId === "date") {
         renderChoices([
-          { label: "约会·A", onClick: () => { doDate("A"); } },
-          { label: "约会·B", onClick: () => { doDate("B"); } },
-          { label: "约会·C", onClick: () => { doDate("C"); } },
+          { label: "和浅羽朔见面", onClick: () => { tryMeeting("B"); } },
+          { label: "和白澤凛司见面", onClick: () => { tryMeeting("A"); } },
+          { label: "和久世伶见面", onClick: () => { tryMeeting("C"); } },
           { label: "返回", onClick: () => { renderChoices(getDefaultChoices()); } }
         ]);
         return;
       }
       task.effect(state);
-      afterAction(`${task.name}完成。`);
+      afterAction(`${task.name}完成。`, taskId);
     }
 
-    function doDate(guyId) {
+    function tryMeeting(guyId) {
+      if (!state.guys[guyId].unlocked) {
+        const hint = guyId === "A"
+          ? "第4周：流程/预算审核卡死，需要白澤凛司签字解锁。"
+          : "第6周：宣传位危机，需要久世伶协作解锁。";
+        state.storyLog.push(`【未解锁】${hint}`);
+        renderAll();
+        return;
+      }
+      if (triggerTriangleEvent()) {
+        return;
+      }
+      startMeeting(guyId);
+    }
+
+    function triggerTriangleEvent() {
+      const candidates = Object.keys(state.guys).filter((id) => state.guys[id].affection >= 55 && state.guys[id].affection < 80);
+      if (candidates.length < 2) return false;
+      const chance = Math.min(0.2, 0.12 + (candidates.length - 2) * 0.04);
+      if (Math.random() > chance) return false;
+      state.flags.triangle = true;
+      const text = "走廊的灯光在你头顶一盏盏亮起，像把人影切成几段。你刚转身，浅羽朔就从另一侧快步走来，笑容温暖却带着一点不容置疑的熟稔：“我们以前不是一直一起走吗？”话音未落，白澤凛司已经站在你身侧，安静得像风停了，他的目光落在你们之间的距离上，冷静又精准：“你答应过要把流程改完。”久世伶从广播室的门口靠近，手里捏着排班表，语气温柔得几乎像低语：“没关系，只要你选我就行。”三个人的视线像三条线交错，空气被拉紧，你能感到他们都在等待你的收场方式。";
+      state.storyLog.push(`【修罗场】${text}`);
+      renderChoices([
+        { label: "安抚浅羽朔", onClick: () => { addTrust(state, "B", 2); afterAction("你温声让浅羽朔先冷静下来。", "date"); } },
+        { label: "安抚白澤凛司", onClick: () => { addTrust(state, "A", 2); afterAction("你向白澤凛司点头，表示会按流程走。", "date"); } },
+        { label: "安抚久世伶", onClick: () => { addTrust(state, "C", 2); afterAction("你靠近久世伶，示意他别太逼迫你。", "date"); } }
+      ]);
+      return true;
+    }
+
+    function startMeeting(guyId) {
       tasks.find((t) => t.id === "date").effect(state);
       addResource(state, "energy", -8);
       addResource(state, "mood", 5);
-      triggerGuyEvent(guyId);
-      if (Math.random() < 0.3) {
-        gainItem(state, `clue${guyId}`);
-      }
-      afterAction(`与${guyStories[guyId].name}的约会结束。`);
+      const pool = meetingEvents[guyId];
+      const event = pool[Math.floor(Math.random() * pool.length)];
+      const callName = getCallName(guyId, state.guys[guyId].affection, state.guys[guyId].trust);
+      const text = event.text.replace("{callName}", callName);
+      state.storyLog.push(`【${guyProfiles[guyId].name}见面】${text}`);
+      const optionChoices = event.options.map((option) => ({
+        label: `${option.label}（${option.tags.join("/")}）`,
+        onClick: () => {
+          applyMeetingChoice(guyId, option.tags);
+          if (Math.random() < 0.3) {
+            gainItem(state, `clue${guyId}`);
+          }
+          afterAction(`你做出了选择。`, "date");
+        }
+      }));
+      renderChoices(optionChoices);
     }
 
-    function afterAction(summary) {
+    function applyMeetingChoice(guyId, tags) {
+      const profile = guyProfiles[guyId];
+      let score = 0;
+      tags.forEach((tag) => {
+        if (profile.preferred.includes(tag)) score += 1;
+        if (profile.disliked.includes(tag)) score -= 1;
+      });
+      let affChange = 0;
+      let trustChange = 0;
+      if (profile.mild) {
+        if (score > 0) {
+          affChange = clamp(2 + score * 2, 2, 6);
+          trustChange = clamp(1 + score, 1, 4);
+        } else if (score < 0) {
+          affChange = -clamp(1 + Math.abs(score), 1, 4);
+          trustChange = -clamp(Math.abs(score), 1, 3);
+        } else {
+          affChange = 1;
+          trustChange = 0;
+        }
+      } else {
+        if (score > 0) {
+          affChange = clamp(6 + score * 2, 6, 12);
+          trustChange = clamp(2 + score, 2, 6);
+        } else if (score < 0) {
+          affChange = 0;
+          trustChange = -clamp(6 + Math.abs(score) * 2, 6, 12);
+        } else {
+          affChange = 2;
+          trustChange = 0;
+        }
+      }
+      addAffection(state, guyId, affChange);
+      addTrust(state, guyId, trustChange);
+    }
+
+    function afterAction(summary, actionId = "") {
       state.storyLog.push(summary);
       state.actionsTaken += 1;
       if (state.daySummary) {
         state.daySummary.logs.push(summary);
+      }
+      if (actionId) {
+        triggerMiniEvent(actionId);
       }
       triggerRandomEvent();
       checkAchievements();
@@ -761,11 +996,58 @@
       }
     }
 
+    function triggerMiniEvent(actionId) {
+      if (actionId === "study" && state.guys.A.unlocked) {
+        const base = 0.04;
+        const scaling = (state.guys.A.affection / 100) * 0.08;
+        const chance = Math.min(0.15, base + scaling);
+        if (Math.random() < chance) {
+          state.storyLog.push("【学习小事件】你翻到难题时，白澤凛司恰好经过，停下脚步给出清晰的推导。你发现他的讲解简短却有力，像在帮你把路灯一盏盏点亮。");
+          addAffection(state, "A", 2);
+          addTrust(state, "A", 1);
+          addResource(state, "study", 1);
+        }
+      }
+      if (actionId === "club") {
+        const base = 0.08;
+        const scaling = (state.guys.B.affection / 100) * 0.06;
+        const chance = Math.min(0.18, base + scaling);
+        if (Math.random() < chance) {
+          state.storyLog.push("【社团小事件】浅羽朔帮你搬完物料，还顺手修好了摇晃的展架。他笑着说“交给我”，让你忍不住放松了一点。");
+          addAffection(state, "B", 2);
+          addResource(state, "mood", 1);
+          addResource(state, "project", 1);
+        }
+      }
+      if (actionId === "rest" && state.guys.C.unlocked) {
+        const base = 0.015;
+        const scaling = (state.guys.C.affection / 100) * 0.03;
+        const chance = Math.min(0.06, base + scaling);
+        if (Math.random() < chance) {
+          state.storyLog.push("【休息小事件】你在图书馆角落小憩，久世伶的影子在书架边停住，他压低声音提醒你休息够了再走。那份靠近让你心跳慢了半拍。");
+          addAffection(state, "C", 1);
+          addTrust(state, "C", 1);
+          addResource(state, "energy", 5);
+        }
+      }
+    }
+
     function applyNightRecovery() {
       let recovery = 25;
       if (state.resources.mood >= 70) recovery += 5;
       addResource(state, "energy", recovery);
       state.storyLog.push(`夜间恢复：精力+${recovery}。`);
+    }
+
+    function checkUnlocks() {
+      if (state.week >= 4 && !state.guys.A.unlocked) {
+        state.guys.A.unlocked = true;
+        state.storyLog.push("【主线解锁】校庆流程/预算审核卡死，你需要白澤凛司签字与校对，第一次正式对话就此展开。");
+      }
+      if (state.week >= 6 && !state.guys.C.unlocked) {
+        state.guys.C.unlocked = true;
+        state.storyLog.push("【主线解锁】宣传位被抢/谣言扩散，你不得不与久世伶交换信息与资源，合作关系正式建立。");
+      }
     }
 
     function finalizeDay() {
@@ -776,6 +1058,7 @@
       } else {
         state.day += 1;
         updateWeek();
+        checkUnlocks();
         if (state.day % 7 === 1) {
           state.storyLog.push(`【周总结】第${state.week - 1}周结束，企划进度${state.resources.project}%。`);
         }
@@ -823,16 +1106,10 @@
 
     function endGame() {
       const mainSuccess = state.resources.project >= 100;
-      const badEnding = !mainSuccess && state.extremeChoices >= 3 && state.lowTrustDays >= 3;
-      if (badEnding) {
-        state.storyLog.push("【坏结局预警】你被困在疲惫与误解里。是否使用补救机制？");
+      if (!mainSuccess) {
+        state.storyLog.push("【失败结局】校庆企划未达标，你不得不接受直接失败的结果。");
         renderAll();
-        renderChoices([
-          { label: "休息重整", onClick: () => { addResource(state, "energy", 20); addResource(state, "mood", 15); state.lowTrustDays = 0; state.extremeChoices = 0; state.storyLog.push("你选择休息与求助，局势缓和。重新迎接一天。"); state.day = maxDay; endGame(); } },
-          { label: "求助男主", onClick: () => { addTrust(state, "A", 10); addTrust(state, "B", 10); addTrust(state, "C", 10); state.lowTrustDays = 0; state.extremeChoices = 0; state.storyLog.push("三人同时出手帮你稳定局面。" ); state.day = maxDay; endGame(); } },
-          { label: "使用道具", onClick: () => { if (state.inventory.length > 0) { useItem(state.inventory[0]); } state.storyLog.push("你用道具稳住心态。" ); state.day = maxDay; endGame(); } },
-          { label: "回溯", onClick: () => { if (state.rewindTokens > 0) { state.rewindTokens -= 1; state.day = maxDay - 3; state.actionsTaken = 0; initDaySummary(); state.storyLog.push("你回溯到三天前。" ); renderAll(); } else { state.storyLog.push("回溯次数不足。" ); renderAll(); } } }
-        ]);
+        renderChoices([{ label: "返回标题", onClick: showTitle }]);
         return;
       }
 
@@ -849,8 +1126,6 @@
         if (endings.length === 0) {
           endings.push("【友情结局】校庆圆满结束，你收获了坚定的伙伴。" );
         }
-      } else {
-        endings.push("【友情结局】主线未完成，但你仍得到朋友的支持。" );
       }
       state.storyLog.push("\n" + endings.join("\n"));
       renderAll();
@@ -913,6 +1188,11 @@
       renderTasks();
       renderStory();
       renderDayInfo();
+      if (state.day === 1 && state.actionsTaken === 0 && state.playerName === defaultName && !state.flags.nameHintShown
+        && !nameModal.classList.contains("active") && !mainlineWarningModal.classList.contains("active")) {
+        state.flags.nameHintShown = true;
+        document.getElementById("nameHintModal").classList.add("active");
+      }
       if (state.day <= maxDay) {
         renderChoices(getDefaultChoices());
       }
@@ -974,18 +1254,33 @@
       tutorialModal.classList.add("active");
     }
 
-    function promptName() {
-      const name = prompt("请输入女主名字：", state.name);
-      if (name) state.name = name;
+    function openNameModal(mode = "rename") {
+      nameModalMode = mode;
+      const input = document.getElementById("nameInput");
+      input.value = state.playerName || defaultName;
+      nameModal.classList.add("active");
+    }
+
+    function applyPlayerName(name) {
+      state.playerName = name && name.trim() ? name.trim() : defaultName;
+      if (nameModalMode === "newgame") {
+        state.storyLog = [`${state.playerName}在新学期第1周回到校园。一天有3次行动，校庆企划等着你。`];
+        initDaySummary();
+        renderAll();
+        openTutorial(0);
+        if (state.settings.showMainlineWarning) {
+          mainlineWarningModal.classList.add("active");
+        }
+      } else {
+        state.storyLog.push(`【改名】你决定使用新的名字：${state.playerName}。`);
+        renderAll();
+      }
     }
 
     function newGame() {
       state = stateTemplate();
-      promptName();
-      state.storyLog = [`${state.name}在新学期第1周回到校园。一天有3次行动，校庆企划等着你。`];
-      initDaySummary();
+      openNameModal("newgame");
       renderAll();
-      openTutorial(0);
     }
 
     function saveGame() {
@@ -1002,12 +1297,23 @@
       const data = localStorage.getItem(`otome_save_${slot}`);
       if (data) {
         state = JSON.parse(data);
+        if (!state.playerName) {
+          state.playerName = state.name || defaultName;
+        }
+        ["A", "B", "C"].forEach((id) => {
+          if (state.guys[id] && state.guys[id].unlocked == null) {
+            state.guys[id].unlocked = id === "B";
+          }
+        });
         if (state.actionsPerDay == null) state.actionsPerDay = 3;
         if (state.actionsTaken == null) state.actionsTaken = 0;
         if (state.forcedRest == null) state.forcedRest = false;
         if (!state.daySummary) {
           initDaySummary();
         }
+        if (!state.settings) state.settings = { showMainlineWarning: true };
+        if (!state.flags) state.flags = { firstDate: false, triangle: false, nameHintShown: false };
+        checkUnlocks();
         state.storyLog.push(`【读档】已读取存档位${slot}。`);
       } else {
         state.storyLog.push("【读档】该存档位为空。");
@@ -1020,6 +1326,11 @@
     document.getElementById("loadGame").addEventListener("click", loadGame);
     document.getElementById("toTitle").addEventListener("click", showTitle);
     document.getElementById("openTutorial").addEventListener("click", () => openTutorial(0));
+    document.getElementById("renamePlayer").addEventListener("click", () => openNameModal("rename"));
+    document.getElementById("openSettings").addEventListener("click", () => {
+      document.getElementById("toggleMainlineWarning").checked = state.settings.showMainlineWarning;
+      settingsModal.classList.add("active");
+    });
     document.getElementById("openAchievements").addEventListener("click", openAchievements);
     document.getElementById("closeAchievements").addEventListener("click", () => achievementModal.classList.remove("active"));
     document.getElementById("openInventory").addEventListener("click", () => openInventory(false));
@@ -1028,13 +1339,46 @@
       settlementModal.classList.remove("active");
       finalizeDay();
     });
+    document.getElementById("confirmName").addEventListener("click", () => {
+      const value = document.getElementById("nameInput").value;
+      nameModal.classList.remove("active");
+      applyPlayerName(value);
+    });
+    document.getElementById("skipName").addEventListener("click", () => {
+      nameModal.classList.remove("active");
+      applyPlayerName(defaultName);
+    });
+    document.getElementById("renameNow").addEventListener("click", () => {
+      nameHintModal.classList.remove("active");
+      openNameModal("rename");
+    });
+    document.getElementById("renameLater").addEventListener("click", () => {
+      nameHintModal.classList.remove("active");
+    });
+    document.getElementById("ackWarning").addEventListener("click", () => {
+      mainlineWarningModal.classList.remove("active");
+      renderAll();
+    });
+    document.getElementById("skipWarning").addEventListener("click", () => {
+      state.settings.showMainlineWarning = false;
+      mainlineWarningModal.classList.remove("active");
+      renderAll();
+    });
+    document.getElementById("toggleMainlineWarning").addEventListener("change", (event) => {
+      state.settings.showMainlineWarning = event.target.checked;
+    });
+    document.getElementById("closeSettings").addEventListener("click", () => {
+      settingsModal.classList.remove("active");
+    });
 
     // 如何添加新事件/新道具/新成就/新行动：
     // 1) 新行动：在 tasks 中新增对象，并配置 desc/effect/condition（行动点会自动计数）。
-    // 2) 新事件：在 randomEvents 或 guyEvents 中追加对象，包含 condition/text/effect。
+    // 2) 新事件：在 randomEvents 或 meetingEvents 中追加对象，包含 text/options。
     // 3) 新道具：在 items 中新增条目，并可在事件或成就奖励里 gainItem。
     // 4) 新成就：在 achievements 中追加对象，提供 check 逻辑与奖励。
     // 5) 精力曲线：修改 tasks 的精力消耗、applyNightRecovery 的恢复值、或补给道具的恢复量。
+    // 6) 称呼分段：调整 getCallName 内各阶段返回值。
+    // 7) 小事件概率：调整 triggerMiniEvent 内的 base/scaling/上限。
 
     renderAll();
   </script>
