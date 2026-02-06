@@ -234,7 +234,9 @@
       <div class="stat">心情 <span id="moodValue">0</span><div class="bar"><span id="moodBar"></span></div></div>
       <div class="stat">学业 <span id="studyValue">0</span><div class="bar"><span id="studyBar"></span></div></div>
       <div class="stat">企划进度 <span id="projectValue">0</span><div class="bar"><span id="projectBar"></span></div></div>
+      <div class="stat">社团效率 <span id="clubEffValue">0</span><div class="bar"><span id="clubEffBar"></span></div></div>
       <div class="small" id="projectHint">未达标将直接失败</div>
+      <div class="small" id="stageInfo"></div>
       <div class="small" id="weekGoal"></div>
       <hr />
       <h2>每日任务清单</h2>
@@ -317,7 +319,7 @@
   <div class="modal" id="mainlineWarningModal">
     <div class="modal-content">
       <h2>重要提示</h2>
-      <p>主线校庆企划必须完成，否则直接失败。建议优先推进主线，再安排约会。</p>
+      <p>主线校庆企划必须按阶段达标，否则直接失败。建议优先推进主线，再安排见面。</p>
       <div class="choices">
         <button class="btn" id="ackWarning">我知道了</button>
         <button class="btn" id="skipWarning">不再提示</button>
@@ -335,26 +337,34 @@
     </div>
   </div>
 
-  <footer>粉黑乙女风 · 现代校园 · 一天3次行动 · 12周一周目 Demo</footer>
+  <footer>粉黑乙女风 · 现代校园 · 一天3次行动 · 20周一周目 Demo</footer>
 
   <script>
-    const maxDay = 84;
-    const maxWeek = 12;
+    const maxDay = 140;
+    const maxWeek = 20;
     const defaultName = "未散";
 
     const weekGoals = [
-      "第1周：立项与分工，至少推进10%",
-      "第2周：校庆主题确认，至少推进18%",
-      "第3周：拉赞助&展台方案，至少推进26%",
-      "第4周：舞台节目定案，至少推进34%",
-      "第5周：节目试排，至少推进42%",
-      "第6周：展台制作启动，至少推进50%",
-      "第7周：第一轮彩排，至少推进58%",
-      "第8周：危机处理与调整，至少推进66%",
-      "第9周：二轮彩排，至少推进74%",
-      "第10周：物资到位，至少推进82%",
-      "第11周：最终彩排，至少推进90%",
-      "第12周：校庆当天，完成100%"
+      "第1周：立项准备，稳住节奏",
+      "第2周：主题确认，开始分工",
+      "第3周：展台与节目初稿",
+      "第4周：立项结算，进度≥25%",
+      "第5周：素材收集与试排",
+      "第6周：节目与展台细化",
+      "第7周：赞助与宣传铺垫",
+      "第8周：资源结算，进度≥50%",
+      "第9周：第一轮彩排",
+      "第10周：执行细节落地",
+      "第11周：流程与人员磨合",
+      "第12周：执行结算，进度≥75%",
+      "第13周：危机预案与补强",
+      "第14周：二轮彩排",
+      "第15周：物资到位",
+      "第16周：最终结算，进度≥100%",
+      "第17周：校庆冲刺",
+      "第18周：最后检查",
+      "第19周：总彩排",
+      "第20周：校庆当日"
     ];
 
     const milestoneEvents = [
@@ -370,6 +380,15 @@
       { threshold: 90, text: "【主线】最终彩排，你站在舞台中央。" },
       { threshold: 100, text: "【主线】校庆当日，所有人都在等你的指挥。" }
     ];
+
+    const mainlineStages = [
+      { week: 4, target: 25, title: "立项未通过", text: "立项评审上，你递交的方案被挑出太多细节漏洞，预算与流程迟迟无法定案。你看见同学们的期待慢慢变成犹豫，会议室的灯光冷得像宣判。你明白这不是终点，却需要先停下来，把破碎的节奏一点点捡起。" },
+      { week: 8, target: 50, title: "资源断裂", text: "赞助名单被退回，展台材料一再缩水，你的手写清单像被风吹散。你尽力补洞，却发现资源像潮水退去，留下空白与难堪。你深呼吸，告诉自己还有机会，只是校庆的脚步已比想象更快。" },
+      { week: 12, target: 75, title: "执行崩塌", text: "排练接连出错，人员与流程像齿轮错位，彼此磨损。你试图把所有人拉回同一个节拍，却发现疲惫已经掏空了士气。你看着空荡的舞台，心里不再是绝望，而是明白需要重整旗鼓。" },
+      { week: 16, target: 100, title: "临门止步", text: "你距离完成只差最后一步，却在关键节点被堵住。报表、审批、物资，像一道道看不见的墙。你已经走到这里，仍被迫停下脚步，心里却很清楚：这不是失败，只是这一次，你没有跨过终点线。" }
+    ];
+
+    const mainlineSuccessText = "【校庆当日】舞台灯光铺满操场，你在展台与舞台间穿行，熟悉的名字在耳边交错。你知道自己用20周把故事推到这里，校庆的喧闹像浪潮把你托起，终于走到可以拥抱结局的时刻。";
 
     const guyProfiles = {
       B: {
@@ -415,7 +434,7 @@
 
     const achievements = [
       { id: "study7", name: "学霸养成", desc: "连续学习7天", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7 },
-      { id: "firstDate", name: "第一次约会", desc: "完成任意男主约会", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.flags.firstDate },
+      { id: "firstDate", name: "第一次见面", desc: "完成任意男主见面", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.flags.firstDate },
       { id: "secret", name: "揭开秘密", desc: "任意男主故事解锁到核心真相", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.storyTier === 2 && g.storyIndex >= 3) },
       { id: "project50", name: "校庆推进50%", desc: "企划进度达到50%", reward: "能量小饼干", rewardItem: "snack", check: (s) => s.resources.project >= 50 },
       { id: "triangle", name: "三人修罗场存活", desc: "同日触发两位男主事件", reward: "回溯+1", rewardRewind: 1, check: (s) => s.flags.triangle },
@@ -567,9 +586,9 @@
     };
 
     const tasks = [
-      { id: "study", name: "学习", desc: "学业+6 心情-1 精力-10", effect: (s) => { addResource(s, "study", 6); addResource(s, "mood", -1); addResource(s, "energy", -10); s.streaks.study++; },
+      { id: "study", name: "学习", desc: "学业+3~6 社团效率+1 心情-1 精力-10", effect: (s) => { const gain = 3 + Math.floor(Math.random() * 4); addResource(s, "study", gain); addResource(s, "clubEff", 1); addResource(s, "mood", -1); addResource(s, "energy", -10); s.streaks.study++; },
         condition: () => true },
-      { id: "club", name: "社团", desc: "心情+5 企划+3 精力-9", effect: (s) => { addResource(s, "mood", 5); addResource(s, "project", 3); addResource(s, "energy", -9); s.stats.club++; s.streaks.study = 0; },
+      { id: "club", name: "社团", desc: "心情+1 企划+2+效率系数 精力-9", effect: (s) => { const bonus = Math.floor(s.resources.clubEff / 5); addResource(s, "mood", 1); addResource(s, "project", 2 + bonus); addResource(s, "energy", -9); s.stats.club++; s.streaks.study = 0; },
         condition: () => true },
       { id: "parttime", name: "打工", desc: "金钱+30 心情-2 精力-14", effect: (s) => { addResource(s, "money", 30); addResource(s, "mood", -2); addResource(s, "energy", -14); s.stats.partTime++; s.streaks.study = 0; },
         condition: () => true },
@@ -588,7 +607,7 @@
     const tutorialSteps = [
       "欢迎来到粉黑乙女校园！左侧是资源面板、任务与成就入口。",
       "一天有3次行动：学习/社团/打工/休息/见面/校庆推进等。",
-      "主线目标是3个月内完成校庆企划，进度条与周目标会提示你。",
+      "主线目标是20周内完成校庆企划，进度条与阶段目标会提示你。",
       "右侧是男主好感与信任，提升后可解锁背景故事层层秘密。",
       "顶部可存档/读档，成就会奖励道具或回溯券。",
       "回溯券可在关键时刻救场，放心探索选择！"
@@ -601,7 +620,7 @@
       actionsPerDay: 3,
       actionsTaken: 0,
       storyLog: ["新学期第1周，你作为转学/返校生踏进校园。一天有3次行动。校庆企划的消息铺天盖地。"],
-      resources: { energy: 80, money: 100, mood: 60, study: 50, project: 0 },
+      resources: { energy: 80, money: 100, mood: 60, study: 50, project: 0, clubEff: 0 },
       inventory: ["snack", "meal"],
       achievements: [],
       guys: {
@@ -618,7 +637,8 @@
       daySummary: null,
       forcedRest: false,
       flags: { firstDate: false, triangle: false, nameHintShown: false },
-      settings: { showMainlineWarning: true }
+      settings: { showMainlineWarning: true },
+      gameOver: false
     });
 
     let state = stateTemplate();
@@ -650,14 +670,16 @@
       money: { value: document.getElementById("moneyValue"), bar: document.getElementById("moneyBar") },
       mood: { value: document.getElementById("moodValue"), bar: document.getElementById("moodBar") },
       study: { value: document.getElementById("studyValue"), bar: document.getElementById("studyBar") },
-      project: { value: document.getElementById("projectValue"), bar: document.getElementById("projectBar") }
+      project: { value: document.getElementById("projectValue"), bar: document.getElementById("projectBar") },
+      clubEff: { value: document.getElementById("clubEffValue"), bar: document.getElementById("clubEffBar") }
     };
     const resourceLabels = {
       energy: "精力",
       money: "金钱",
       mood: "心情",
       study: "学业",
-      project: "企划进度"
+      project: "企划进度",
+      clubEff: "社团效率"
     };
 
     const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
@@ -785,6 +807,9 @@
         resourceMap[key].bar.style.width = `${value}%`;
       });
       document.getElementById("weekGoal").textContent = weekGoals[state.week - 1] || "";
+      const stageIndex = Math.min(Math.floor((state.week - 1) / 4) + 1, 5);
+      const stageLabel = stageIndex <= 4 ? `阶段${stageIndex}/4 · 第${stageIndex * 4}周结算` : "阶段5/5 · 校庆当日";
+      document.getElementById("stageInfo").textContent = `主线阶段：${stageLabel} · 当前进度${state.resources.project}%`;
     }
 
     function renderCharacters() {
@@ -893,7 +918,7 @@
     }
 
     function triggerTriangleEvent() {
-      const candidates = Object.keys(state.guys).filter((id) => state.guys[id].affection >= 55 && state.guys[id].affection < 80);
+      const candidates = Object.keys(state.guys).filter((id) => state.guys[id].unlocked && state.guys[id].affection >= 55 && state.guys[id].affection < 80);
       if (candidates.length < 2) return false;
       const chance = Math.min(0.2, 0.12 + (candidates.length - 2) * 0.04);
       if (Math.random() > chance) return false;
@@ -1050,6 +1075,20 @@
       }
     }
 
+    function checkMainlineCheckpoint() {
+      const prevWeek = state.week - 1;
+      const stage = mainlineStages.find((item) => item.week === prevWeek);
+      if (!stage) return false;
+      if (state.resources.project < stage.target) {
+        state.gameOver = true;
+        state.storyLog.push(`【失败结局·${stage.title}】${stage.text}`);
+        renderAll();
+        renderChoices([{ label: "返回标题", onClick: showTitle }]);
+        return true;
+      }
+      return false;
+    }
+
     function finalizeDay() {
       applyNightRecovery();
       if (state.forcedRest) {
@@ -1061,6 +1100,9 @@
         checkUnlocks();
         if (state.day % 7 === 1) {
           state.storyLog.push(`【周总结】第${state.week - 1}周结束，企划进度${state.resources.project}%。`);
+          if (checkMainlineCheckpoint()) {
+            return;
+          }
         }
       }
       state.actionsTaken = 0;
@@ -1112,6 +1154,7 @@
         renderChoices([{ label: "返回标题", onClick: showTitle }]);
         return;
       }
+      state.storyLog.push(mainlineSuccessText);
 
       const endings = [];
       if (mainSuccess) {
@@ -1193,8 +1236,10 @@
         state.flags.nameHintShown = true;
         document.getElementById("nameHintModal").classList.add("active");
       }
-      if (state.day <= maxDay) {
+      if (!state.gameOver && state.day <= maxDay) {
         renderChoices(getDefaultChoices());
+      } else if (state.gameOver) {
+        renderChoices([{ label: "返回标题", onClick: showTitle }]);
       }
     }
 
@@ -1313,6 +1358,7 @@
         }
         if (!state.settings) state.settings = { showMainlineWarning: true };
         if (!state.flags) state.flags = { firstDate: false, triangle: false, nameHintShown: false };
+        if (state.gameOver == null) state.gameOver = false;
         checkUnlocks();
         state.storyLog.push(`【读档】已读取存档位${slot}。`);
       } else {
