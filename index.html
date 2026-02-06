@@ -223,6 +223,7 @@
     <button class="btn" id="openTutorial">帮助/教程</button>
     <button class="btn" id="renamePlayer">修改名字</button>
     <button class="btn" id="openSettings">设置</button>
+    <button class="btn" id="openShop">商店</button>
   </header>
 
   <div class="container">
@@ -337,6 +338,15 @@
     </div>
   </div>
 
+  <div class="modal" id="shopModal">
+    <div class="modal-content">
+      <h2>商店</h2>
+      <div class="small">当前金钱：<span id="shopMoney">0</span></div>
+      <div id="shopList" class="inventory"></div>
+      <button class="btn" id="closeShop">关闭</button>
+    </div>
+  </div>
+
   <footer>粉黑乙女风 · 现代校园 · 一天3次行动 · 20周一周目 Demo</footer>
 
   <script>
@@ -420,8 +430,12 @@
     const items = {
       snack: { name: "能量小饼干", type: "补给", desc: "精力+15", effect: (state) => addResource(state, "energy", 15) },
       meal: { name: "食堂热餐", type: "补给", desc: "精力+25", effect: (state) => addResource(state, "energy", 25) },
-      bento: { name: "便当盒", type: "补给", desc: "精力+30 心情+4", effect: (state) => { addResource(state, "energy", 30); addResource(state, "mood", 4); } },
-      tonic: { name: "补给饮", type: "补给", desc: "精力+40 心情+2", effect: (state) => { addResource(state, "energy", 40); addResource(state, "mood", 2); } },
+      bento: { name: "便当盒", type: "补给", desc: "精力+15", effect: (state) => { addResource(state, "energy", 15); } },
+      tonic: { name: "能量饮料", type: "补给", desc: "精力+20", effect: (state) => { addResource(state, "energy", 20); } },
+      coffee: { name: "咖啡", type: "补给", desc: "学习效率+1（学业+1）", effect: (state) => { addResource(state, "study", 1); } },
+      bookmark: { name: "书签", type: "礼物", desc: "送给白澤凛司，好感+3", effect: (state) => giftTo(state, "A", 3) },
+      sweets: { name: "手作点心", type: "礼物", desc: "送给浅羽朔，好感+3", effect: (state) => giftTo(state, "B", 3) },
+      headset: { name: "黑色耳机", type: "礼物", desc: "送给久世伶，好感+3", effect: (state) => giftTo(state, "C", 3) },
       note: { name: "灵感便笺", type: "补给", desc: "企划进度+6", effect: (state) => addResource(state, "project", 6) },
       charm: { name: "黑桃发夹", type: "礼物", desc: "送给白澤凛司，好感+6", effect: (state) => giftTo(state, "A", 6) },
       soda: { name: "草莓汽水", type: "礼物", desc: "送给浅羽朔，好感+6", effect: (state) => giftTo(state, "B", 6) },
@@ -431,6 +445,15 @@
       clueB: { name: "B的旧照片", type: "线索", desc: "解锁B的背景故事", effect: (state) => addClue(state, "B") },
       clueC: { name: "C的广播手稿", type: "线索", desc: "解锁C的背景故事", effect: (state) => addClue(state, "C") }
     };
+
+    const shopItems = [
+      { id: "bookmark", name: "书签", cost: 18, desc: "凛司好感+3" },
+      { id: "sweets", name: "手作点心", cost: 18, desc: "朔好感+3" },
+      { id: "headset", name: "黑色耳机", cost: 22, desc: "伶好感+3" },
+      { id: "tonic", name: "能量饮料", cost: 15, desc: "精力+20" },
+      { id: "bento", name: "便当", cost: 12, desc: "精力+15" },
+      { id: "coffee", name: "咖啡", cost: 14, desc: "学习效率+1" }
+    ];
 
     const achievements = [
       { id: "study7", name: "学霸养成", desc: "连续学习7天", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7 },
@@ -586,17 +609,17 @@
     };
 
     const tasks = [
-      { id: "study", name: "学习", desc: "学业+3~6 社团效率+1 心情-1 精力-10", effect: (s) => { const gain = 3 + Math.floor(Math.random() * 4); addResource(s, "study", gain); addResource(s, "clubEff", 1); addResource(s, "mood", -1); addResource(s, "energy", -10); s.streaks.study++; },
+      { id: "study", name: "学习", desc: "学业+3~6 社团效率+1 心情-1 精力-12", effect: (s) => { const gain = 3 + Math.floor(Math.random() * 4); addResource(s, "study", gain); addResource(s, "clubEff", 1); addResource(s, "mood", -1); addResource(s, "energy", -12); s.streaks.study++; },
         condition: () => true },
-      { id: "club", name: "社团", desc: "心情+1 企划+2+效率系数 精力-9", effect: (s) => { const bonus = Math.floor(s.resources.clubEff / 5); addResource(s, "mood", 1); addResource(s, "project", 2 + bonus); addResource(s, "energy", -9); s.stats.club++; s.streaks.study = 0; },
+      { id: "club", name: "社团", desc: "心情+1 企划+2+效率系数 精力-10", effect: (s) => { const bonus = Math.floor(s.resources.clubEff / 5); addResource(s, "mood", 1); addResource(s, "project", 2 + bonus); addResource(s, "energy", -10); s.stats.club++; s.streaks.study = 0; },
         condition: () => true },
-      { id: "parttime", name: "打工", desc: "金钱+30 心情-2 精力-14", effect: (s) => { addResource(s, "money", 30); addResource(s, "mood", -2); addResource(s, "energy", -14); s.stats.partTime++; s.streaks.study = 0; },
+      { id: "parttime", name: "打工", desc: "金钱+20~+40 心情-2 精力-16", effect: (s) => { const gain = 20 + Math.floor(Math.random() * 21); addResource(s, "money", gain); addResource(s, "mood", -2); addResource(s, "energy", -16); s.stats.partTime++; s.streaks.study = 0; },
         condition: () => true },
       { id: "rest", name: "休息", desc: "精力+35 心情+4（有概率额外+5）", effect: (s) => { addResource(s, "energy", 35); addResource(s, "mood", 4); if (Math.random() < 0.35) addResource(s, "mood", 5); s.stats.rest++; s.streaks.study = 0; },
         condition: () => true },
-      { id: "date", name: "见面", desc: "与男主互动 好感/信任↑ 精力-8 心情+5", effect: (s) => { s.flags.firstDate = true; },
+      { id: "date", name: "见面", desc: "与男主互动 好感/信任↑ 精力-8 心情+3", effect: (s) => { s.flags.firstDate = true; },
         condition: (s) => s.day >= 3 },
-      { id: "project", name: "校庆推进", desc: "企划+10 精力-12 心情-1", effect: (s) => { addResource(s, "project", 10); addResource(s, "energy", -12); addResource(s, "mood", -1); s.stats.projectTasks++; s.streaks.study = 0; },
+      { id: "project", name: "校庆推进", desc: "企划+10 精力-14 心情-1（需资金支持）", effect: (s) => { applyProjectProgress(s); addResource(s, "energy", -14); addResource(s, "mood", -1); s.stats.projectTasks++; s.streaks.study = 0; },
         condition: () => true },
       { id: "useItem", name: "使用道具", desc: "使用背包内道具", effect: () => {}, condition: (s) => s.inventory.length > 0 },
       { id: "emergencyRest", name: "强制休整", desc: "精力+40 心情+3（低精力时解锁）", effect: (s) => { addResource(s, "energy", 40); addResource(s, "mood", 3); s.stats.rest++; }, condition: (s) => s.resources.energy < 25 },
@@ -730,6 +753,19 @@
       if (key === "project") {
         s.resources.project = clamp(s.resources.project, 0, 100);
         checkMilestones(s);
+      }
+    }
+
+    function applyProjectProgress(s) {
+      const costs = [8, 10, 12];
+      const cost = costs[s.stats.projectTasks % costs.length];
+      if (s.resources.money < cost) {
+        s.storyLog.push("【资金不足】海报费/布景费/宣传费未凑齐，本次推进受阻。");
+        addResource(s, "project", 2);
+      } else {
+        addResource(s, "money", -cost);
+        addResource(s, "project", 10);
+        s.storyLog.push(`【资金支出】支付${cost}金，推进顺利。`);
       }
     }
 
@@ -936,12 +972,34 @@
     function startMeeting(guyId) {
       tasks.find((t) => t.id === "date").effect(state);
       addResource(state, "energy", -8);
-      addResource(state, "mood", 5);
+      addResource(state, "mood", 3);
+      if (state.guys[guyId].affection >= 60) {
+        addResource(state, "energy", 3);
+      }
       const pool = meetingEvents[guyId];
       const event = pool[Math.floor(Math.random() * pool.length)];
       const callName = getCallName(guyId, state.guys[guyId].affection, state.guys[guyId].trust);
       const text = event.text.replace("{callName}", callName);
       state.storyLog.push(`【${guyProfiles[guyId].name}见面】${text}`);
+      const giftOptions = getGiftOptions(guyId);
+      if (giftOptions.length) {
+        const giftChoices = giftOptions.map((gift) => ({
+          label: `赠送${items[gift].name}（+3好感）`,
+          onClick: () => {
+            useItem(gift);
+            removeItem(gift);
+            state.storyLog.push(`你递出${items[gift].name}，对方视线微微一顿。`);
+            renderMeetingChoices(event, guyId);
+          }
+        }));
+        giftChoices.push({ label: "不送礼物", onClick: () => renderMeetingChoices(event, guyId) });
+        renderChoices(giftChoices);
+      } else {
+        renderMeetingChoices(event, guyId);
+      }
+    }
+
+    function renderMeetingChoices(event, guyId) {
       const optionChoices = event.options.map((option) => ({
         label: `${option.label}（${option.tags.join("/")}）`,
         onClick: () => {
@@ -953,6 +1011,19 @@
         }
       }));
       renderChoices(optionChoices);
+    }
+
+    function getGiftOptions(guyId) {
+      const giftMap = { A: "bookmark", B: "sweets", C: "headset" };
+      const giftId = giftMap[guyId];
+      return state.inventory.includes(giftId) ? [giftId] : [];
+    }
+
+    function removeItem(itemId) {
+      const index = state.inventory.indexOf(itemId);
+      if (index >= 0) {
+        state.inventory.splice(index, 1);
+      }
     }
 
     function applyMeetingChoice(guyId, tags) {
@@ -1225,6 +1296,38 @@
       }
     }
 
+    function openShop() {
+      document.getElementById("shopMoney").textContent = state.resources.money;
+      const list = document.getElementById("shopList");
+      list.innerHTML = shopItems.map((item) => {
+        const canBuy = state.resources.money >= item.cost;
+        return `
+          <div class="item">
+            <strong>${item.name}</strong>
+            <span class="badge">¥${item.cost}</span>
+            <div class="small">${item.desc}</div>
+            <button class="btn" data-id="${item.id}" ${canBuy ? "" : "disabled"}>购买</button>
+          </div>
+        `;
+      }).join("");
+      list.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          const item = shopItems.find((entry) => entry.id === id);
+          if (!item) return;
+          if (state.resources.money < item.cost) {
+            state.storyLog.push("金钱不足，无法购买。");
+            renderAll();
+            return;
+          }
+          addResource(state, "money", -item.cost);
+          gainItem(state, id);
+          openShop();
+        });
+      });
+      document.getElementById("shopModal").classList.add("active");
+    }
+
     function renderAll() {
       renderResources();
       renderCharacters();
@@ -1359,6 +1462,7 @@
         if (!state.settings) state.settings = { showMainlineWarning: true };
         if (!state.flags) state.flags = { firstDate: false, triangle: false, nameHintShown: false };
         if (state.gameOver == null) state.gameOver = false;
+        if (state.resources.clubEff == null) state.resources.clubEff = 0;
         checkUnlocks();
         state.storyLog.push(`【读档】已读取存档位${slot}。`);
       } else {
@@ -1373,6 +1477,7 @@
     document.getElementById("toTitle").addEventListener("click", showTitle);
     document.getElementById("openTutorial").addEventListener("click", () => openTutorial(0));
     document.getElementById("renamePlayer").addEventListener("click", () => openNameModal("rename"));
+    document.getElementById("openShop").addEventListener("click", () => openShop());
     document.getElementById("openSettings").addEventListener("click", () => {
       document.getElementById("toggleMainlineWarning").checked = state.settings.showMainlineWarning;
       settingsModal.classList.add("active");
@@ -1415,6 +1520,9 @@
     });
     document.getElementById("closeSettings").addEventListener("click", () => {
       settingsModal.classList.remove("active");
+    });
+    document.getElementById("closeShop").addEventListener("click", () => {
+      document.getElementById("shopModal").classList.remove("active");
     });
 
     // 如何添加新事件/新道具/新成就/新行动：
