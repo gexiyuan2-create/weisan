@@ -220,16 +220,18 @@
     <button class="btn" id="saveGame">存档</button>
     <button class="btn" id="loadGame">读档</button>
     <button class="btn" id="toTitle">返回标题</button>
-    <button class="btn" id="openTutorial">帮助/教程</button>
-    <button class="btn" id="renamePlayer">修改名字</button>
-    <button class="btn" id="openSettings">设置</button>
-    <button class="btn" id="openShop">商店</button>
+<button class="btn" id="openTutorial">帮助/教程</button>
+<button class="btn" id="renamePlayer">修改名字</button>
+<button class="btn" id="openSettings">设置</button>
+<button class="btn" id="openShop">商店</button>
+
   </header>
 
   <div class="container">
     <aside class="panel">
       <h2>资源面板</h2>
-      <div class="small" id="actionInfo"></div>
+<div class="small" id="actionInfo"></div>
+
       <div class="stat">精力 <span id="energyValue">0</span><div class="bar"><span id="energyBar"></span></div></div>
       <div class="stat">金钱 <span id="moneyValue">0</span><div class="bar"><span id="moneyBar"></span></div></div>
       <div class="stat">心情 <span id="moodValue">0</span><div class="bar"><span id="moodBar"></span></div></div>
@@ -352,7 +354,7 @@
   <script>
     const maxDay = 140;
     const maxWeek = 20;
-    const defaultName = "未散";
+    const defaultName = "新同学";
 
     const weekGoals = [
       "第1周：立项准备，稳住节奏",
@@ -386,6 +388,12 @@
       { threshold: 58, text: "【主线】第一次彩排，浅羽朔把气氛带得像派对。" },
       { threshold: 66, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
       { threshold: 74, text: "【主线】二轮彩排，久世伶的台词改得更“贴近你”。" },
+      { threshold: 26, text: "【主线】赞助谈判开局，A默默递来预算模板。" },
+      { threshold: 34, text: "【主线】节目定案：三男主联动的校园舞台剧。" },
+      { threshold: 50, text: "【主线】展台制作开工，材料清单排到爆。" },
+      { threshold: 58, text: "【主线】第一次彩排，B把气氛带得像派对。" },
+      { threshold: 66, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
+      { threshold: 74, text: "【主线】二轮彩排，C的台词改得更“贴近你”。" },
       { threshold: 82, text: "【主线】物资到位，展台初成型。" },
       { threshold: 90, text: "【主线】最终彩排，你站在舞台中央。" },
       { threshold: 100, text: "【主线】校庆当日，所有人都在等你的指挥。" }
@@ -482,6 +490,9 @@
     const achievements = [
       { id: "study7", name: "学霸养成", desc: "连续学习7天", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7 },
       { id: "firstDate", name: "第一次见面", desc: "完成任意男主见面", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.flags.firstDate },
+    const achievements = [
+      { id: "study7", name: "学霸养成", desc: "连续学习7天", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7 },
+      { id: "firstDate", name: "第一次约会", desc: "完成任意男主约会", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.flags.firstDate },
       { id: "secret", name: "揭开秘密", desc: "任意男主故事解锁到核心真相", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.storyTier === 2 && g.storyIndex >= 3) },
       { id: "project50", name: "校庆推进50%", desc: "企划进度达到50%", reward: "能量小饼干", rewardItem: "snack", check: (s) => s.resources.project >= 50 },
       { id: "triangle", name: "三人修罗场存活", desc: "同日触发两位男主事件", reward: "回溯+1", rewardRewind: 1, check: (s) => s.flags.triangle },
