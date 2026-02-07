@@ -241,9 +241,9 @@
       <div class="stat">金钱 <span id="moneyValue">0</span><div class="bar"><span id="moneyBar"></span></div></div>
       <div class="stat">心情 <span id="moodValue">0</span><div class="bar"><span id="moodBar"></span></div></div>
       <div class="stat">学业 <span id="studyValue">0</span><div class="bar"><span id="studyBar"></span></div></div>
-      <div class="stat">企划进度 <span id="projectValue">0</span><div class="bar"><span id="projectBar"></span></div></div>
+      <div class="stat">主线进度 <span id="projectValue">0</span><div class="bar"><span id="projectBar"></span></div></div>
       <div class="stat">社团效率 <span id="clubEffValue">0</span><div class="bar"><span id="clubEffBar"></span></div></div>
-      <div class="small" id="projectHint">未达标将直接失败</div>
+      <div class="small" id="projectHint">社团为唯一主线推进途径 · 未达标将直接失败</div>
       <div class="small" id="stageInfo"></div>
       <div class="small" id="weekGoal"></div>
       <hr />
@@ -404,31 +404,38 @@
     const mainlineStages = [
       {
         week: 4,
-        target: 25,
+        target: 20,
         title: "立项未通过",
         text: "立项评审会上，方案被指出流程不清、预算不完整，老师要求先补齐材料再讨论。你看见同学们的期待慢慢变成迟疑，会议室里只剩翻纸的声音。你知道这不是终点，但必须先把资料整理清楚，再重新争取通过。",
         passText: "【阶段过场】老师翻完材料，点头说：“立项先通过，后续细化。”你松了口气，赶紧记下要补的细节。有人小声说：“终于能动起来了。”你回到走廊，给社团群发了进度，提醒大家先把分工表更新。"
       },
       {
         week: 8,
-        target: 50,
+        target: 45,
         title: "资源断裂",
         text: "赞助名单被退回，材料报价也上涨，你手里的清单一改再改。你努力补缺口，却发现能用的资源越来越少。你深吸一口气，告诉自己还有机会，只是校庆的时间比预想更紧。",
         passText: "【阶段过场】你把更新后的赞助表贴在白板上，和同学逐条确认费用。有人问：“进度还稳吗？”你点头：“先顶住，再想办法。”浅羽朔笑着说：“那就一起扛。”你拿起笔，把下一周的任务分到每个人手里。"
       },
       {
         week: 12,
-        target: 75,
+        target: 70,
         title: "执行崩塌",
         text: "排练接连出错，人员安排和流程对不上，问题越堆越多。你试着把大家拉回同一节奏，却发现疲惫已经影响了士气。你看着空荡的舞台，知道必须重新梳理流程，把执行细节再抓紧。",
         passText: "【阶段过场】你和同学把道具清点一遍，重新按流程摆好位置。白澤凛司递来新版流程表：“先把节奏找回来。”你点头：“我会盯住。”有人在后台说：“再练一次就好。”你把名单贴在墙上，重新排了时间。"
       },
       {
         week: 16,
-        target: 100,
+        target: 90,
         title: "临门止步",
         text: "你距离完成只差最后一步，却被审批与物资卡住。报表、签字、采购清单一条条压下来，让你不得不停下脚步。你已经走到这里，只能承认这次没能跨过终点线。",
         passText: "【阶段过场】你在清单上勾完最后一项，抬头时看见大家表情放松。有人说：“终于齐了。”你答：“还剩冲刺。”久世伶在一旁补一句：“宣传位我会守着。”你把文件收好，提醒自己最后一段更要稳。"
+      },
+      {
+        week: 20,
+        target: 100,
+        title: "冲刺未达标",
+        text: "校庆当天的清单还空着几项，你跑完最后一圈确认，却发现关键物资和流程没能及时补齐。你看着操场的灯光一点点亮起，心里明白这一次还是差了一口气。",
+        passText: "【阶段过场】你把最后一份表格交到老师手里，确认清单全部到位。有人问：“还能撑住吗？”你笑着回：“最后一周了，稳住就好。”你整理好对讲机和日程表，带着大家进入最终冲刺。"
       }
     ];
 
@@ -593,31 +600,31 @@
     };
 
     const randomEvents = [
-      { id: "energyLow", condition: (s) => s.resources.energy <= 30, text: "午后楼道有风，你靠墙缓口气。路过的同学把水递过来，说：“喝点水再走。”你接过来点头：“谢谢，我调整一下。”他还叮嘱你别逞强，你把水瓶拧紧，提醒自己先稳住状态。", effect: (s) => addResource(s, "energy", 10) },
-      { id: "moodLow", condition: (s) => s.resources.mood <= 30, text: "放学后你在教室收作业，心情有点闷。班长经过问：“还好吗？”你回：“有点累，缓一缓就好。”他点头：“需要帮忙就说。”你把桌面理好，深呼吸了一下，情绪稍微松了点。", effect: (s) => addResource(s, "mood", 8) },
-      { id: "moneyLow", condition: (s) => s.resources.money <= 20, text: "兼职群发来临时加班，你看了几秒还是点了报名。对方很快回复：“明天放学后来。”你回：“好的。”你把时间记在本子上，心里记着海报费要先补上。", effect: (s) => addResource(s, "money", 30) },
-      { id: "studyHigh", condition: (s) => s.resources.study >= 70, text: "自习课上，你把笔记整理得很清楚。老师走过来说：“这份笔记很规范。”同桌小声问：“能借我看看吗？”你点头：“可以，记得还我。”你把页码标好，心情稍微好了些。", effect: (s) => addResource(s, "mood", 5) },
-      { id: "projectPush", condition: (s) => s.resources.project >= 40, text: "你把流程卡片贴在白板上，同学围过来确认顺序。有人说：“这次清楚多了。”你回：“按这个推进就稳。”你顺手把下一步分工写在角落，大家看完后点了点头。", effect: (s) => addResource(s, "project", 4) },
-      { id: "giftDrop", condition: () => true, text: "社团柜子里多了个纸袋，你打开看到一张便签：“别太累。”你左右看了看，没找到是谁放的。你把纸袋收好，顺手把便签夹进本子里，心里对这份心意记了一笔。", effect: (s) => tryDropItem(s, "ticket", "随机事件") },
-      { id: "library", condition: () => true, text: "图书馆很安静，你摊开企划资料做记录。管理员路过提醒：“别太晚。”你回：“我马上收。”你把要点整理成清单，又在便利贴上写了进度，思路清楚了不少。", effect: (s) => { addResource(s, "study", 4); addResource(s, "project", 2); } },
-      { id: "canteen", condition: () => true, text: "食堂排队的人很多，你端着套餐坐下。有人认出你在做校庆，笑着说：“辛苦了。”你回：“还好，大家一起。”热汤下肚，心情稍微回暖，你把盘子收好准备继续。", effect: (s) => addResource(s, "mood", 6) },
-      { id: "rain", condition: () => true, text: "下雨了，你刚出门就发现伞不够。三把伞从不同方向递过来，有人说：“别淋到。”另一个补一句：“路滑。”你接住伞道谢，说“我没事”，他们还是把伞往你这边靠了一点。", effect: (s) => { addAffection(s, "A", 1); addAffection(s, "B", 1); addAffection(s, "C", 1); s.flags.triangle = true; } },
-      { id: "broadcast", condition: () => true, text: "广播站播报校庆提醒，你听到自己的名字被点到。旁边同学抬头问：“是你负责的吗？”你回：“嗯，是我。”他点头：“那就加油。”你把广播内容记在本子里，准备下次调整。", effect: (s) => addResource(s, "mood", 5) },
-      { id: "campusCat", condition: () => true, text: "操场边的猫蹭到你脚边，你蹲下摸了摸。路过的同学笑：“它挑人。”你回：“那我算运气好。”你拍了拍衣服站起来，心里轻松了一点。", effect: (s) => addResource(s, "energy", 5) },
-      { id: "poster", condition: () => true, text: "公告栏前有人停下看海报，你走近把边角重新压平。学弟说：“这个节目很想看。”你回：“欢迎来。”你把二维码贴直，又补上联系方式，心里踏实了些。", effect: (s) => addResource(s, "project", 3) },
-      { id: "rumor", condition: (s) => s.resources.mood <= 40, text: "走廊角落有人议论校庆压力，你的名字被带到。你没有停下，只是把资料抱紧。有人看见你，尴尬地说：“我们只是随便说说。”你点头：“我知道。”然后去办公室交表。", effect: (s) => addResource(s, "mood", 4) },
-      { id: "clinic", condition: (s) => s.resources.energy <= 25, text: "你到校医室测体温，校医递来温水：“先坐会儿。”你回：“我只是有点累。”她说：“别硬扛。”你点头，休息片刻后精神回了一点，也把注意事项记在心里。", effect: (s) => addResource(s, "energy", 12) },
-      { id: "bonus", condition: (s) => s.resources.money >= 120, text: "你检查账目时发现结余多一点，便把一部分预算转去物资。负责同学说：“这样真的够吗？”你回：“先把关键项补齐。”你把清单标红，剩余的钱留作机动，进度又推进了一些。", effect: (s) => { addResource(s, "money", -20); addResource(s, "project", 4); } },
-      { id: "practice", condition: (s) => s.resources.project >= 60, text: "排练场灯亮起，你把队形重新确认一遍。负责同学说：“这次顺了。”你回：“按这个节奏走。”你把道具位置写到台边纸上，提醒大家下次提前到。", effect: (s) => addResource(s, "project", 4) },
-      { id: "sleepy", condition: (s) => s.resources.energy <= 40, text: "午休时你趴在桌上眯了一会儿，铃声响起才起身。同桌笑你：“终于醒了。”你回：“我没睡太久。”你喝了口水，收拾好书包，短短的休息让你缓过劲。", effect: (s) => addResource(s, "energy", 8) },
-      { id: "volunteer", condition: () => true, text: "新生志愿者来帮忙搬物料，你指给他们位置。有人问：“这样放可以吗？”你回：“可以，辛苦了。”你在名单上勾掉已完成的项目，人手多了，任务压力小了些。", effect: (s) => addResource(s, "project", 2) }
+      { id: "energyLow", condition: (s) => s.resources.energy <= 30, text: "午后楼道有风，你靠墙缓口气。路过的同学把水递过来：“先喝口水。”你点头道谢，把水拧开慢慢喝了几口。", effect: (s) => addResource(s, "energy", 10) },
+      { id: "moodLow", condition: (s) => s.resources.mood <= 30, text: "放学后你在教室收作业，情绪有点闷。班长经过问：“还好吗？”你回：“有点累，缓一缓就好。”他点头：“需要帮忙说一声。”", effect: (s) => addResource(s, "mood", 8) },
+      { id: "moneyLow", condition: (s) => s.resources.money <= 20, text: "兼职群发来临时加班，你看了几秒还是点了报名。对方很快回复：“明天放学后来。”你回：“好的。”把时间记在本子上。", effect: (s) => addResource(s, "money", 30) },
+      { id: "studyHigh", condition: (s) => s.resources.study >= 70, text: "自习课上你把笔记整理了一遍，同桌问能不能借看。你点头：“记得还我。”他把页码标好，小声说晚点抄完就还。", effect: (s) => addResource(s, "mood", 5) },
+      { id: "projectPush", condition: (s) => s.resources.project >= 40, text: "你把流程卡片贴在白板上，同学围过来确认顺序。有人说要把两个环节换一下，你点头让他先写在便签上。", effect: (s) => addResource(s, "project", 4) },
+      { id: "giftDrop", condition: () => true, text: "社团柜子里多了个纸袋，你打开看到一张便签：“别太累。”你左右看了看，没找到是谁放的。你把纸袋收好，顺手把便签夹进本子里。", effect: (s) => tryDropItem(s, "ticket", "随机事件") },
+      { id: "library", condition: () => true, text: "图书馆很安静，你摊开企划资料做记录。管理员路过提醒：“别太晚。”你回：“我马上收。”你把要点整理成清单。", effect: (s) => { addResource(s, "study", 4); addResource(s, "project", 2); } },
+      { id: "canteen", condition: () => true, text: "食堂排队的人很多，你端着套餐坐下。旁边同学说今天菜还行，你笑了下，边吃边把下午要做的事记在便签上。", effect: (s) => addResource(s, "mood", 6) },
+      { id: "rain", condition: () => true, text: "下雨了，你刚出门就发现伞不够。几把伞从不同方向递过来，有人提醒“路滑”，你接住伞道谢，跟着一起往教学楼走。", effect: (s) => { addAffection(s, "A", 1); addAffection(s, "B", 1); addAffection(s, "C", 1); s.flags.triangle = true; } },
+      { id: "broadcast", condition: () => true, text: "广播站播报校庆提醒，你听到自己的名字被点到。旁边同学抬头问是不是你负责，你点头说“是我”，顺手把时间记在本子上。", effect: (s) => addResource(s, "mood", 5) },
+      { id: "campusCat", condition: () => true, text: "操场边的猫蹭到你脚边，你蹲下摸了摸。路过的同学笑说它很黏人，你拍拍猫的背，起身继续走。", effect: (s) => addResource(s, "energy", 5) },
+      { id: "poster", condition: () => true, text: "公告栏前有人停下看海报，你走近把边角重新压平。学弟问二维码扫哪一个，你指给他看，顺手把联系方式贴直。", effect: (s) => addResource(s, "project", 3) },
+      { id: "rumor", condition: (s) => s.resources.mood <= 40, text: "走廊角落有人议论校庆压力，你的名字被带到。你没有停下，只是把资料抱紧。对方看见你，有点尴尬地收了话。", effect: (s) => addResource(s, "mood", 4) },
+      { id: "clinic", condition: (s) => s.resources.energy <= 25, text: "你到校医室测体温，校医递来温水：“先坐会儿。”你回：“我只是有点累。”她点头让你休息一会儿。", effect: (s) => addResource(s, "energy", 12) },
+      { id: "bonus", condition: (s) => s.resources.money >= 120, text: "你检查账目时发现结余多一点，就把一部分预算转去物资。负责同学问“这样够吗”，你说“先补关键项”。", effect: (s) => { addResource(s, "money", -20); addResource(s, "project", 4); } },
+      { id: "practice", condition: (s) => s.resources.project >= 60, text: "排练场灯亮起，你把队形重新确认一遍。负责同学把道具位置写到台边纸上，你点头让他贴在墙上。", effect: (s) => addResource(s, "project", 4) },
+      { id: "sleepy", condition: (s) => s.resources.energy <= 40, text: "午休时你趴在桌上眯了一会儿，铃声响起才起身。同桌笑你“醒了”，你回“嗯”，喝了口水继续整理资料。", effect: (s) => addResource(s, "energy", 8) },
+      { id: "volunteer", condition: () => true, text: "新生志愿者来帮忙搬物料，你指给他们位置。有人问“这样放可以吗”，你点头说可以，把清单上已完成的项目勾掉。", effect: (s) => addResource(s, "project", 2) }
     ];
 
     const meetingEvents = {
       B: [
         {
           id: "B_meet_1",
-          text: "操场晚风吹过，浅羽朔把运动外套搭在你肩上，笑意很轻却不散。他说起你刚转来那天，自己跑遍教学楼帮你找教室，像是在确认你真的回来了。夜色把灯光晕开，他却盯着你，不让你躲开。你心里泛起熟悉的温度，听见他问：“{callName}，今天还好吗？”你回道：“还行，只是有点累。”他点头：“累了就靠我一会儿。”",
+          text: "操场晚风吹过，浅羽朔把外套搭在你肩上，语气很自然：“顺路买了两瓶水，给你一瓶。”他说起你以前常走这条路，总会在灯下发呆，说他一眼就认出你的背影。你轻轻应了声，他看着你：“{callName}，今天还好吗？”你回：“还行，有点累。”他点头：“那慢一点走，我在外侧挡人流。”",
           options: [
             { label: "认真道谢，说你很感激他的陪伴。", tags: ["善良", "体贴", "坦率"] },
             { label: "笑着调侃他太黏人，提醒他也要照顾自己。", tags: ["边界感", "坦率"] },
@@ -736,7 +743,7 @@
       A: [
         {
           id: "A_meet_1",
-          text: "预算表摊在桌面上，白澤凛司的笔尖停在细小的数字偏差处。他抬眼，语气清晰：“这个位置要对齐。”你注意到他连纸边都整理得一丝不苟，像在守护规则。他把文件递给你时指节发白，像在压住焦躁。你心里轻轻一缩，听见他低低喊了一声“{callName}”。你答：“我会改好。”他点头：“谢谢。”",
+          text: "预算表摊在桌面上，白澤凛司把你漏掉的几项补在空格里，顺手把页码对齐。他抬眼说：“我先改完了，你再核一遍。”你注意到他把一杯温水推到你手边，“别一直盯屏幕。”你应了声“谢谢”，他只点头：“{callName}，早点收工。”",
           options: [
             { label: "认真记录并表示会马上修正。", tags: ["守规矩", "效率", "上进"] },
             { label: "轻声说谢谢他的校对，同时询问他是否需要休息。", tags: ["体贴", "尊重边界"] },
@@ -855,7 +862,7 @@
       C: [
         {
           id: "C_meet_1",
-          text: "广播站的玻璃窗映着你的倒影，久世伶推开门时脚步轻得像没声音。他把宣传位的排班表递给你，语气温柔：“我帮你留了最佳时段。”你明白这不是无条件好意，而是信息差后的选择。他的手指停在你名字旁边，像在确认归属。他低声重复：“{callName}。”你回：“谢谢。”他轻笑：“不用谢我，答应就好。”",
+          text: "广播站的玻璃窗映着你的倒影，久世伶推开门时脚步很轻。他把宣传位的排班表递给你：“我提前问了流程，能用的时段在这里。”他指了指你名字那一行，语气温和：“不想你跑来跑去。”你回了句“谢谢”，他笑了一下：“不用谢我，先把事情稳住。”",
           options: [
             { label: "顺着他的安排，表示愿意配合。", tags: ["信息差", "小谎言"] },
             { label: "试探他为什么愿意帮你。", tags: ["试探"] },
@@ -974,10 +981,10 @@
     };
 
     const tasks = [
-      { id: "study", name: "学习", desc: "学业+3~6 社团效率+1 心情-1 精力-10", effect: (s) => { const repeat = getRepeatPenalty("study"); const mods = getMoodEffectMultipliers(); const base = 3 + Math.floor(Math.random() * 4); const rawGain = Math.floor(base * mods.studyMultiplier * repeat.multiplier); const gain = Math.max(1, rawGain); const effGain = Math.max(0, Math.floor(1 * mods.studyMultiplier * repeat.multiplier)); addResource(s, "study", gain + s.buffs.nextStudyBonus); addResource(s, "clubEff", effGain); addResource(s, "mood", -1 - repeat.moodPenalty); addResource(s, "energy", -10); s.buffs.nextStudyBonus = 0; if (s.buffs.tutoringDays > 0) s.buffs.tutoringDays -= 1; s.streaks.study++; },
-        condition: (s) => s.resources.mood >= MOOD_LOCK && canTakeAction(s) },
-      { id: "club", name: "社团", desc: "主线+3+效率系数 额外+1 心情无变化 精力-8（社团为主线推进）", effect: (s) => { const repeat = getRepeatPenalty("club"); const bonus = Math.floor(s.resources.clubEff / 5); const mods = getMoodEffectMultipliers(); const base = 3 + bonus + s.buffs.nextClubBonus; const gain = Math.max(1, Math.floor(base * mods.clubMultiplier * repeat.multiplier)); const cost = 6 + Math.floor(Math.random() * 5); if (s.resources.energy <= 20) s.stats.lowEnergyClubCount += 1; if (bonus >= 4) s.stats.clubMaxBonusCount += 1; addResource(s, "mood", -repeat.moodPenalty); addResource(s, "energy", -8); if (s.resources.money < cost) { const reduced = Math.max(1, Math.floor(gain * 0.5)); addResource(s, "project", reduced); s.storyLog.push("【资金不足】社团推进受阻，本次主线进度减半。"); } else { addResource(s, "money", -cost); addResource(s, "project", gain); s.storyLog.push(`【资金支出】社团消耗${cost}金，主线推进顺利。`); } addResource(s, "project", 1); s.buffs.nextClubBonus = 0; const pool = ["snack", "meal", "ticket", "posterKit"]; const drop = pool[Math.floor(Math.random() * pool.length)]; tryDropItem(s, drop, "社团掉落"); s.stats.club++; s.streaks.study = 0; },
-        condition: (s) => s.resources.mood >= MOOD_LOCK && canTakeAction(s) },
+      { id: "study", name: "学习", desc: "学业+2~4 社团效率+1 心情-2 精力-12（心情低收益更低）", effect: (s) => { const base = 2 + Math.floor(Math.random() * 3); const mood = s.resources.mood; const moodMul = mood >= 70 ? 1.10 : mood >= 50 ? 1.00 : mood >= 30 ? 0.85 : 0.70; const gain = Math.max(0, Math.floor(base * moodMul)); addResource(s, "study", gain); addResource(s, "clubEff", 1); addResource(s, "mood", -2); addResource(s, "energy", -12); s.streaks.study = (s.streaks.study || 0) + 1; if (s.daySummary) s.daySummary.logs.push(`学习提升：+${gain}（base${base} mood×${moodMul.toFixed(2)}）`); },
+        condition: () => true },
+      { id: "club", name: "社团", desc: "主线推进+1~3（受心情/精力影响） 心情-2 精力-12（有概率触发社团事件）", effect: (s) => { const base = 1 + Math.floor(Math.random() * 3); const mood = s.resources.mood; const moodMul = mood >= 70 ? 1.10 : mood >= 50 ? 1.00 : mood >= 30 ? 0.85 : 0.70; const energy = s.resources.energy; const energyMul = energy >= 60 ? 1.00 : energy >= 40 ? 0.85 : 0.70; const eff = s.resources.clubEff || 0; const effMul = 1 + Math.min(eff, 30) / 100; const gain = Math.max(0, Math.floor(base * moodMul * energyMul * effMul)); addResource(s, "project", gain); addResource(s, "mood", -2); addResource(s, "energy", -12); s.stats.club = (s.stats.club || 0) + 1; s.streaks.study = 0; if (s.daySummary) s.daySummary.logs.push(`社团推进：+${gain}（base${base} mood×${moodMul.toFixed(2)} energy×${energyMul.toFixed(2)} eff×${effMul.toFixed(2)}）`); },
+        condition: () => true },
       { id: "parttime", name: "打工", desc: "金钱+4~8（每累计6次+1） 心情-6 精力-14", effect: (s) => { const count = s.stats.partTime || 0; const bonus = Math.floor(count / 6); const base = 4 + Math.floor(Math.random() * 5); const gain = base + bonus; addResource(s, "money", gain); addResource(s, "mood", -6); addResource(s, "energy", -14); s.stats.partTime = count + 1; if (gain >= 9) s.stats.parttimeHighPay += 1; s.streaks.study = 0; if (s.daySummary) { s.daySummary.logs.push(`打工收入：${gain}（基础${base}+熟练${bonus}）`); } },
         condition: (s) => canTakeAction(s) },
       { id: "rest", name: "休息", desc: "精力恢复（分段） 心情+4（有概率额外+5）", effect: (s) => { const base = calcRestRecovery(s.resources.energy); addResource(s, "energy", base); addResource(s, "mood", 4); if (Math.random() < 0.35) addResource(s, "mood", 5); s.stats.rest++; s.flags.restToday = true; s.streaks.study = 0; },
@@ -1014,7 +1021,7 @@
       actionsPerDay: 3,
       actionsTaken: 0,
       storyLog: [],
-      resources: { energy: 75, money: 20, mood: 50, study: 50, project: 0, clubEff: 0 },
+      resources: { energy: 75, money: 20, mood: 50, study: 0, project: 0, clubEff: 0 },
       inventory: ["snack"],
       achievements: [],
       buffs: {
@@ -1101,6 +1108,7 @@
         firstDateRewarded: false,
         openingPlayed: false,
         restToday: false,
+        passiveEncounterToday: false,
         firstMeet: { A: false, B: false, C: false },
         weeklyTutorOffered: false,
         weeklyTutorUsed: false,
@@ -1454,6 +1462,7 @@
       setActionsPerDay();
       state.actionsTaken = 0;
       state.flags.restToday = false;
+      state.flags.passiveEncounterToday = false;
       resetDailyActionCounts();
       initDaySummary();
       checkSundayTutorOffer();
@@ -1615,6 +1624,7 @@
         return;
       }
       task.effect(state);
+      tryPassiveEncounter(taskId);
       afterAction(`${task.name}完成。`, taskId, null, actionCost);
     }
 
@@ -1930,13 +1940,112 @@
       }
     }
 
+    function triggerPassiveEncounter(guyId, source, options = {}) {
+      const guyName = guyProfiles[guyId].name;
+      const affMin = options.affectionMin ?? 1;
+      const affMax = options.affectionMax ?? 3;
+      const affGain = affMin + Math.floor(Math.random() * (affMax - affMin + 1));
+      const trustChance = options.trustChance ?? 0.25;
+      const trustGain = Math.random() < trustChance ? 1 + Math.floor(Math.random() * 2) : 0;
+      const moneyBonus = options.moneyBonus ?? 0;
+      const summaryParts = [];
+
+      addAffection(state, guyId, affGain);
+      summaryParts.push(`好感+${affGain}`);
+      if (trustGain > 0) {
+        addTrust(state, guyId, trustGain);
+        summaryParts.push(`信任+${trustGain}`);
+      }
+      if (moneyBonus > 0) {
+        addResource(state, "money", moneyBonus);
+        summaryParts.push(`金钱+${moneyBonus}`);
+      }
+
+      state.storyLog.push(`【被动邂逅·${source}】${options.text}`);
+      if (state.daySummary) {
+        state.daySummary.logs.push(`${guyName}邂逅：${summaryParts.join("，")}。`);
+      }
+      state.flags.passiveEncounterToday = true;
+    }
+
+    function tryPassiveEncounter(actionId) {
+      if (!["study", "club", "parttime"].includes(actionId)) return;
+      if (state.flags.passiveEncounterToday) return;
+      if (state.forcedRest) return;
+
+      if (actionId === "club") {
+        const chance = 0.35;
+        if (Math.random() >= chance) return;
+        const pool = [
+          { id: "B", weight: 50 },
+          { id: "A", weight: 30 },
+          { id: "C", weight: 20, condition: () => state.week >= 6 && state.guys.C.unlocked && !state.guys.C.lockedOut }
+        ].filter((entry) => !entry.condition || entry.condition());
+        if (!pool.length) return;
+        const total = pool.reduce((sum, item) => sum + item.weight, 0);
+        let roll = Math.random() * total;
+        let chosen = pool[0].id;
+        for (const entry of pool) {
+          roll -= entry.weight;
+          if (roll <= 0) {
+            chosen = entry.id;
+            break;
+          }
+        }
+        const textByGuy = {
+          B: "排练间隙你抬头才发现浅羽朔早就在整理物资，他顺手把水放到你手边：“我刚好也在这边，顺路买了两份。”你接过水，他已经把展台的螺丝拧紧。",
+          A: "你在核对社团流程时，白澤凛司把改过的预算表放在你旁边：“我顺手修好了，老师那边我去对接。”他没多解释，却把关键页用便签夹好。",
+          C: "宣传位冲突刚处理完，你抬头才发现久世伶早就在门口等着。他轻声说他“刚好路过”，递给你一张赞助线索：“我先把麻烦挡掉了。”"
+        };
+        triggerPassiveEncounter(chosen, "社团", { text: textByGuy[chosen] });
+        return;
+      }
+
+      if (actionId === "study") {
+        const bonus = state.guys.A.affection >= 40 ? 0.10 : 0;
+        const chance = 0.30 + bonus;
+        if (Math.random() >= chance) return;
+        const pool = [
+          { id: "A", weight: 60, condition: () => state.guys.A.unlocked && !state.guys.A.lockedOut },
+          { id: "B", weight: 40, condition: () => state.guys.B.unlocked && !state.guys.B.lockedOut }
+        ].filter((entry) => entry.condition());
+        if (!pool.length) return;
+        const total = pool.reduce((sum, item) => sum + item.weight, 0);
+        let roll = Math.random() * total;
+        let chosen = pool[0].id;
+        for (const entry of pool) {
+          roll -= entry.weight;
+          if (roll <= 0) {
+            chosen = entry.id;
+            break;
+          }
+        }
+        const textByGuy = {
+          A: "自习室里你在题本边缘做标记，白澤凛司在对面坐下，低声说：“我把错题改好了。”他把重点页推到你手边，又留了张便签提醒你先休息。",
+          B: "你刚坐下，浅羽朔把你常用的位置空出来：“我先帮你占了。”他把饮料放在桌角：“顺路买的，别硬撑。”"
+        };
+        triggerPassiveEncounter(chosen, "学习", { text: textByGuy[chosen] });
+        return;
+      }
+
+      if (actionId === "parttime") {
+        if (!state.guys.C.unlocked || state.guys.C.lockedOut) return;
+        if (state.guys.C.affection < 30) return;
+        const chance = 0.25;
+        if (Math.random() >= chance) return;
+        const moneyBonus = Math.random() < 0.3 ? 10 : 0;
+        const text = "你下班收银时抬头才发现久世伶早就在门口等着，他说“刚好顺路来买点东西”。他替你挡了个纠缠的顾客，又把一张兼职情报塞到你手里：“你不用自己扛。”";
+        triggerPassiveEncounter("C", "打工", { text, affectionMin: 1, affectionMax: 2, moneyBonus });
+      }
+    }
+
     function triggerMiniEvent(actionId) {
       if (actionId === "study" && state.guys.A.unlocked && !state.guys.A.lockedOut) {
         const base = 0.04 + (state.buffs.tutoringDays > 0 ? 0.03 : 0);
         const scaling = (state.guys.A.affection / 100) * 0.08;
         const chance = Math.min(0.15, base + scaling);
         if (Math.random() < chance) {
-          state.storyLog.push("【学习小事件】你卡在一道题，白澤凛司路过时停下说：“这里先把已知列出来。”他写了两步就停：“剩下你自己做。”你点头：“谢谢。”你把步骤记在纸上，打算课后再做一遍。");
+          state.storyLog.push("【学习小事件】你卡在一道题，白澤凛司路过时停下说：“先把已知写清楚。”他把步骤写到草稿纸上，又把纸推给你：“你慢慢做。”你点头道谢，把思路记了下来。");
           addAffection(state, "A", 1);
           addTrust(state, "A", 1);
           addResource(state, "study", 1);
@@ -1948,7 +2057,7 @@
         const base = 0.10 + state.resources.clubEff * 0.012;
         const chance = clamp(base * moodMultiplier, 0, 0.35);
         if (Math.random() < chance) {
-          state.storyLog.push("【社团小事件】浅羽朔帮你把物料搬到展台旁，还顺手把展架拧紧。他说：“我来就行。”你回：“谢了，等会儿请你喝水。”他把手套递给你，让你别刮到指尖。");
+          state.storyLog.push("【社团小事件】浅羽朔把物料搬到展台旁，还顺手把展架拧紧。他说：“你手上还有别的事，我来就行。”你回：“谢了。”他把手套递给你，让你别刮到指尖。");
           addAffection(state, "B", 1);
           addResource(state, "mood", 1);
           addResource(state, "project", 1);
@@ -1959,7 +2068,7 @@
         const scaling = (state.guys.C.affection / 100) * 0.03;
         const chance = Math.min(0.06, base + scaling);
         if (Math.random() < chance) {
-          state.storyLog.push("【休息小事件】你在自习室打了个盹，久世伶路过轻声说：“别趴太久。”你抬头应了一声，他把窗帘拉开一点让你透气，还把小纸条压在桌角提醒你补水。");
+          state.storyLog.push("【休息小事件】你在自习室打了个盹，久世伶路过轻声说：“别趴太久。”你抬头应了一声，他把窗帘拉开一点让你透气，还把纸条压在桌角提醒你补水。");
           addAffection(state, "C", 1);
           addTrust(state, "C", 1);
           addResource(state, "energy", 5);
@@ -2528,6 +2637,7 @@
             firstDateRewarded: false,
             openingPlayed: false,
             restToday: false,
+            passiveEncounterToday: false,
             firstMeet: { A: false, B: false, C: false },
             weeklyTutorOffered: false,
             weeklyTutorUsed: false,
@@ -2537,6 +2647,7 @@
         if (state.flags.firstDateRewarded == null) state.flags.firstDateRewarded = false;
         if (state.flags.openingPlayed == null) state.flags.openingPlayed = state.storyLog && state.storyLog.length > 0;
         if (state.flags.restToday == null) state.flags.restToday = false;
+        if (state.flags.passiveEncounterToday == null) state.flags.passiveEncounterToday = false;
         if (!state.flags.firstMeet) state.flags.firstMeet = { A: false, B: false, C: false };
         if (state.flags.weeklyTutorOffered == null) state.flags.weeklyTutorOffered = false;
         if (state.flags.weeklyTutorUsed == null) state.flags.weeklyTutorUsed = false;
