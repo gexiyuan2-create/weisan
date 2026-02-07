@@ -241,9 +241,9 @@
       <div class="stat">金钱 <span id="moneyValue">0</span><div class="bar"><span id="moneyBar"></span></div></div>
       <div class="stat">心情 <span id="moodValue">0</span><div class="bar"><span id="moodBar"></span></div></div>
       <div class="stat">学业 <span id="studyValue">0</span><div class="bar"><span id="studyBar"></span></div></div>
-      <div class="stat">主线进度 <span id="projectValue">0</span><div class="bar"><span id="projectBar"></span></div></div>
+      <div class="stat">企划进度 <span id="projectValue">0</span><div class="bar"><span id="projectBar"></span></div></div>
       <div class="stat">社团效率 <span id="clubEffValue">0</span><div class="bar"><span id="clubEffBar"></span></div></div>
-      <div class="small" id="projectHint">社团为唯一主线推进途径 · 未达标将直接失败</div>
+      <div class="small" id="projectHint">未达标将直接失败</div>
       <div class="small" id="stageInfo"></div>
       <div class="small" id="weekGoal"></div>
       <hr />
@@ -389,11 +389,17 @@
       { threshold: 10, text: "【主线】校庆企划正式立项，你被推为展台联络人。" },
       { threshold: 18, text: "【主线】主题确认：粉黑学院恋爱剧场。" },
       { threshold: 26, text: "【主线】赞助谈判开局，白澤凛司默默递来预算模板。" },
-      { threshold: 34, text: "【主线】节目定案：相关人物联动的校园舞台剧。" },
+      { threshold: 34, text: "【主线】节目定案：三男主联动的校园舞台剧。" },
       { threshold: 50, text: "【主线】展台制作开工，材料清单排到爆。" },
       { threshold: 58, text: "【主线】第一次彩排，浅羽朔把气氛带得像派对。" },
       { threshold: 66, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
       { threshold: 74, text: "【主线】二轮彩排，久世伶的台词改得更“贴近你”。" },
+      { threshold: 26, text: "【主线】赞助谈判开局，A默默递来预算模板。" },
+      { threshold: 34, text: "【主线】节目定案：三男主联动的校园舞台剧。" },
+      { threshold: 50, text: "【主线】展台制作开工，材料清单排到爆。" },
+      { threshold: 58, text: "【主线】第一次彩排，B把气氛带得像派对。" },
+      { threshold: 66, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
+      { threshold: 74, text: "【主线】二轮彩排，C的台词改得更“贴近你”。" },
       { threshold: 82, text: "【主线】物资到位，展台初成型。" },
       { threshold: 90, text: "【主线】最终彩排，你站在舞台中央。" },
       { threshold: 100, text: "【主线】校庆当日，所有人都在等你的指挥。" }
@@ -418,19 +424,19 @@
         week: 12,
         target: 75,
         title: "执行崩塌",
-        text: "排练接连出错，人员安排和流程对不上，问题越堆越多。你试着把大家拉回同一节奏，却发现疲惫已经影响了士气。你看着空荡的舞台，知道必须重新梳理流程，把执行细节再抓紧。",
-        passText: "【阶段过场】你和同学把道具清点一遍，重新按流程摆好位置。白澤凛司递来新版流程表：“先把节奏找回来。”你点头：“我会盯住。”有人在后台说：“再练一次就好。”你把名单贴在墙上，重新排了时间。"
+        text: "排练接连出错，人员与流程像齿轮错位，彼此磨损。你试图把所有人拉回同一个节拍，却发现疲惫已经掏空了士气。你看着空荡的舞台，心里不再是绝望，而是明白需要重整旗鼓。",
+        passText: "【阶段过场】舞台灯光亮起时，你听见道具落位的轻响，心里有一点踏实。白澤凛司递来流程表，语气简短：“节奏回来了。”你轻声回：“我会守住。”有人在后台说：“再练一次就好。”你抬手压住心跳，告诉自己还能继续。"
       },
       {
         week: 16,
         target: 100,
         title: "临门止步",
-        text: "你距离完成只差最后一步，却被审批与物资卡住。报表、签字、采购清单一条条压下来，让你不得不停下脚步。你已经走到这里，只能承认这次没能跨过终点线。",
-        passText: "【阶段过场】你在清单上勾完最后一项，抬头时看见大家表情放松。有人说：“终于齐了。”你答：“还剩冲刺。”久世伶在一旁补一句：“宣传位我会守着。”你把文件收好，提醒自己最后一段更要稳。"
+        text: "你距离完成只差最后一步，却在关键节点被堵住。报表、审批、物资，像一道道看不见的墙。你已经走到这里，仍被迫停下脚步，心里却很清楚：这不是失败，只是这一次，你没有跨过终点线。",
+        passText: "【阶段过场】清点表格时，你终于在最后一页打上对勾。你抬眼，看到大家的表情从紧绷变得轻松。有人说：“终于齐了。”你轻声答：“还差最后冲刺。”久世伶在一旁低声道：“我会守住宣传位。”你把手心合上，心里知道终点就在前方。"
       }
     ];
 
-    const mainlineSuccessText = "【校庆当日】操场的舞台灯光亮起，你在展台和后台之间来回确认流程。熟悉的名字在耳边交错，有人喊你去合影，有人提醒道具位置。你笑着说：“我马上。”另一侧有人说：“我们做到了。”你点头：“谢谢大家。”喧闹、脚步、对讲机的声音混在一起，你知道自己用了20周把企划做成了。";
+    const mainlineSuccessText = "【校庆当日】舞台灯光铺满操场，鼓点与人声交叠，你在展台与舞台间穿行。熟悉的名字在耳边交错，你想起那些熬夜与纸张翻动的声音。有人轻声喊：“快来合影。”你笑着回：“我马上。”另一侧有人说：“我们的企划成功了。”你点头：“谢谢你们。”喧闹像浪潮把你托起，你知道自己用20周把故事推到这里，终于走到可以拥抱结局的时刻。";
 
     const guyProfiles = {
       B: {
@@ -460,8 +466,7 @@
     };
 
     const items = {
-      snack: { name: "能量小饼干", type: "补给", desc: "心情+6", effect: (state) => addResource(state, "mood", state.resources.mood >= 95 ? 3 : 6) },
-      drink: { name: "能量饮料", type: "补给", desc: "精力+10 心情+2", effect: (state) => { addResource(state, "energy", 10); addResource(state, "mood", 2); } },
+      snack: { name: "能量小饼干", type: "补给", desc: "精力+15", effect: (state) => addResource(state, "energy", 15) },
       meal: { name: "食堂热餐", type: "补给", desc: "精力+25", effect: (state) => addResource(state, "energy", 25) },
       bento: { name: "便当盒", type: "补给", desc: "精力+15", effect: (state) => { addResource(state, "energy", 15); } },
       tonic: { name: "能量饮料", type: "补给", desc: "精力+20", effect: (state) => { addResource(state, "energy", 20); } },
@@ -478,6 +483,13 @@
       charm: { name: "黑桃发夹", type: "礼物", desc: "送给白澤凛司，好感+4", effect: (state) => giftTo(state, "A", 4) },
       soda: { name: "草莓汽水", type: "礼物", desc: "送给浅羽朔，好感+4", effect: (state) => giftTo(state, "B", 4) },
       ribbon: { name: "暗红丝带", type: "礼物", desc: "送给久世伶，好感+4", effect: (state) => giftTo(state, "C", 4) },
+      bookmark: { name: "书签", type: "礼物", desc: "送给白澤凛司，好感+3", effect: (state) => giftTo(state, "A", 3) },
+      sweets: { name: "手作点心", type: "礼物", desc: "送给浅羽朔，好感+3", effect: (state) => giftTo(state, "B", 3) },
+      headset: { name: "黑色耳机", type: "礼物", desc: "送给久世伶，好感+3", effect: (state) => giftTo(state, "C", 3) },
+      note: { name: "灵感便笺", type: "补给", desc: "企划进度+6", effect: (state) => addResource(state, "project", 6) },
+      charm: { name: "黑桃发夹", type: "礼物", desc: "送给白澤凛司，好感+6", effect: (state) => giftTo(state, "A", 6) },
+      soda: { name: "草莓汽水", type: "礼物", desc: "送给浅羽朔，好感+6", effect: (state) => giftTo(state, "B", 6) },
+      ribbon: { name: "暗红丝带", type: "礼物", desc: "送给久世伶，好感+6", effect: (state) => giftTo(state, "C", 6) },
       ticket: { name: "演出券", type: "纪念品", desc: "心情+10，随机男主信任+4", effect: (state) => { addResource(state, "mood", 10); randomTrust(state, 4); } },
       clueA: { name: "A的旧奖状", type: "线索", desc: "解锁A的背景故事", effect: (state) => addClue(state, "A") },
       clueB: { name: "B的旧照片", type: "线索", desc: "解锁B的背景故事", effect: (state) => addClue(state, "B") },
@@ -591,24 +603,24 @@
     };
 
     const randomEvents = [
-      { id: "energyLow", condition: (s) => s.resources.energy <= 30, text: "午后楼道有风，你靠墙缓口气。路过的同学把水递过来，说：“喝点水再走。”你接过来点头：“谢谢，我调整一下。”他还叮嘱你别逞强，你把水瓶拧紧，提醒自己先稳住状态。", effect: (s) => addResource(s, "energy", 10) },
-      { id: "moodLow", condition: (s) => s.resources.mood <= 30, text: "放学后你在教室收作业，心情有点闷。班长经过问：“还好吗？”你回：“有点累，缓一缓就好。”他点头：“需要帮忙就说。”你把桌面理好，深呼吸了一下，情绪稍微松了点。", effect: (s) => addResource(s, "mood", 8) },
-      { id: "moneyLow", condition: (s) => s.resources.money <= 20, text: "兼职群发来临时加班，你看了几秒还是点了报名。对方很快回复：“明天放学后来。”你回：“好的。”你把时间记在本子上，心里记着海报费要先补上。", effect: (s) => addResource(s, "money", 30) },
-      { id: "studyHigh", condition: (s) => s.resources.study >= 70, text: "自习课上，你把笔记整理得很清楚。老师走过来说：“这份笔记很规范。”同桌小声问：“能借我看看吗？”你点头：“可以，记得还我。”你把页码标好，心情稍微好了些。", effect: (s) => addResource(s, "mood", 5) },
-      { id: "projectPush", condition: (s) => s.resources.project >= 40, text: "你把流程卡片贴在白板上，同学围过来确认顺序。有人说：“这次清楚多了。”你回：“按这个推进就稳。”你顺手把下一步分工写在角落，大家看完后点了点头。", effect: (s) => addResource(s, "project", 4) },
-      { id: "giftDrop", condition: () => true, text: "社团柜子里多了个纸袋，你打开看到一张便签：“别太累。”你左右看了看，没找到是谁放的。你把纸袋收好，顺手把便签夹进本子里，心里对这份心意记了一笔。", effect: (s) => gainItem(s, "ticket") },
-      { id: "library", condition: () => true, text: "图书馆很安静，你摊开企划资料做记录。管理员路过提醒：“别太晚。”你回：“我马上收。”你把要点整理成清单，又在便利贴上写了进度，思路清楚了不少。", effect: (s) => { addResource(s, "study", 4); addResource(s, "project", 2); } },
-      { id: "canteen", condition: () => true, text: "食堂排队的人很多，你端着套餐坐下。有人认出你在做校庆，笑着说：“辛苦了。”你回：“还好，大家一起。”热汤下肚，心情稍微回暖，你把盘子收好准备继续。", effect: (s) => addResource(s, "mood", 6) },
-      { id: "rain", condition: () => true, text: "下雨了，你刚出门就发现伞不够。三把伞从不同方向递过来，有人说：“别淋到。”另一个补一句：“路滑。”你接住伞道谢，说“我没事”，他们还是把伞往你这边靠了一点。", effect: (s) => { addAffection(s, "A", 1); addAffection(s, "B", 1); addAffection(s, "C", 1); s.flags.triangle = true; } },
-      { id: "broadcast", condition: () => true, text: "广播站播报校庆提醒，你听到自己的名字被点到。旁边同学抬头问：“是你负责的吗？”你回：“嗯，是我。”他点头：“那就加油。”你把广播内容记在本子里，准备下次调整。", effect: (s) => addResource(s, "mood", 5) },
-      { id: "campusCat", condition: () => true, text: "操场边的猫蹭到你脚边，你蹲下摸了摸。路过的同学笑：“它挑人。”你回：“那我算运气好。”你拍了拍衣服站起来，心里轻松了一点。", effect: (s) => addResource(s, "energy", 5) },
-      { id: "poster", condition: () => true, text: "公告栏前有人停下看海报，你走近把边角重新压平。学弟说：“这个节目很想看。”你回：“欢迎来。”你把二维码贴直，又补上联系方式，心里踏实了些。", effect: (s) => addResource(s, "project", 3) },
-      { id: "rumor", condition: (s) => s.resources.mood <= 40, text: "走廊角落有人议论校庆压力，你的名字被带到。你没有停下，只是把资料抱紧。有人看见你，尴尬地说：“我们只是随便说说。”你点头：“我知道。”然后去办公室交表。", effect: (s) => addResource(s, "mood", 4) },
-      { id: "clinic", condition: (s) => s.resources.energy <= 25, text: "你到校医室测体温，校医递来温水：“先坐会儿。”你回：“我只是有点累。”她说：“别硬扛。”你点头，休息片刻后精神回了一点，也把注意事项记在心里。", effect: (s) => addResource(s, "energy", 12) },
-      { id: "bonus", condition: (s) => s.resources.money >= 120, text: "你检查账目时发现结余多一点，便把一部分预算转去物资。负责同学说：“这样真的够吗？”你回：“先把关键项补齐。”你把清单标红，剩余的钱留作机动，进度又推进了一些。", effect: (s) => { addResource(s, "money", -20); addResource(s, "project", 4); } },
-      { id: "practice", condition: (s) => s.resources.project >= 60, text: "排练场灯亮起，你把队形重新确认一遍。负责同学说：“这次顺了。”你回：“按这个节奏走。”你把道具位置写到台边纸上，提醒大家下次提前到。", effect: (s) => addResource(s, "project", 4) },
-      { id: "sleepy", condition: (s) => s.resources.energy <= 40, text: "午休时你趴在桌上眯了一会儿，铃声响起才起身。同桌笑你：“终于醒了。”你回：“我没睡太久。”你喝了口水，收拾好书包，短短的休息让你缓过劲。", effect: (s) => addResource(s, "energy", 8) },
-      { id: "volunteer", condition: () => true, text: "新生志愿者来帮忙搬物料，你指给他们位置。有人问：“这样放可以吗？”你回：“可以，辛苦了。”你在名单上勾掉已完成的项目，人手多了，任务压力小了些。", effect: (s) => addResource(s, "project", 2) }
+      { id: "energyLow", condition: (s) => s.resources.energy <= 30, text: "走廊的窗缝漏进风，光线被切成细长的格子。你靠着墙缓缓吐气，心里提醒自己别被疲惫拖垮。这时有人停下脚步，轻轻把水瓶递到你手里，指尖短暂停顿。对方说：“先喝一点。”你低声回了一句：“谢谢，我会慢慢调整。”", effect: (s) => addResource(s, "energy", 10) },
+      { id: "moodLow", condition: (s) => s.resources.mood <= 30, text: "傍晚的广播声在走廊里回旋，你盯着地面上摇晃的光影，心里有一瞬间想逃。手机忽然弹出匿名鼓励语，像有人在暗处扶了一把。你抿唇笑了笑，对屏幕轻声说：“我知道了。”手机那头没有回应，你却觉得空气缓和了。", effect: (s) => addResource(s, "mood", 8) },
+      { id: "moneyLow", condition: (s) => s.resources.money <= 20, text: "夜色沉下来，兼职群忽然亮起提示音，你看着那行“临时加班”犹豫了几秒。心里想着主线的支出，你伸手点了确认。对方回复得很快：“辛苦了，明天见。”你把手机塞回口袋，自言自语：“至少能把海报费补上。”", effect: (s) => addResource(s, "money", 30) },
+      { id: "studyHigh", condition: (s) => s.resources.study >= 70, text: "教室灯光明亮，你的笔尖在纸上划出整齐的线。老师经过时停了一下，低声道：“你稳得像定心丸。”你心里一热，却只是点点头。旁边同学悄声说：“你也太厉害了吧。”你轻轻笑了一下，回道：“我也只是认真一点。”", effect: (s) => addResource(s, "mood", 5) },
+      { id: "projectPush", condition: (s) => s.resources.project >= 40, text: "会议室空调声嗡嗡作响，你把流程卡片一张张摆好，心里默数着进度。有人翻了翻计划表，说：“这次推进比上周顺。”你握紧笔，低声回应：“大家一起才快。”窗外的晚霞被玻璃映成柔色，你的呼吸也跟着轻了点。", effect: (s) => addResource(s, "project", 4) },
+      { id: "giftDrop", condition: () => true, text: "社团柜子被轻轻推开，木板发出细微的响声。你发现一只小纸袋安静地躺在角落，系着浅色丝带。你心里微微一跳，伸手拿起时袋口滑出一张便签：“希望你今天别太累。”你轻声说：“是谁写的呢？”空气没有回答。", effect: (s) => gainItem(s, "ticket") },
+      { id: "library", condition: () => true, text: "图书馆的灯光温黄，纸页翻动的声音像细雨。你把企划内容摊开，心里暗暗给自己加油。管理员路过时轻声提醒：“注意别太晚。”你点头回应：“我就整理一下。”笔尖停停走走，你的思路逐渐清晰。", effect: (s) => { addResource(s, "study", 4); addResource(s, "project", 2); } },
+      { id: "canteen", condition: () => true, text: "食堂里热气腾腾，蒸汽在天花板下卷出淡淡的光晕。你端着新推出的粉黑限定甜品，心里悄悄松一口气。路过的同学笑着说：“这个很好吃。”你应了一声：“是啊，甜得刚好。”暖意顺着指尖蔓延，让你不再那么紧绷。", effect: (s) => addResource(s, "mood", 6) },
+      { id: "rain", condition: () => true, text: "雨点敲在伞面上，声音细密而近。你刚抬头，三把伞从不同方向靠近，像三道并行的光。有人低声说：“别淋到。”另一个补了一句：“路有点滑，小心。”你握紧伞柄，心里既慌乱又温热，像被无形的线牵住。", effect: (s) => { addAffection(s, "A", 2); addAffection(s, "B", 2); addAffection(s, "C", 2); s.flags.triangle = true; } },
+      { id: "broadcast", condition: () => true, text: "广播台的声音在校园上空缓缓落下，像一层薄雾。你听见自己的名字被温柔念出，心里忽然被点亮。旁边的同学侧头问：“是你吗？”你轻声回：“嗯，是我。”回声散开，你却觉得自己被看见了。", effect: (s) => addResource(s, "mood", 5) },
+      { id: "campusCat", condition: () => true, text: "校园猫蜷在台阶边，尾巴轻轻摆动。你蹲下身时它抬眼看你，像在确认你的情绪。你轻声说：“今天也辛苦了。”猫轻轻蹭过你的指尖，你心里忽然松了一下。旁边有人笑道：“它很黏人吧？”你点头：“是啊，像在安慰我。”", effect: (s) => addResource(s, "energy", 5) },
+      { id: "poster", condition: () => true, text: "主楼的公告栏前有人驻足，你的海报被风微微掀起边角。你看着自己的字迹，心里涌出一点成就感。学弟学妹指着海报讨论：“这个看起来很认真。”你轻声回：“谢谢，希望你们来。”风把纸角抚平，像是在回应。", effect: (s) => addResource(s, "project", 3) },
+      { id: "rumor", condition: (s) => s.resources.mood <= 40, text: "走廊角落传来低低的议论声，你的名字被夹在句尾。你停顿了一下，心里有点刺痛，却还是继续往前走。有人小声说：“她真的这么拼吗？”你在心里回：“是啊，我在为自己的选择负责。”脚步声稳下来，你不再回头。", effect: (s) => addResource(s, "mood", 4) },
+      { id: "clinic", condition: (s) => s.resources.energy <= 25, text: "校医室的灯光柔白，你坐在床边，听见电热水壶咕噜作响。校医把暖宝宝贴在你腰侧，动作很轻。她说：“别硬扛。”你小声应：“我会注意。”窗外风吹过树叶，沙沙声像在提醒你慢下来。", effect: (s) => addResource(s, "energy", 12) },
+      { id: "bonus", condition: (s) => s.resources.money >= 120, text: "账目本上的数字比预想多了一点，你看着它们心里动摇。最终你还是把一部分资金投入校庆，像把信心投进一张票。有人惊讶地说：“你这么舍得？”你回：“这是我们一起的舞台。”纸张被按平，心也跟着稳了。", effect: (s) => { addResource(s, "money", -20); addResource(s, "project", 4); } },
+      { id: "practice", condition: (s) => s.resources.project >= 60, text: "舞台边的音响调试发出低鸣，你站在台阶上看着队伍排开。动作刚开始就比预想顺，节拍像在同一条线。负责同学对你点头：“这次稳多了。”你轻声说：“谢谢，继续保持。”风吹过幕布，像给出无声肯定。", effect: (s) => addResource(s, "project", 4) },
+      { id: "sleepy", condition: (s) => s.resources.energy <= 40, text: "午后的教室被光线铺满，灰尘在空中缓慢漂浮。你趴在桌上闭了会儿眼，心里默数着时间。有人轻声提醒：“别睡太久。”你含糊回应：“嗯，马上起。”短短的休息像把精神重新缝起来。", effect: (s) => addResource(s, "energy", 8) },
+      { id: "volunteer", condition: () => true, text: "新生志愿者抱着物料进来，脸上带着紧张与期待。你指给他们位置，心里忽然松了一口气。有人问：“这样摆可以吗？”你笑着说：“可以，辛苦了。”人手变多，任务不再像山一样压住你。", effect: (s) => addResource(s, "project", 2) }
     ];
 
     const meetingEvents = {
@@ -1118,6 +1130,7 @@
 
     updateWeek();
     setActionsPerDay();
+    initDaySummary();
 
     const storyEl = document.getElementById("story");
     const choicesEl = document.getElementById("choices");
@@ -1245,6 +1258,19 @@
       if (key === "project") {
         s.resources.project = clamp(s.resources.project, 0, 100);
         checkMilestones(s);
+      }
+    }
+
+    function applyProjectProgress(s) {
+      const costs = [8, 10, 12];
+      const cost = costs[s.stats.projectTasks % costs.length];
+      if (s.resources.money < cost) {
+        s.storyLog.push("【资金不足】海报费/布景费/宣传费未凑齐，本次推进受阻。");
+        addResource(s, "project", 2);
+      } else {
+        addResource(s, "money", -cost);
+        addResource(s, "project", 10);
+        s.storyLog.push(`【资金支出】支付${cost}金，推进顺利。`);
       }
     }
 
