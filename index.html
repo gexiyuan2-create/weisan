@@ -489,9 +489,6 @@
 
     const achievements = [
       { id: "study7", name: "学霸养成", desc: "连续学习7天", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7 },
-      { id: "firstDate", name: "第一次见面", desc: "完成任意男主见面", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.flags.firstDate },
-    const achievements = [
-      { id: "study7", name: "学霸养成", desc: "连续学习7天", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7 },
       { id: "firstDate", name: "第一次约会", desc: "完成任意男主约会", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.flags.firstDate },
       { id: "secret", name: "揭开秘密", desc: "任意男主故事解锁到核心真相", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.storyTier === 2 && g.storyIndex >= 3) },
       { id: "project50", name: "校庆推进50%", desc: "企划进度达到50%", reward: "能量小饼干", rewardItem: "snack", check: (s) => s.resources.project >= 50 },
