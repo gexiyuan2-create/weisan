@@ -1,0 +1,2637 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>粉黑乙女：校庆心动企划</title>
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #141420;
+      --panel-2: #1f1a2a;
+      --accent: #ff4f99;
+      --accent-2: #ff8ac2;
+      --text: #f5e9f2;
+      --muted: #b7a6c6;
+      --danger: #ff4f6d;
+      --good: #7dffb0;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft Yahei", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, #1b0c1f 0%, #08070d 65%);
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 20px;
+      background: #09090f;
+      border-bottom: 1px solid #2d2033;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: var(--accent-2);
+      flex: 1;
+    }
+    .btn {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--accent);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .btn:hover {
+      background: var(--accent);
+      color: #0b0b12;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      gap: 16px;
+      padding: 20px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid #2d2033;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: var(--accent-2);
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .stat .bar {
+      flex: 1;
+      height: 8px;
+      background: #2a2035;
+      border-radius: 999px;
+      margin-left: 10px;
+      overflow: hidden;
+    }
+    .bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #a95bff);
+    }
+    .darkness-bar span {
+      background: linear-gradient(90deg, #a0103a, #7a1fbf);
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #2c1b33;
+      color: var(--accent-2);
+      margin-right: 6px;
+    }
+    .task-list {
+      display: grid;
+      gap: 8px;
+    }
+    .task {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #2d2033;
+      background: var(--panel-2);
+      font-size: 13px;
+    }
+    .task small {
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+    }
+    .story {
+      min-height: 340px;
+      max-height: 420px;
+      overflow-y: auto;
+      background: rgba(9, 7, 12, 0.7);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #2d2033;
+      line-height: 1.7;
+    }
+    .story p {
+      margin: 0 0 12px;
+    }
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .choices button {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--accent-2);
+      background: #1b1223;
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .choices button:hover {
+      background: var(--accent-2);
+      color: #0b0b12;
+    }
+    .right-panel .character {
+      border-bottom: 1px solid #2d2033;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+    .character h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: var(--accent-2);
+    }
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--panel);
+      border: 1px solid #2d2033;
+      border-radius: 12px;
+      padding: 20px;
+      width: min(640px, 90vw);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: var(--accent-2);
+    }
+    .inventory {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .inventory .item {
+      background: #1d1525;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #2d2033;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 20px 0 30px;
+    }
+    .highlight {
+      color: var(--accent-2);
+    }
+    .weekday {
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>粉黑乙女：校庆心动企划</h1>
+    <button class="btn" id="newGame">新游戏</button>
+    <button class="btn" id="saveGame">存档</button>
+    <button class="btn" id="loadGame">读档</button>
+    <button class="btn" id="toTitle">返回标题</button>
+    <button class="btn" id="openTutorial">帮助/教程</button>
+    <button class="btn" id="renamePlayer">修改名字</button>
+    <button class="btn" id="openSettings">设置</button>
+    <button class="btn" id="openShop">商店</button>
+  </header>
+
+  <div class="container">
+    <aside class="panel">
+      <h2>资源面板</h2>
+      <div class="small" id="actionInfo"></div>
+      <div class="stat">精力 <span id="energyValue">0</span><div class="bar"><span id="energyBar"></span></div></div>
+      <div class="stat">金钱 <span id="moneyValue">0</span><div class="bar"><span id="moneyBar"></span></div></div>
+      <div class="stat">心情 <span id="moodValue">0</span><div class="bar"><span id="moodBar"></span></div></div>
+      <div class="stat">学业 <span id="studyValue">0</span><div class="bar"><span id="studyBar"></span></div></div>
+      <div class="stat">主线进度 <span id="projectValue">0</span><div class="bar"><span id="projectBar"></span></div></div>
+      <div class="stat">社团效率 <span id="clubEffValue">0</span><div class="bar"><span id="clubEffBar"></span></div></div>
+      <div class="small" id="projectHint">社团为唯一主线推进途径 · 未达标将直接失败</div>
+      <div class="small" id="stageInfo"></div>
+      <div class="small" id="weekGoal"></div>
+      <hr />
+      <h2>每日任务清单</h2>
+      <div class="task-list" id="taskList"></div>
+      <div style="margin-top:12px;">
+        <button class="btn" id="openAchievements">成就入口</button>
+        <button class="btn" id="openInventory">道具</button>
+      </div>
+    </aside>
+
+    <main class="panel">
+      <div class="small" id="dayInfo"></div>
+      <div class="story" id="story"></div>
+      <div class="choices" id="choices"></div>
+    </main>
+
+    <aside class="panel right-panel">
+      <h2>男主状态</h2>
+      <div class="character" id="charA"></div>
+      <div class="character" id="charB"></div>
+      <div class="character" id="charC"></div>
+    </aside>
+  </div>
+
+  <div class="modal" id="achievementModal">
+    <div class="modal-content">
+      <h2>成就</h2>
+      <div id="achievementList"></div>
+      <button class="btn" id="closeAchievements">关闭</button>
+    </div>
+  </div>
+
+  <div class="modal" id="inventoryModal">
+    <div class="modal-content">
+      <h2>道具</h2>
+      <div class="inventory" id="inventoryList"></div>
+      <button class="btn" id="closeInventory">关闭</button>
+    </div>
+  </div>
+
+  <div class="modal" id="settlementModal">
+    <div class="modal-content">
+      <h2>今日结算</h2>
+      <div id="settlementBody"></div>
+      <button class="btn" id="confirmSettlement">进入下一天</button>
+    </div>
+  </div>
+
+  <div class="modal" id="tutorialModal">
+    <div class="modal-content">
+      <h2>新手教程</h2>
+      <div id="tutorialBody"></div>
+      <div class="choices" id="tutorialControls"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="nameModal">
+    <div class="modal-content">
+      <h2>为女主命名</h2>
+      <div class="small">默认名：未散，可随时修改。</div>
+      <input id="nameInput" type="text" style="width:100%;padding:8px;margin:12px 0;border-radius:6px;border:1px solid #2d2033;background:#0d0a13;color:var(--text);" />
+      <div class="choices">
+        <button class="btn" id="confirmName">确认</button>
+        <button class="btn" id="skipName">跳过(使用未散)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="nameHintModal">
+    <div class="modal-content">
+      <h2>小提示</h2>
+      <p>建议改名增强代入感。</p>
+      <div class="choices">
+        <button class="btn" id="renameNow">现在改名</button>
+        <button class="btn" id="renameLater">稍后再说</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="mainlineWarningModal">
+    <div class="modal-content">
+      <h2>重要提示</h2>
+      <p>主线校庆企划必须按阶段达标，否则直接失败。建议优先推进主线，再安排见面。</p>
+      <div class="choices">
+        <button class="btn" id="ackWarning">我知道了</button>
+        <button class="btn" id="skipWarning">不再提示</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <h2>设置</h2>
+      <label class="small"><input type="checkbox" id="toggleMainlineWarning" /> 显示主线失败提醒</label>
+      <div style="margin-top:12px;">
+        <button class="btn" id="closeSettings">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="shopModal">
+    <div class="modal-content">
+      <h2>商店</h2>
+      <div class="small">当前金钱：<span id="shopMoney">0</span></div>
+      <div id="shopList" class="inventory"></div>
+      <button class="btn" id="closeShop">关闭</button>
+    </div>
+  </div>
+
+  <footer>粉黑乙女风 · 现代校园 · 一天3次行动 · 20周一周目 Demo</footer>
+
+  <script>
+    const maxWeek = 20;
+    const WEEKDAYS = ["周一", "周三", "周五", "周日"];
+    const maxDay = maxWeek * WEEKDAYS.length;
+    const defaultName = "未散";
+
+    const weekGoals = [
+      "第1周：立项准备，稳住节奏",
+      "第2周：主题确认，开始分工",
+      "第3周：展台与节目初稿",
+      "第4周：立项结算，进度≥25%",
+      "第5周：素材收集与试排",
+      "第6周：节目与展台细化",
+      "第7周：赞助与宣传铺垫",
+      "第8周：资源结算，进度≥50%",
+      "第9周：第一轮彩排",
+      "第10周：执行细节落地",
+      "第11周：流程与人员磨合",
+      "第12周：执行结算，进度≥75%",
+      "第13周：危机预案与补强",
+      "第14周：二轮彩排",
+      "第15周：物资到位",
+      "第16周：最终结算，进度≥100%",
+      "第17周：校庆冲刺",
+      "第18周：最后检查",
+      "第19周：总彩排",
+      "第20周：校庆当日"
+    ];
+
+    const milestoneEvents = [
+      { threshold: 10, text: "【主线】校庆企划正式立项，你被推为展台联络人。" },
+      { threshold: 18, text: "【主线】主题确认：粉黑学院恋爱剧场。" },
+      { threshold: 26, text: "【主线】赞助谈判开局，白澤凛司默默递来预算模板。" },
+      { threshold: 34, text: "【主线】节目定案：相关人物联动的校园舞台剧。" },
+      { threshold: 50, text: "【主线】展台制作开工，材料清单排到爆。" },
+      { threshold: 58, text: "【主线】第一次彩排，浅羽朔把气氛带得像派对。" },
+      { threshold: 66, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
+      { threshold: 74, text: "【主线】二轮彩排，久世伶的台词改得更“贴近你”。" },
+      { threshold: 82, text: "【主线】物资到位，展台初成型。" },
+      { threshold: 90, text: "【主线】最终彩排，你站在舞台中央。" },
+      { threshold: 100, text: "【主线】校庆当日，所有人都在等你的指挥。" }
+    ];
+
+    const mainlineStages = [
+      {
+        week: 4,
+        target: 25,
+        title: "立项未通过",
+        text: "立项评审会上，方案被指出流程不清、预算不完整，老师要求先补齐材料再讨论。你看见同学们的期待慢慢变成迟疑，会议室里只剩翻纸的声音。你知道这不是终点，但必须先把资料整理清楚，再重新争取通过。",
+        passText: "【阶段过场】老师翻完材料，点头说：“立项先通过，后续细化。”你松了口气，赶紧记下要补的细节。有人小声说：“终于能动起来了。”你回到走廊，给社团群发了进度，提醒大家先把分工表更新。"
+      },
+      {
+        week: 8,
+        target: 50,
+        title: "资源断裂",
+        text: "赞助名单被退回，材料报价也上涨，你手里的清单一改再改。你努力补缺口，却发现能用的资源越来越少。你深吸一口气，告诉自己还有机会，只是校庆的时间比预想更紧。",
+        passText: "【阶段过场】你把更新后的赞助表贴在白板上，和同学逐条确认费用。有人问：“进度还稳吗？”你点头：“先顶住，再想办法。”浅羽朔笑着说：“那就一起扛。”你拿起笔，把下一周的任务分到每个人手里。"
+      },
+      {
+        week: 12,
+        target: 75,
+        title: "执行崩塌",
+        text: "排练接连出错，人员安排和流程对不上，问题越堆越多。你试着把大家拉回同一节奏，却发现疲惫已经影响了士气。你看着空荡的舞台，知道必须重新梳理流程，把执行细节再抓紧。",
+        passText: "【阶段过场】你和同学把道具清点一遍，重新按流程摆好位置。白澤凛司递来新版流程表：“先把节奏找回来。”你点头：“我会盯住。”有人在后台说：“再练一次就好。”你把名单贴在墙上，重新排了时间。"
+      },
+      {
+        week: 16,
+        target: 100,
+        title: "临门止步",
+        text: "你距离完成只差最后一步，却被审批与物资卡住。报表、签字、采购清单一条条压下来，让你不得不停下脚步。你已经走到这里，只能承认这次没能跨过终点线。",
+        passText: "【阶段过场】你在清单上勾完最后一项，抬头时看见大家表情放松。有人说：“终于齐了。”你答：“还剩冲刺。”久世伶在一旁补一句：“宣传位我会守着。”你把文件收好，提醒自己最后一段更要稳。"
+      }
+    ];
+
+    const mainlineSuccessText = "【校庆当日】操场的舞台灯光亮起，你在展台和后台之间来回确认流程。熟悉的名字在耳边交错，有人喊你去合影，有人提醒道具位置。你笑着说：“我马上。”另一侧有人说：“我们做到了。”你点头：“谢谢大家。”喧闹、脚步、对讲机的声音混在一起，你知道自己用了20周把企划做成了。";
+
+    const guyProfiles = {
+      B: {
+        name: "浅羽 朔",
+        roman: "Asaba Saku",
+        label: "竹马",
+        preferred: ["善良", "体贴", "坦率", "边界感"],
+        disliked: ["恶趣味", "操控", "冷漠"],
+        mild: true
+      },
+      A: {
+        name: "白澤 凛司",
+        roman: "Shirasawa Rinji",
+        label: "学霸",
+        preferred: ["守规矩", "上进", "坦率", "尊重边界", "效率"],
+        disliked: ["胡闹", "低效率", "恶趣味"],
+        mild: true
+      },
+      C: {
+        name: "久世 伶",
+        roman: "Kuze Rei",
+        label: "病娇",
+        preferred: ["试探", "恶趣味", "占有", "信息差", "小谎言"],
+        disliked: ["公开拒绝", "强调边界", "把他当外人"],
+        mild: false
+      }
+    };
+
+    const items = {
+      snack: { name: "能量小饼干", type: "补给", desc: "心情+6", effect: (state) => addResource(state, "mood", state.resources.mood >= 95 ? 3 : 6) },
+      drink: { name: "能量饮料", type: "补给", desc: "精力+10 心情+2", effect: (state) => { addResource(state, "energy", 10); addResource(state, "mood", 2); } },
+      meal: { name: "食堂热餐", type: "补给", desc: "精力+25", effect: (state) => addResource(state, "energy", 25) },
+      bento: { name: "便当盒", type: "补给", desc: "精力+15", effect: (state) => { addResource(state, "energy", 15); } },
+      tonic: { name: "能量饮料", type: "补给", desc: "精力+20", effect: (state) => { addResource(state, "energy", 20); } },
+      coffee: { name: "咖啡", type: "补给", desc: "学习效率+1（学业+1）", effect: (state) => { addResource(state, "study", 1); } },
+      posterKit: { name: "校庆物料包", type: "补给", desc: "主线进度+4", effect: (state) => addResource(state, "project", 4) },
+      giftSmall: { name: "小礼物", type: "礼物", desc: "见面时可赠送", effect: () => {} },
+      clueCard: { name: "线索卡", type: "线索", desc: "获得一次额外主线提示", effect: (state) => { state.storyLog.push("【线索提示】主线推进以社团为核心，注意资金与效率的平衡。"); } },
+      bonusShift: { name: "加班补贴", type: "补给", desc: "下次打工额外+20金钱", effect: (state) => { state.buffs.nextPartTimeBonus += 20; } },
+      rewindFragment: { name: "回溯碎片", type: "补给", desc: "集齐3个可合成回溯券", effect: (state) => { state.buffs.rewindFragments += 1; } },
+      bookmark: { name: "书签", type: "礼物", desc: "送给白澤凛司，好感+2", effect: (state) => giftTo(state, "A", 2) },
+      sweets: { name: "手作点心", type: "礼物", desc: "送给浅羽朔，好感+2", effect: (state) => giftTo(state, "B", 2) },
+      headset: { name: "黑色耳机", type: "礼物", desc: "送给久世伶，好感+2", effect: (state) => giftTo(state, "C", 2) },
+      note: { name: "灵感便笺", type: "补给", desc: "企划进度+6", effect: (state) => addResource(state, "project", 6) },
+      charm: { name: "黑桃发夹", type: "礼物", desc: "送给白澤凛司，好感+4", effect: (state) => giftTo(state, "A", 4) },
+      soda: { name: "草莓汽水", type: "礼物", desc: "送给浅羽朔，好感+4", effect: (state) => giftTo(state, "B", 4) },
+      ribbon: { name: "暗红丝带", type: "礼物", desc: "送给久世伶，好感+4", effect: (state) => giftTo(state, "C", 4) },
+      ticket: { name: "演出券", type: "纪念品", desc: "心情+10，随机男主信任+4", effect: (state) => { addResource(state, "mood", 10); randomTrust(state, 4); } },
+      clueA: { name: "A的旧奖状", type: "线索", desc: "解锁A的背景故事", effect: (state) => addClue(state, "A") },
+      clueB: { name: "B的旧照片", type: "线索", desc: "解锁B的背景故事", effect: (state) => addClue(state, "B") },
+      clueC: { name: "C的广播手稿", type: "线索", desc: "解锁C的背景故事", effect: (state) => addClue(state, "C") }
+    };
+
+    const shopItems = [
+      { id: "snack", name: "零食", cost: 15, desc: "心情+6", type: "inventory" },
+      { id: "drink", name: "饮料", cost: 22, desc: "精力+10 心情+2", type: "inventory" },
+      { id: "notes", name: "资料笔记", cost: 45, desc: "下次学习额外+3学业", type: "buff" },
+      { id: "giftSmall", name: "小礼物", cost: 75, desc: "下次见面可赠送", type: "inventory" },
+      { id: "resourcePack", name: "校庆资源包", cost: 110, desc: "下一次社团主线+4", type: "buff" },
+      { id: "tutoring", name: "补课辅导", cost: 150, desc: "7天学习收益+10%且学霸事件+3%", type: "buff" },
+      { id: "bookmark", name: "书签", cost: 18, desc: "凛司好感+2", type: "inventory" },
+      { id: "sweets", name: "手作点心", cost: 18, desc: "朔好感+2", type: "inventory" },
+      { id: "headset", name: "黑色耳机", cost: 22, desc: "伶好感+2", type: "inventory" },
+      { id: "tonic", name: "能量饮料", cost: 15, desc: "精力+20", type: "inventory" },
+      { id: "bento", name: "便当", cost: 12, desc: "精力+15", type: "inventory" },
+      { id: "coffee", name: "咖啡", cost: 14, desc: "学习效率+1", type: "inventory" }
+    ];
+
+    const achievements = [
+      { id: "firstRest", name: "先歇一会", desc: "第一次休息", reward: "能量小饼干", rewardItem: "snack", check: (s) => s.stats.rest >= 1 },
+      { id: "firstSnack", name: "嘴角放松", desc: "第一次使用零食", reward: "心情+3", rewardMood: 3, check: (s) => s.stats.snackUsed >= 1 },
+      { id: "firstItem", name: "口袋准备", desc: "第一次使用道具", reward: "便当盒", rewardItem: "bento", check: (s) => s.stats.itemsUsed >= 1 },
+      { id: "firstClub", name: "社团开局", desc: "第一次社团推进", reward: "灵感便笺", rewardItem: "note", check: (s) => s.stats.club >= 1 },
+      { id: "firstSave", name: "进度留存", desc: "第一次存档", reward: "回溯+1", rewardRewind: 1, check: (s) => s.stats.saveCount >= 1 },
+      { id: "firstLoad", name: "旧档回访", desc: "第一次读档", reward: "能量小饼干", rewardItem: "snack", check: (s) => s.stats.loadCount >= 1 },
+
+      { id: "money200", name: "零钱充足", desc: "金钱达到200", reward: "便当盒", rewardItem: "bento", check: (s) => s.resources.money >= 200 },
+      { id: "money500", name: "资金稳住", desc: "金钱达到500", reward: "能量饮料", rewardItem: "tonic", check: (s) => s.resources.money >= 500 },
+      { id: "money1000", name: "小富即安", desc: "金钱达到1000", reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.money >= 1000 },
+      { id: "moodHigh3", name: "心情在线", desc: "心情≥70持续3天", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.stats.moodHighStreak >= 3, progress: (s) => ({ current: Math.min(s.stats.moodHighStreak, 3), target: 3 }) },
+      { id: "lowEnergyClub", name: "低电也要上", desc: "精力≤20仍完成社团", reward: "能量饮料", rewardItem: "tonic", check: (s) => s.stats.lowEnergyClubCount >= 1 },
+      { id: "noWorkWeek", name: "无打工周", desc: "一周内不打工", reward: "心情+5", rewardMood: 5, check: (s) => s.stats.noPartTimeWeeks >= 1 },
+      { id: "noRest3", name: "硬撑三天", desc: "连续3天不休息", reward: "便当盒", rewardItem: "bento", check: (s) => s.stats.noRestStreak >= 3, progress: (s) => ({ current: Math.min(s.stats.noRestStreak, 3), target: 3 }) },
+
+      { id: "study60", name: "学业起步", desc: "学业达到60", reward: "咖啡", rewardItem: "coffee", check: (s) => s.resources.study >= 60 },
+      { id: "study75", name: "学业进阶", desc: "学业达到75", reward: "咖啡", rewardItem: "coffee", check: (s) => s.resources.study >= 75 },
+      { id: "study90", name: "学业稳定", desc: "学业达到90", reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.study >= 90 },
+      { id: "study7", name: "学霸养成", desc: "连续学习7次", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7, progress: (s) => ({ current: Math.min(s.streaks.study, 7), target: 7 }) },
+      { id: "studyHelp3", name: "借一题", desc: "学习小事件触发3次", reward: "书签", rewardItem: "bookmark", check: (s) => s.stats.studyHelpCount >= 3, progress: (s) => ({ current: Math.min(s.stats.studyHelpCount, 3), target: 3 }) },
+
+      { id: "stage25", name: "阶段一通过", desc: "第4周结算达标(≥25%)", reward: "灵感便笺", rewardItem: "note", check: (s) => s.resources.project >= 25 && s.week >= 4 },
+      { id: "stage50", name: "阶段二通过", desc: "第8周结算达标(≥50%)", reward: "演出券", rewardItem: "ticket", check: (s) => s.resources.project >= 50 && s.week >= 8 },
+      { id: "stage75", name: "阶段三通过", desc: "第12周结算达标(≥75%)", reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.project >= 75 && s.week >= 12 },
+      { id: "stage100", name: "阶段四通过", desc: "第16周结算达标(≥100%)", reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.project >= 100 && s.week >= 16 },
+      { id: "project100", name: "主线完成", desc: "主线进度达到100%", reward: "心情+8", rewardMood: 8, check: (s) => s.resources.project >= 100 },
+      { id: "week20", name: "坚持到底", desc: "完成20周", reward: "终局回溯+1", rewardRewind: 1, check: (s) => s.day > maxDay },
+
+      { id: "unlockA", name: "流程负责人", desc: "解锁白澤凛司", reward: "书签", rewardItem: "bookmark", check: (s) => s.guys.A.unlocked },
+      { id: "unlockC", name: "宣传搭档", desc: "解锁久世伶", reward: "黑色耳机", rewardItem: "headset", check: (s) => s.guys.C.unlocked },
+      { id: "affection40", name: "关系升温", desc: "任意男主好感≥40", reward: "能量小饼干", rewardItem: "snack", check: (s) => Object.values(s.guys).some((g) => g.affection >= 40) },
+      { id: "affection55", name: "关系稳定", desc: "任意男主好感≥55", reward: "草莓汽水", rewardItem: "soda", check: (s) => Object.values(s.guys).some((g) => g.affection >= 55) },
+      { id: "affection80", name: "关系升阶", desc: "任意男主好感≥80", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.affection >= 80) },
+      { id: "trust50", name: "信任建立", desc: "任意男主信任≥50", reward: "演出券", rewardItem: "ticket", check: (s) => Object.values(s.guys).some((g) => g.trust >= 50) },
+      { id: "trust70", name: "信任稳固", desc: "任意男主信任≥70", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.trust >= 70) },
+      { id: "triangleOnce", name: "修罗场初见", desc: "触发修罗场1次", reward: "能量饮料", rewardItem: "tonic", check: (s) => s.stats.triangleCount >= 1, progress: (s) => ({ current: Math.min(s.stats.triangleCount, 1), target: 1 }) },
+      { id: "triangleThree", name: "修罗场熟练", desc: "触发修罗场3次", reward: "回溯+1", rewardRewind: 1, check: (s) => s.stats.triangleCount >= 3, progress: (s) => ({ current: Math.min(s.stats.triangleCount, 3), target: 3 }) },
+      { id: "confession", name: "关系确认", desc: "首次进入确认关系阶段", reward: "演出券", rewardItem: "ticket", check: (s) => Object.values(s.confessionTriggered || {}).some(Boolean) },
+      { id: "darknessReveal", name: "情绪显影", desc: "拒绝后首次看到黑化值", reward: "能量小饼干", rewardItem: "snack", check: (s) => Object.values(s.guys).some((g) => g.darknessRevealed) },
+      { id: "darkness30", name: "情绪偏高", desc: "任意角色黑化≥30", reward: "心情+4", rewardMood: 4, check: (s) => Object.values(s.guys).some((g) => g.darkness >= 30) },
+      { id: "darkness60", name: "情绪紧绷", desc: "任意角色黑化≥60", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.darkness >= 60) },
+      { id: "darkness90", name: "关系警报", desc: "任意角色黑化≥90", reward: "能量饮料", rewardItem: "tonic", check: (s) => Object.values(s.guys).some((g) => g.darkness >= 90) },
+      { id: "darkness100", name: "无法回头", desc: "任意角色黑化达到上限", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.darkness >= g.darknessCap) },
+      { id: "rinjiLeave", name: "各自前路", desc: "白澤凛司选择离开", reward: "回溯+1", rewardRewind: 1, check: (s) => s.guys.A.lockedOut },
+
+      { id: "clubEff5", name: "社团顺手", desc: "社团效率达到5", reward: "能量小饼干", rewardItem: "snack", check: (s) => s.resources.clubEff >= 5 },
+      { id: "clubEff10", name: "社团可靠", desc: "社团效率达到10", reward: "便当盒", rewardItem: "bento", check: (s) => s.resources.clubEff >= 10 },
+      { id: "clubEff20", name: "社团王牌", desc: "社团效率达到20", reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.clubEff >= 20 },
+      { id: "clubMaxBonus", name: "效率拉满", desc: "社团推进达到最大加成", reward: "灵感便笺", rewardItem: "note", check: (s) => s.stats.clubMaxBonusCount >= 1 },
+
+      { id: "parttime5", name: "兼职起步", desc: "累计打工5次", reward: "便当盒", rewardItem: "bento", check: (s) => s.stats.partTime >= 5, progress: (s) => ({ current: Math.min(s.stats.partTime, 5), target: 5 }) },
+      { id: "parttime10", name: "勤劳打工人", desc: "累计打工10次", reward: "演出券", rewardItem: "ticket", check: (s) => s.stats.partTime >= 10, progress: (s) => ({ current: Math.min(s.stats.partTime, 10), target: 10 }) },
+      { id: "parttime20", name: "兼职熟练", desc: "累计打工20次", reward: "回溯+1", rewardRewind: 1, check: (s) => s.stats.partTime >= 20, progress: (s) => ({ current: Math.min(s.stats.partTime, 20), target: 20 }) },
+      { id: "parttimeLowMood", name: "硬撑到明天", desc: "打工后心情≤10仍进入下一天", reward: "心情+6", rewardMood: 6, check: (s) => s.stats.parttimeLowMoodDay >= 1 },
+      { id: "walletBoost", name: "钱包回血", desc: "一次打工获得≥35金钱", reward: "草莓汽水", rewardItem: "soda", check: (s) => s.stats.parttimeHighPay >= 1 },
+
+      { id: "rewind3", name: "留一手", desc: "回溯券达到3", reward: "能量小饼干", rewardItem: "snack", check: (s) => s.rewindTokens >= 3 },
+      { id: "ticket2", name: "票券在手", desc: "拥有演出券2张", reward: "心情+4", rewardMood: 4, check: (s) => s.inventory.filter((id) => id === "ticket").length >= 2, progress: (s) => ({ current: Math.min(s.inventory.filter((id) => id === "ticket").length, 2), target: 2 }) },
+      { id: "meal3", name: "餐券备好", desc: "拥有补给道具3个", reward: "能量饮料", rewardItem: "tonic", check: (s) => s.inventory.filter((id) => ["meal", "bento", "tonic", "snack"].includes(id)).length >= 3, progress: (s) => ({ current: Math.min(s.inventory.filter((id) => ["meal", "bento", "tonic", "snack"].includes(id)).length, 3), target: 3 }) },
+      { id: "itemChain", name: "道具熟练", desc: "累计使用道具5次", reward: "回溯+1", rewardRewind: 1, check: (s) => s.stats.itemsUsed >= 5, progress: (s) => ({ current: Math.min(s.stats.itemsUsed, 5), target: 5 }) },
+      { id: "secret", name: "揭开秘密", desc: "任意男主故事解锁到核心真相", reward: "回溯+1", rewardRewind: 1, check: (s) => Object.values(s.guys).some((g) => g.storyTier === 2 && g.storyIndex >= 3) }
+    ];
+
+    const guyStories = {
+      A: {
+        name: "白澤 凛司",
+        layers: [
+          ["他总在图书馆固定座位，像一条冷清的走廊。", "对社团活动不屑一顾，视社交为浪费。", "他拒绝合照，理由是“没必要”。"],
+          ["家里对他“必须第一”的高压让他习惯把情绪压成静音。", "他暗中在做校庆赞助申请，却不愿说出口。", "他把忙碌当成防护罩，只留给你一丝温度。"],
+          ["他曾因一次“放弃机会去救人”导致成绩受影响。", "家里的冷暴力把他逼成了“可靠机器”。", "他把“可靠”当成赎罪，直到你伸手。"]
+        ]
+      },
+      B: {
+        name: "浅羽 朔",
+        layers: [
+          ["他总能逗你笑，像春天的操场。", "小卖部新品第一口总想塞给你。", "对你转学回来特别上心，像在确认你还在。"],
+          ["他对外像太阳，对内却自卑。", "他怕你越走越远，于是拼命跟上。", "他常替你挡流言，却装作不经意。"],
+          ["他曾经“误会”你一次，导致你离开。", "他把这三年当作补偿，日复一日。", "他想在校庆那天把真心说出口。"]
+        ]
+      },
+      C: {
+        name: "久世 伶",
+        layers: [
+          ["他温柔、会记住你所有细节。", "总能“刚好路过”，像一阵精准的风。", "他把你的喜好写进广播台的片尾。"],
+          ["他在学生会/广播站掌握信息。", "会用“为了你好”制造选择倾向。", "他给你安排“最佳路线”，不让别人靠近。"],
+          ["他小时候被长期忽视。", "靠观察与操控获得安全感。", "他害怕失去你，所以宁愿当“坏人也要留下你”。"]
+        ]
+      }
+    };
+
+    const randomEvents = [
+      { id: "energyLow", condition: (s) => s.resources.energy <= 30, text: "午后楼道有风，你靠墙缓口气。路过的同学把水递过来，说：“喝点水再走。”你接过来点头：“谢谢，我调整一下。”他还叮嘱你别逞强，你把水瓶拧紧，提醒自己先稳住状态。", effect: (s) => addResource(s, "energy", 10) },
+      { id: "moodLow", condition: (s) => s.resources.mood <= 30, text: "放学后你在教室收作业，心情有点闷。班长经过问：“还好吗？”你回：“有点累，缓一缓就好。”他点头：“需要帮忙就说。”你把桌面理好，深呼吸了一下，情绪稍微松了点。", effect: (s) => addResource(s, "mood", 8) },
+      { id: "moneyLow", condition: (s) => s.resources.money <= 20, text: "兼职群发来临时加班，你看了几秒还是点了报名。对方很快回复：“明天放学后来。”你回：“好的。”你把时间记在本子上，心里记着海报费要先补上。", effect: (s) => addResource(s, "money", 30) },
+      { id: "studyHigh", condition: (s) => s.resources.study >= 70, text: "自习课上，你把笔记整理得很清楚。老师走过来说：“这份笔记很规范。”同桌小声问：“能借我看看吗？”你点头：“可以，记得还我。”你把页码标好，心情稍微好了些。", effect: (s) => addResource(s, "mood", 5) },
+      { id: "projectPush", condition: (s) => s.resources.project >= 40, text: "你把流程卡片贴在白板上，同学围过来确认顺序。有人说：“这次清楚多了。”你回：“按这个推进就稳。”你顺手把下一步分工写在角落，大家看完后点了点头。", effect: (s) => addResource(s, "project", 4) },
+      { id: "giftDrop", condition: () => true, text: "社团柜子里多了个纸袋，你打开看到一张便签：“别太累。”你左右看了看，没找到是谁放的。你把纸袋收好，顺手把便签夹进本子里，心里对这份心意记了一笔。", effect: (s) => gainItem(s, "ticket") },
+      { id: "library", condition: () => true, text: "图书馆很安静，你摊开企划资料做记录。管理员路过提醒：“别太晚。”你回：“我马上收。”你把要点整理成清单，又在便利贴上写了进度，思路清楚了不少。", effect: (s) => { addResource(s, "study", 4); addResource(s, "project", 2); } },
+      { id: "canteen", condition: () => true, text: "食堂排队的人很多，你端着套餐坐下。有人认出你在做校庆，笑着说：“辛苦了。”你回：“还好，大家一起。”热汤下肚，心情稍微回暖，你把盘子收好准备继续。", effect: (s) => addResource(s, "mood", 6) },
+      { id: "rain", condition: () => true, text: "下雨了，你刚出门就发现伞不够。三把伞从不同方向递过来，有人说：“别淋到。”另一个补一句：“路滑。”你接住伞道谢，说“我没事”，他们还是把伞往你这边靠了一点。", effect: (s) => { addAffection(s, "A", 1); addAffection(s, "B", 1); addAffection(s, "C", 1); s.flags.triangle = true; } },
+      { id: "broadcast", condition: () => true, text: "广播站播报校庆提醒，你听到自己的名字被点到。旁边同学抬头问：“是你负责的吗？”你回：“嗯，是我。”他点头：“那就加油。”你把广播内容记在本子里，准备下次调整。", effect: (s) => addResource(s, "mood", 5) },
+      { id: "campusCat", condition: () => true, text: "操场边的猫蹭到你脚边，你蹲下摸了摸。路过的同学笑：“它挑人。”你回：“那我算运气好。”你拍了拍衣服站起来，心里轻松了一点。", effect: (s) => addResource(s, "energy", 5) },
+      { id: "poster", condition: () => true, text: "公告栏前有人停下看海报，你走近把边角重新压平。学弟说：“这个节目很想看。”你回：“欢迎来。”你把二维码贴直，又补上联系方式，心里踏实了些。", effect: (s) => addResource(s, "project", 3) },
+      { id: "rumor", condition: (s) => s.resources.mood <= 40, text: "走廊角落有人议论校庆压力，你的名字被带到。你没有停下，只是把资料抱紧。有人看见你，尴尬地说：“我们只是随便说说。”你点头：“我知道。”然后去办公室交表。", effect: (s) => addResource(s, "mood", 4) },
+      { id: "clinic", condition: (s) => s.resources.energy <= 25, text: "你到校医室测体温，校医递来温水：“先坐会儿。”你回：“我只是有点累。”她说：“别硬扛。”你点头，休息片刻后精神回了一点，也把注意事项记在心里。", effect: (s) => addResource(s, "energy", 12) },
+      { id: "bonus", condition: (s) => s.resources.money >= 120, text: "你检查账目时发现结余多一点，便把一部分预算转去物资。负责同学说：“这样真的够吗？”你回：“先把关键项补齐。”你把清单标红，剩余的钱留作机动，进度又推进了一些。", effect: (s) => { addResource(s, "money", -20); addResource(s, "project", 4); } },
+      { id: "practice", condition: (s) => s.resources.project >= 60, text: "排练场灯亮起，你把队形重新确认一遍。负责同学说：“这次顺了。”你回：“按这个节奏走。”你把道具位置写到台边纸上，提醒大家下次提前到。", effect: (s) => addResource(s, "project", 4) },
+      { id: "sleepy", condition: (s) => s.resources.energy <= 40, text: "午休时你趴在桌上眯了一会儿，铃声响起才起身。同桌笑你：“终于醒了。”你回：“我没睡太久。”你喝了口水，收拾好书包，短短的休息让你缓过劲。", effect: (s) => addResource(s, "energy", 8) },
+      { id: "volunteer", condition: () => true, text: "新生志愿者来帮忙搬物料，你指给他们位置。有人问：“这样放可以吗？”你回：“可以，辛苦了。”你在名单上勾掉已完成的项目，人手多了，任务压力小了些。", effect: (s) => addResource(s, "project", 2) }
+    ];
+
+    const meetingEvents = {
+      B: [
+        {
+          id: "B_meet_1",
+          text: "操场晚风吹过，浅羽朔把运动外套搭在你肩上，笑意很轻却不散。他说起你刚转来那天，自己跑遍教学楼帮你找教室，像是在确认你真的回来了。夜色把灯光晕开，他却盯着你，不让你躲开。你心里泛起熟悉的温度，听见他问：“{callName}，今天还好吗？”你回道：“还行，只是有点累。”他点头：“累了就靠我一会儿。”",
+          options: [
+            { label: "认真道谢，说你很感激他的陪伴。", tags: ["善良", "体贴", "坦率"] },
+            { label: "笑着调侃他太黏人，提醒他也要照顾自己。", tags: ["边界感", "坦率"] },
+            { label: "收回情绪，转而谈校庆任务。", tags: ["冷漠"] }
+          ]
+        },
+        {
+          id: "B_meet_2",
+          text: "小卖部新品被他塞进你手里，塑料袋上凝着水珠。浅羽朔边说排练顺利，边把你推到有风的走廊尽头。你看见他背包夹层里掉出旧照片——你们小时候在校庆舞台下的合影。他立刻收回，眼神短促慌了一下：“{callName}，如果你不喜欢，我就不提过去了。”你心里一软，低声答：“我没有不喜欢。”他笑了一下：“那以后也一起。”",
+          options: [
+            { label: "告诉他你也怀念过去，并愿意听他讲。", tags: ["善良", "坦率"] },
+            { label: "轻声说现在也很好，但希望彼此尊重边界。", tags: ["边界感", "体贴"] },
+            { label: "半开玩笑说照片太幼稚，想看新的合照。", tags: ["坦率", "体贴"] }
+          ]
+        },
+        {
+          id: "B_meet_3",
+          text: "排练结束的空教室里只剩你和浅羽朔，他把椅子拖到你身旁，声音压低：“我们以前，是不是也这样并肩？”他刻意把“以前”说得很轻，却又像刻在字里。你听得出他在用熟悉感拉住你，既温柔又带一点小心机。他的眼神像在等你给答案。你轻声说：“我们一直在变，但我还在。”他回：“那我也在。”",
+          options: [
+            { label: "坦白告诉他你珍惜这份羁绊。", tags: ["坦率", "善良"] },
+            { label: "提醒他别靠过去绑住你们的现在。", tags: ["边界感"] },
+            { label: "调皮地说要用行动证明你们的现在。", tags: ["体贴", "坦率"] }
+          ]
+        },
+        {
+          id: "B_meet_4_heart",
+          text: "晚霞斜斜铺进走廊，浅羽朔把你的资料夹接过去，一页页帮你压平。他的手指在纸边停住，像是怕弄皱你的心思。你心里忽然有点发热，想起他总是替你挡流言，却从不说出口。他轻声说：“我不想你一个人撑。”你抬眼看他，听见自己回答：“那你呢？”他笑得很淡：“我只要你回头看我就好。”风吹起他的刘海，他却没有移开视线。",
+          options: [
+            { label: "轻声说你一直看着他。", tags: ["体贴", "坦率"] },
+            { label: "告诉他你需要并肩而不是被保护。", tags: ["边界感", "坦率"] },
+            { label: "玩笑说他总是太认真，让你紧张。", tags: ["善良", "体贴"] }
+          ]
+        },
+        {
+          id: "B_meet_5",
+          text: "食堂外的风有点凉，浅羽朔把围巾绕到你脖子上，动作很熟练。你心里一紧，想说谢谢，又觉得太客气。他先开口：“你总是硬撑，我看得出来。”你垂眼：“我不想拖累大家。”他停顿一下：“你不是负担，是我的习惯。”你轻笑：“这话太犯规了。”他回：“那就罚我多陪你一点。”",
+          options: [
+            { label: "接受他的关心，认真道谢。", tags: ["体贴", "善良"] },
+            { label: "提醒他别把你当成过去的投影。", tags: ["边界感"] },
+            { label: "半开玩笑说他太会说话。", tags: ["坦率"] }
+          ]
+        },
+        {
+          id: "B_meet_6",
+          text: "操场灯光像一圈圈柔光，他陪你慢跑，脚步刻意放慢。你心里想着企划细节，他却忽然问：“{callName}，你有没有想过，我们以后还能不能一直这样？”你停了半步，听见自己的呼吸。你答：“我们要先把现在走稳。”他点点头：“那我就陪你把现在走完。”风吹过发梢，他的笑意比灯光更温。",
+          options: [
+            { label: "肯定他，表示你愿意一起走下去。", tags: ["善良", "坦率"] },
+            { label: "说你需要先完成目标，再谈未来。", tags: ["上进", "边界感"] },
+            { label: "调皮地说他先赢过你再说。", tags: ["坦率"] }
+          ]
+        },
+        {
+          id: "B_meet_7_heart",
+          text: "雨后教学楼的地面还带着潮意，浅羽朔撑着伞把你护在身侧。他的衣角被雨水打湿，却一直往你这边倾。你心里泛起一种说不清的酸软，像被旧回忆轻轻触碰。你低声说：“你不用这样。”他笑：“我想。”你抬头看他，听见他补了一句：“我从小就想这样。”伞外的雨声更密，你的心跳也更快。",
+          options: [
+            { label: "轻声说你也想靠近他。", tags: ["体贴", "坦率"] },
+            { label: "提醒他别把过去当成义务。", tags: ["边界感"] },
+            { label: "转移话题，怕自己太动摇。", tags: ["试探", "边界感"] }
+          ]
+        },
+        {
+          id: "B_meet_8",
+          text: "你整理物资时手指划到纸边，浅羽朔立刻把你的手拉过来看。他眉心微皱，却语气轻：“别急，慢一点。”你心里一紧，觉得自己像被过度照顾。你说：“我没那么脆弱。”他沉默一下：“我知道，但我还是想挡在你前面。”你轻叹：“那就一起分担。”他点头：“好。”",
+          options: [
+            { label: "让他知道你愿意依赖他。", tags: ["体贴", "善良"] },
+            { label: "强调你也能照顾他。", tags: ["坦率", "边界感"] },
+            { label: "敷衍带过，回到工作。", tags: ["冷漠"] }
+          ]
+        },
+        {
+          id: "B_meet_9",
+          text: "你在楼梯口停住，浅羽朔刚好从下方走来。他抬眼时，像是先认出了你的疲惫。他说：“要不要我帮你顶一会儿？”你心里有点动摇，担心自己会习惯他的好。你答：“我可以。”他笑：“那就让我陪你一起可以。”你被他的逻辑逗笑，紧绷的肩慢慢放下。",
+          options: [
+            { label: "接受他的陪伴，轻声感谢。", tags: ["体贴", "善良"] },
+            { label: "说你不想麻烦他太多。", tags: ["边界感"] },
+            { label: "用玩笑带过，转而说任务。", tags: ["坦率"] }
+          ]
+        },
+        {
+          id: "B_meet_10",
+          text: "灯光偏暗的走廊里，他把你挡在身后避开人潮。你心里有点不安，想到自己是不是又在依赖他。他却低声说：“我不是在管你，只是怕你被挤到。”你轻声回：“我明白。”他停顿一秒：“你明白就好。”那一瞬间，你听见自己心里很轻的回应。",
+          options: [
+            { label: "主动靠近他，表示信任。", tags: ["体贴", "坦率"] },
+            { label: "提醒他保持一点距离。", tags: ["边界感"] },
+            { label: "不置可否，默默跟着。", tags: ["试探"] }
+          ]
+        },
+        {
+          id: "B_meet_11",
+          text: "夜跑后，你们坐在操场边，呼吸还没平稳。他递给你水，语气里带着一点认真：“{callName}，你有没有想过离开这里？”你愣了下，心里一酸：“我刚回来。”他轻声说：“那我就更想好好陪你。”你看着他的侧脸，忽然意识到，他的温柔里藏着不愿被你忽略的心意。",
+          options: [
+            { label: "直白说你不想再离开。", tags: ["坦率", "善良"] },
+            { label: "说你需要时间确认自己的方向。", tags: ["边界感", "上进"] },
+            { label: "用笑掩饰情绪，转移话题。", tags: ["试探"] }
+          ]
+        },
+        {
+          id: "B_meet_12",
+          text: "排练室里只剩灯管的嗡鸣，你整理道具，他突然把一张折好的纸塞给你。展开一看，是你名字的练习字迹。他低声说：“怕你累的时候忘了自己的名字。”你心里一跳，轻轻笑了：“你怎么总把我当重要的人？”他很认真：“因为你就是。”你别开脸，却忍不住弯起唇角。",
+          options: [
+            { label: "承认你也把他放在心上。", tags: ["坦率", "体贴"] },
+            { label: "提醒他别把你捧得太高。", tags: ["边界感"] },
+            { label: "假装嫌弃，缓和气氛。", tags: ["恶趣味", "坦率"] }
+          ]
+        },
+        {
+          id: "B_meet_13",
+          text: "你在教室门口等人，浅羽朔把外套披到你身上，指尖轻轻拢了一下。你心里忽然安静下来，像被旧时光包围。他说：“我们从以前到现在，都在同一条路上。”你轻声回应：“我知道。”他笑：“那就别走太快，让我跟上。”你点头，心里有一点柔软的决定。",
+          options: [
+            { label: "让他放心，你会等他。", tags: ["体贴", "善良"] },
+            { label: "说你更希望并肩而不是被追赶。", tags: ["边界感", "坦率"] },
+            { label: "转移话题，怕自己说太多。", tags: ["试探"] }
+          ]
+        }
+      ],
+      A: [
+        {
+          id: "A_meet_1",
+          text: "预算表摊在桌面上，白澤凛司的笔尖停在细小的数字偏差处。他抬眼，语气清晰：“这个位置要对齐。”你注意到他连纸边都整理得一丝不苟，像在守护规则。他把文件递给你时指节发白，像在压住焦躁。你心里轻轻一缩，听见他低低喊了一声“{callName}”。你答：“我会改好。”他点头：“谢谢。”",
+          options: [
+            { label: "认真记录并表示会马上修正。", tags: ["守规矩", "效率", "上进"] },
+            { label: "轻声说谢谢他的校对，同时询问他是否需要休息。", tags: ["体贴", "尊重边界"] },
+            { label: "笑着说格式无所谓，重点是内容。", tags: ["胡闹", "低效率"] }
+          ]
+        },
+        {
+          id: "A_meet_2",
+          text: "你在教室外等他签字，白澤凛司却先把你叫进办公室。他指向屏幕上的流程图：“如果不按规定走，整个校庆会卡死。”他的语气不高，却像刀锋干净。你看见他眼底的倦意，像压了很久的负担。你轻声说：“我会配合。”他停顿一下：“{callName}，别勉强。”你答：“不会。”",
+          options: [
+            { label: "表示理解并愿意配合流程优化。", tags: ["守规矩", "效率"] },
+            { label: "直白说你也不想拖累他，会更上进。", tags: ["坦率", "上进"] },
+            { label: "试图拉他去喝点东西放松。", tags: ["体贴", "尊重边界"] }
+          ]
+        },
+        {
+          id: "A_meet_3",
+          text: "晚自习后，白澤凛司把折得很平整的资料递给你。他没有多解释，只说：“你会用得到。”走廊灯光冷白，他的影子落在你脚边，像一条严谨的线。你轻声问他是不是也会累，他回答：“没事，{callName}，先把事做好。”你心里有点发热，低声回：“谢谢你。”他略微点头，却没有走远。",
+          options: [
+            { label: "点头收下资料，并承诺按他的思路推进。", tags: ["守规矩", "效率"] },
+            { label: "说你会努力，但也希望他能照顾自己。", tags: ["尊重边界", "体贴"] },
+            { label: "开玩笑说他太死板，想看他失控一次。", tags: ["胡闹", "恶趣味"] }
+          ]
+        },
+        {
+          id: "A_meet_4_heart",
+          text: "教室窗外是淡蓝的夜色，白澤凛司把你的企划纸张按在桌面，逐条对照。他的声音很低：“这段改完，流程就通了。”你心里忽然安静下来，像把乱线重新理顺。他停顿片刻，似乎在寻找合适的词：“{callName}—做得很好。”那句话很轻，却像落在心口。你抬眼看他，发现他的耳尖微红，却很快移开视线。你轻声说：“谢谢你一直在。”他回：“我只是做该做的。”",
+          options: [
+            { label: "认可他的认真，愿意一起扛。", tags: ["坦率", "守规矩"] },
+            { label: "提醒他也要喘口气。", tags: ["尊重边界", "体贴"] },
+            { label: "用玩笑缓和他的紧绷。", tags: ["坦率"] }
+          ]
+        },
+        {
+          id: "A_meet_5",
+          text: "你把打印好的流程递上去，他先是对齐角度，再慢慢翻页。他忽然抬头：“你为什么总是一个人做？”你怔了一下，心里有点酸，却还是平静回答：“习惯了。”他沉默几秒，说：“不必习惯。”你轻声回：“那我就试着不习惯。”他点头，像在认可你的回答。",
+          options: [
+            { label: "坦白说你其实也想有人并肩。", tags: ["坦率", "善良"] },
+            { label: "表示自己还能撑住，不想麻烦人。", tags: ["上进", "边界感"] },
+            { label: "把话题转回工作细节。", tags: ["效率"] }
+          ]
+        },
+        {
+          id: "A_meet_6",
+          text: "办公室的灯光亮得刺眼，你们对着预算表一行行核对。他忽然停下笔：“这部分可以优化。”你顺着他的手指看过去，心里有种被认真对待的感觉。你说：“我会再调整。”他答：“我等你的版本。”你轻声笑了下：“谢谢你信我。”他抿唇：“这是流程需要。”",
+          options: [
+            { label: "认真记录并快速修改。", tags: ["效率", "守规矩"] },
+            { label: "询问他是否还有别的建议。", tags: ["坦率", "上进"] },
+            { label: "提醒他别太苛刻。", tags: ["边界感"] }
+          ]
+        },
+        {
+          id: "A_meet_7_heart",
+          text: "图书馆的灯光落在他的侧脸上，线条冷而漂亮。他把一本书推到你面前：“这个章节会有用。”你翻开时发现里面夹着一张便签，写着你的名字。你心里一怔，抬头看他。他说得很轻：“我不擅长表达，但我会记住。”你低声回应：“我知道。”他的指尖轻轻敲了敲桌面，像在压住某种情绪。你忽然觉得这个安静的瞬间，比任何热闹都让人心动。",
+          options: [
+            { label: "直白告诉他你很感动。", tags: ["坦率", "体贴"] },
+            { label: "轻声道谢，给他空间。", tags: ["尊重边界"] },
+            { label: "用玩笑缓解紧张。", tags: ["坦率"] }
+          ]
+        },
+        {
+          id: "A_meet_8",
+          text: "你递交资料时不小心打翻水杯，他伸手帮你挡住纸面，袖口瞬间湿了一片。他没有抱怨，只说：“下次注意。”你心里一紧：“对不起。”他看了你一眼：“没事。”你低声补：“谢谢你。”他微不可察地嗯了一声，像把情绪压到最轻。",
+          options: [
+            { label: "认真道歉并马上整理。", tags: ["守规矩", "上进"] },
+            { label: "询问他是否需要更换衣物。", tags: ["体贴", "尊重边界"] },
+            { label: "试着笑着带过，缓解气氛。", tags: ["坦率"] }
+          ]
+        },
+        {
+          id: "A_meet_9",
+          text: "走廊尽头的风吹得纸张微卷，他把一叠表格按住，抬眼看你：“你别总把责任背在自己身上。”你心里一震，却还是说：“我怕出错。”他语气淡却很坚定：“流程不是你一个人的。”你点头，心里忽然轻了一点。你说：“我会学着依赖团队。”他轻轻颔首。",
+          options: [
+            { label: "接受他的提醒，愿意分担。", tags: ["坦率", "守规矩"] },
+            { label: "表示你会更努力保证质量。", tags: ["上进", "效率"] },
+            { label: "试探他是否也需要帮助。", tags: ["体贴", "尊重边界"] }
+          ]
+        },
+        {
+          id: "A_meet_10",
+          text: "你在资料室找文件，他从背后递来一份备份，语气简短：“你要的。”你心里一热，想说谢谢又觉得太轻。他补了一句：“我顺手。”你抬眼：“你的顺手总是救急。”他没有回应，但视线停在你身上半秒。你轻声说：“我会记得。”他淡淡回：“不必。”",
+          options: [
+            { label: "表达感谢并认真收下。", tags: ["坦率", "体贴"] },
+            { label: "说你会用成果回报他。", tags: ["上进", "效率"] },
+            { label: "提醒他别把自己逼太紧。", tags: ["尊重边界"] }
+          ]
+        },
+        {
+          id: "A_meet_11",
+          text: "晚风穿过楼道，他站在栏杆边翻看你的修改稿。你站在旁边，心里有点紧张。他忽然说：“这一版比上一版好。”你轻轻松了口气：“我熬了一夜。”他抬眼：“别熬。”你笑了下：“你也别。”他停顿一下：“我会尽量。”那句尽量很轻，却让你觉得他不是只有冰冷的规则。",
+          options: [
+            { label: "答应他会调整作息。", tags: ["守规矩", "体贴"] },
+            { label: "坦白说你需要他提醒。", tags: ["坦率"] },
+            { label: "笑着敷衍，继续推进。", tags: ["效率"] }
+          ]
+        },
+        {
+          id: "A_meet_12",
+          text: "你把预算表重新打印，他忽然递来一支备用笔：“你的笔没墨了。”你一怔，才发现他一直留意你的小细节。你说：“谢谢。”他淡淡回：“别分心。”你心里忽然有一点被照顾的温度，却又不敢说太多。你低声问：“你是不是也会怕？”他看向远处：“怕出错。”你点头：“我也是。”",
+          options: [
+            { label: "坦率承认你也会不安。", tags: ["坦率"] },
+            { label: "表示你会用行动弥补不安。", tags: ["上进", "效率"] },
+            { label: "试着转移话题，减轻压力。", tags: ["体贴"] }
+          ]
+        },
+        {
+          id: "A_meet_13",
+          text: "你在空教室里写报告，他突然进来把窗关上：“风太大，会乱。”你看着他背影，心里有种被保护的错觉。他转身时语气克制：“你可以慢一点。”你轻轻回答：“我会。”他点头，像把允许写进规则里。你忽然觉得这个人其实比你想的更温柔，只是用另一种方式表达。",
+          options: [
+            { label: "接受他的提醒，放慢节奏。", tags: ["守规矩", "体贴"] },
+            { label: "说你需要他的协助。", tags: ["坦率"] },
+            { label: "坚持自己能扛住。", tags: ["上进", "边界感"] }
+          ]
+        }
+      ],
+      C: [
+        {
+          id: "C_meet_1",
+          text: "广播站的玻璃窗映着你的倒影，久世伶推开门时脚步轻得像没声音。他把宣传位的排班表递给你，语气温柔：“我帮你留了最佳时段。”你明白这不是无条件好意，而是信息差后的选择。他的手指停在你名字旁边，像在确认归属。他低声重复：“{callName}。”你回：“谢谢。”他轻笑：“不用谢我，答应就好。”",
+          options: [
+            { label: "顺着他的安排，表示愿意配合。", tags: ["信息差", "小谎言"] },
+            { label: "试探他为什么愿意帮你。", tags: ["试探"] },
+            { label: "强调自己会按规则申请，不需要特殊照顾。", tags: ["强调边界"] }
+          ]
+        },
+        {
+          id: "C_meet_2",
+          text: "你在走廊拐角被久世伶“偶遇”，他递来匿名赞助线索，嘴角弧度恰到好处：“我只是不想看到你被别人抢走资源。”他总是把话说得很轻，却像一根线缠上你的手腕。你听见远处有人走近，他却站得更近，让你只能面对他。那份靠近里有温柔，也有不容拒绝的坚持，他在你耳边叫了声“{callName}”。你低声回：“我记住了。”",
+          options: [
+            { label: "半真半假地说只有他懂你。", tags: ["占有", "小谎言"] },
+            { label: "提醒他别太过度，合作就够了。", tags: ["公开拒绝", "强调边界"] },
+            { label: "轻声说想听他真正的目的。", tags: ["试探", "恶趣味"] }
+          ]
+        },
+        {
+          id: "C_meet_3",
+          text: "夜晚的广播站灯光昏暗，久世伶把耳机扣在你耳边，低声说：“你听，只有我们听得到。”他的声音像在缠绕你，语气温柔却不容置疑。他把你的名字在句尾拉长：“{callName}—”你心里一紧，意识到他的亲近不是单纯喜欢，而是带着占有与试探。你低声说：“别靠太近。”他笑：“那就更近一点，你会习惯的。”",
+          options: [
+            { label: "让他继续念下去，告诉他你想听。", tags: ["占有", "试探"] },
+            { label: "轻轻把耳机取下，说你需要一点空间。", tags: ["公开拒绝"] },
+            { label: "用玩笑回应他的暧昧，保持模糊。", tags: ["恶趣味", "信息差"] }
+          ]
+        },
+        {
+          id: "C_meet_4_heart",
+          text: "广播站外的灯忽明忽暗，久世伶把你的名字写在便签上，指腹轻轻描过那两个字。你心里一热，像被某种视线缠住。他低声说：“你今天只需要听我的。”你笑得很轻：“你为什么总是这么自信？”他靠近半步：“因为你会回来。”你听见自己的呼吸，想说拒绝，却又被他的温柔拖住。你轻声问：“如果我不呢？”他回答：“那我就等。”",
+          options: [
+            { label: "顺着他的节奏，表示愿意听他一次。", tags: ["占有", "信息差"] },
+            { label: "试探他会不会真的等你。", tags: ["试探", "恶趣味"] },
+            { label: "提醒他你不喜欢被控制。", tags: ["强调边界"] }
+          ]
+        },
+        {
+          id: "C_meet_5",
+          text: "你在公告栏前停下脚步，久世伶从背后递来一张宣传卡。他的声音很低：“我把最好的位置留给你。”你心里微微一紧，知道这意味着你必须承他的人情。你回：“我会补偿。”他轻声笑：“我不要补偿，我要你记住我。”你抬眼看他，他的目光像一层看不见的网。",
+          options: [
+            { label: "答应他，顺势接受好意。", tags: ["信息差", "小谎言"] },
+            { label: "试探他真正的代价。", tags: ["试探"] },
+            { label: "拒绝太多照顾，强调合作边界。", tags: ["强调边界"] }
+          ]
+        },
+        {
+          id: "C_meet_6",
+          text: "夜色压在走廊上，他忽然伸手替你拉好胸前的围巾，动作轻得几乎没有触感。你心里一跳，想后退，却被他温柔的声音按住：“别怕，我只是帮你挡风。”你低声说：“你总是知道我会在哪里。”他笑：“因为我记得你所有的习惯。”你抿唇：“这不公平。”他轻声回：“公平不重要，只有你重要。”",
+          options: [
+            { label: "接受他的靠近，轻声回应。", tags: ["占有", "试探"] },
+            { label: "提醒他不要越界。", tags: ["强调边界"] },
+            { label: "用玩笑缓和紧绷。", tags: ["恶趣味"] }
+          ]
+        },
+        {
+          id: "C_meet_7",
+          text: "广播台的红灯亮起，他把耳麦放到你手心，指尖轻轻擦过你的掌心。你心里一紧，觉得他故意放慢了动作。他说：“只要你愿意，所有人都会听见你的声音。”你低声回：“我不想欠你。”他笑：“那就把你的秘密给我。”你抬眼：“你想知道什么？”他靠近：“你更偏向谁。”",
+          options: [
+            { label: "含糊回应，给他一点想象。", tags: ["信息差", "小谎言"] },
+            { label: "直接拒绝他的试探。", tags: ["公开拒绝"] },
+            { label: "反问他是不是在嫉妒。", tags: ["试探", "恶趣味"] }
+          ]
+        },
+        {
+          id: "C_meet_8_heart",
+          text: "你在楼梯间停住，久世伶从上方望下来，影子把你包住。他慢慢走近，声音像擦过耳际：“{callName}，你总是把自己放在最后。”你想反驳，却被他轻轻握住手腕。你说：“你这样很危险。”他笑得温柔：“危险的是你离我太远。”你心里一震，意识到他的温柔背后藏着极深的执念。你轻声问：“那我该怎么办？”他回答：“只要别把我当外人。”",
+          options: [
+            { label: "答应他会更靠近一些。", tags: ["占有", "试探"] },
+            { label: "告诉他你需要保持边界。", tags: ["强调边界"] },
+            { label: "用玩笑掩饰心跳。", tags: ["恶趣味"] }
+          ]
+        },
+        {
+          id: "C_meet_9",
+          text: "夜风吹过走廊，他把你的手套塞进你掌心：“你又忘了。”你心里一软，却又觉得他知道得太多。他说：“你会在这个时间经过这里。”你低声回：“你监视我？”他笑：“我在等你。”你心里一震，发现他把等待说得很轻，却像在设定你的位置。",
+          options: [
+            { label: "接受他的等待，轻声道谢。", tags: ["试探", "占有"] },
+            { label: "质疑他的行为，要求解释。", tags: ["公开拒绝"] },
+            { label: "用玩笑带过，保持模糊。", tags: ["恶趣味", "信息差"] }
+          ]
+        },
+        {
+          id: "C_meet_10",
+          text: "广播室里只有机器的低鸣，你在整理稿件，久世伶靠在门边看着你。他忽然说：“我知道你今天很累。”你抬眼：“你怎么知道？”他笑：“我听见你的叹气。”你心里一紧，觉得自己被看得太透。他靠近半步：“让我帮你。”你低声回：“你想换什么？”他轻轻说：“你的信任。”",
+          options: [
+            { label: "答应他，试着交出一点信任。", tags: ["占有", "试探"] },
+            { label: "拒绝他，强调你自己能处理。", tags: ["公开拒绝"] },
+            { label: "用玩笑试探他的底线。", tags: ["恶趣味"] }
+          ]
+        },
+        {
+          id: "C_meet_11",
+          text: "你在公告栏前拆掉被覆盖的宣传纸，他从后方递上新的版面：“我重新排了顺序。”你心里一凛，知道他在替你扫清障碍。你说：“你不需要做到这一步。”他轻声回：“我想。”你抬眼看他，他目光温柔却不容置疑。你低声问：“你到底想要什么？”他答：“只要你别把我推开。”",
+          options: [
+            { label: "答应他会考虑他的心情。", tags: ["试探", "占有"] },
+            { label: "提醒他不要控制你。", tags: ["强调边界"] },
+            { label: "用暧昧笑意回避问题。", tags: ["恶趣味", "信息差"] }
+          ]
+        },
+        {
+          id: "C_meet_12",
+          text: "夜自习后你独自收拾，他突然出现，递来一张新的流程表。你心里一紧：“你怎么在这里？”他笑：“我总会出现。”你低声回：“那不公平。”他慢慢说：“公平从来不是我们的规则。”他的语气很柔，却让你心里发凉。你抬眼：“你会一直这样吗？”他答：“只要你还需要我。”",
+          options: [
+            { label: "顺势接受他的安排。", tags: ["信息差", "占有"] },
+            { label: "质疑他的动机。", tags: ["试探"] },
+            { label: "冷静拒绝他的插手。", tags: ["公开拒绝"] }
+          ]
+        },
+        {
+          id: "C_meet_13",
+          text: "你在楼道拐角停住，他靠近时带着淡淡的皂香。久世伶把你的名牌轻轻拨正，像在确认你属于哪里。他低声说：“别让别人碰你。”你心里一紧，问：“你是在命令我？”他笑得温柔：“只是请求。”你看着他，觉得他的温柔像一条细线，慢慢绕上你的心。",
+          options: [
+            { label: "答应他的请求，保持暧昧距离。", tags: ["占有", "试探"] },
+            { label: "提醒他你有自己的选择。", tags: ["强调边界"] },
+            { label: "用玩笑缓和，保留主动权。", tags: ["恶趣味", "信息差"] }
+          ]
+        }
+      ]
+    };
+
+    const tasks = [
+      { id: "study", name: "学习", desc: "学业+3~6 社团效率+1 心情-1 精力-10", effect: (s) => { const repeat = getRepeatPenalty("study"); const mods = getMoodEffectMultipliers(); const base = 3 + Math.floor(Math.random() * 4); const rawGain = Math.floor(base * mods.studyMultiplier * repeat.multiplier); const gain = Math.max(1, rawGain); const effGain = Math.max(0, Math.floor(1 * mods.studyMultiplier * repeat.multiplier)); addResource(s, "study", gain + s.buffs.nextStudyBonus); addResource(s, "clubEff", effGain); addResource(s, "mood", -1 - repeat.moodPenalty); addResource(s, "energy", -10); s.buffs.nextStudyBonus = 0; if (s.buffs.tutoringDays > 0) s.buffs.tutoringDays -= 1; s.streaks.study++; },
+        condition: () => true },
+      { id: "club", name: "社团", desc: "主线+3+效率系数 额外+1 心情无变化 精力-8（社团为主线推进）", effect: (s) => { const repeat = getRepeatPenalty("club"); const bonus = Math.floor(s.resources.clubEff / 5); const mods = getMoodEffectMultipliers(); const base = 3 + bonus + s.buffs.nextClubBonus; const gain = Math.max(1, Math.floor(base * mods.clubMultiplier * repeat.multiplier)); const cost = 6 + Math.floor(Math.random() * 5); if (s.resources.energy <= 20) s.stats.lowEnergyClubCount += 1; if (bonus >= 4) s.stats.clubMaxBonusCount += 1; addResource(s, "mood", -repeat.moodPenalty); addResource(s, "energy", -8); if (s.resources.money < cost) { const reduced = Math.max(1, Math.floor(gain * 0.5)); addResource(s, "project", reduced); s.storyLog.push("【资金不足】社团推进受阻，本次主线进度减半。"); } else { addResource(s, "money", -cost); addResource(s, "project", gain); s.storyLog.push(`【资金支出】社团消耗${cost}金，主线推进顺利。`); } addResource(s, "project", 1); s.buffs.nextClubBonus = 0; const dropChance = clamp((0.08 + s.resources.clubEff * 0.008) * mods.moodMultiplier * repeat.multiplier, 0, 0.25); if (Math.random() < dropChance) { const pool = ["snack", "meal", "ticket", "posterKit"]; const drop = pool[Math.floor(Math.random() * pool.length)]; gainItem(s, drop); } s.stats.club++; s.streaks.study = 0; },
+        condition: () => getWeekdayName() !== "周日" },
+      { id: "parttime", name: "打工", desc: "金钱+25~+50 心情-8 精力-18", effect: (s) => { const repeat = getRepeatPenalty("parttime"); const base = 25 + Math.floor(Math.random() * 26); const gain = Math.max(1, Math.floor(base * repeat.multiplier)); const bonus = s.buffs.nextPartTimeBonus; addResource(s, "money", gain + bonus); s.buffs.nextPartTimeBonus = 0; addResource(s, "mood", -8 - repeat.moodPenalty); addResource(s, "energy", -18); s.stats.partTime++; s.stats.weekPartTime += 1; if (gain + bonus >= 35) s.stats.parttimeHighPay += 1; if (s.resources.mood <= 10) s.stats.parttimeLowMoodFlag = true; const rareBase = 0.12; const rareChance = clamp(rareBase * (repeat.multiplier === 1 ? 1 : repeat.multiplier === 0.8 ? 0.7 : 0.5), 0, 1); if (Math.random() < rareChance) { const rarePool = ["clueCard", "bonusShift", "rewindFragment"]; const rare = rarePool[Math.floor(Math.random() * rarePool.length)]; if (rare === "clueCard") { s.daySummary?.clues.push("线索卡"); s.storyLog.push("【意外收获】你得到了线索卡。"); items.clueCard.effect(s); } else if (rare === "bonusShift") { s.daySummary?.items.push("加班补贴"); s.storyLog.push("【意外收获】你拿到了加班补贴。"); items.bonusShift.effect(s); } else { s.daySummary?.items.push("回溯碎片"); s.storyLog.push("【意外收获】你发现了回溯碎片。"); items.rewindFragment.effect(s); if (s.buffs.rewindFragments >= 3) { s.buffs.rewindFragments -= 3; s.rewindTokens += 1; s.storyLog.push("【合成】回溯碎片集齐，获得回溯券+1。"); } } } s.streaks.study = 0; },
+        condition: () => true },
+      { id: "rest", name: "休息", desc: "精力恢复（分段） 心情+4（有概率额外+5）", effect: (s) => { const base = calcRestRecovery(s.resources.energy); addResource(s, "energy", base); addResource(s, "mood", 4); if (Math.random() < 0.35) addResource(s, "mood", 5); s.stats.rest++; s.flags.restToday = true; s.streaks.study = 0; },
+        condition: () => true },
+      { id: "goHome", name: "回家", desc: "周日限定 · 心情+12 精力+10 金钱+20（消耗2次行动）", actionCost: 2, effect: (s) => { const moodBefore = s.resources.mood; const baseMood = 12; const baseEnergy = 10; const baseMoney = 20; const reduced = s.streaks.homeWeeks >= 2; const moodGain = reduced ? Math.floor(baseMood / 2) : baseMood; const energyGain = reduced ? Math.floor(baseEnergy / 2) : baseEnergy; const moneyGain = reduced ? Math.floor(baseMoney / 2) : baseMoney; addResource(s, "mood", moodGain); addResource(s, "energy", energyGain); addResource(s, "money", moneyGain); const suffix = reduced ? "（连续回家收益减半）" : ""; s.storyLog.push(`【回家】你回家休息了一下，心情和体力缓了过来，收到零用钱+${moneyGain}。${suffix}`); if (s.daySummary) s.daySummary.logs.push(`回家收益：心情+${moodGain} 精力+${energyGain} 金钱+${moneyGain}`); triggerHomeConflict(s, moodBefore); triggerHomeBuddy(s); },
+        condition: (s) => getWeekdayName() === "周日" && (!s.weekCounts || s.weekCounts.goHome === 0) },
+      { id: "date", name: "见面", desc: "与男主互动 好感/信任↑ 精力-8 心情+3", effect: (s) => { s.flags.firstDate = true; },
+        condition: (s) => s.day >= 3 },
+      { id: "tutor", name: "学霸补课", desc: "周日限定 · 学业+10 好感+2 信任+2 心情-1（消耗2次行动）", actionCost: 2, effect: (s) => { addResource(s, "study", 10); addAffection(s, "A", 2); addTrust(s, "A", 2); addResource(s, "mood", -1); s.flags.weeklyTutorUsed = true; s.storyLog.push("【学霸补课】白澤凛司把课本摊开，口气冷淡但很认真：“这里按步骤来，不要跳。”你坐在他旁边复习到晚一点，他把重点圈好才收拾书包。你小声说：“谢谢。”他只点了点头，像是在确认你把规则记住了。"); if (s.daySummary) { s.daySummary.logs.push("学霸补课：学业+10，好感+2，信任+2，心情-1。"); } },
+        condition: (s) => getWeekdayName() === "周日" && s.flags.weeklyTutorOffered && !s.flags.weeklyTutorUsed },
+      { id: "useItem", name: "使用道具", desc: "使用背包内道具", effect: () => {}, condition: (s) => s.inventory.length > 0 },
+      { id: "emergencyRest", name: "强制休整", desc: "精力恢复（低精力） 心情+3（低精力时解锁）", effect: (s) => { const base = calcRestRecovery(s.resources.energy, -5); addResource(s, "energy", base); addResource(s, "mood", 3); s.stats.rest++; s.flags.restToday = true; },
+        condition: (s) => s.resources.energy < 25 },
+      { id: "canteen", name: "食堂补给", desc: "精力恢复（低精力） 心情+3（低精力时解锁）", effect: (s) => { const base = calcRestRecovery(s.resources.energy, -5); addResource(s, "energy", base); addResource(s, "mood", 3); },
+        condition: (s) => s.resources.energy < 25 },
+      { id: "seekB", name: "向竹马求助", desc: "精力恢复（低精力） 心情+4 信任+4（低精力时解锁）", effect: (s) => { const base = calcRestRecovery(s.resources.energy, -5); addResource(s, "energy", base); addResource(s, "mood", 4); addTrust(s, "B", 4); },
+        condition: (s) => s.resources.energy < 25 && s.day >= 2 }
+    ];
+
+    const tutorialSteps = [
+      "欢迎来到粉黑乙女校园！左侧是资源面板、任务与成就入口。",
+      "每周只安排周一/周三/周五/周日行动：周一/周三/周五有2次行动，周日有3次行动。",
+      "主线目标是20周内完成校庆企划，进度条与阶段目标会提示你。",
+      "右侧是男主好感与信任，提升后可解锁背景故事层层秘密。",
+      "顶部可存档/读档，成就会奖励道具或回溯券。",
+      "回溯券可在关键时刻救场，放心探索选择！"
+    ];
+
+    const stateTemplate = () => ({
+      playerName: defaultName,
+      day: 1,
+      week: 1,
+      calendar: { week: 1, weekdayIndex: 0, weekdayName: "周一" },
+      actionsPerDay: 2,
+      actionsTaken: 0,
+      storyLog: [],
+      resources: { energy: 75, money: 20, mood: 50, study: 50, project: 0, clubEff: 0 },
+      inventory: ["snack", "meal"],
+      achievements: [],
+      buffs: {
+        nextStudyBonus: 0,
+        nextClubBonus: 0,
+        nextPartTimeBonus: 0,
+        tutoringDays: 0,
+        rewindFragments: 0
+      },
+      weekProjectGain: 0,
+      dailyActionCounts: { study: 0, club: 0, parttime: 0, rest: 0, date: 0, useItem: 0, goHome: 0, tutor: 0 },
+      weekCounts: { study: 0, club: 0, parttime: 0, rest: 0, date: 0, goHome: 0, tutor: 0, useItem: 0 },
+      guys: {
+        A: {
+          affection: 20,
+          trust: 20,
+          storyTier: 0,
+          storyIndex: 0,
+          unlocked: false,
+          darkness: 0,
+          darknessCap: 50,
+          darknessRevealed: false,
+          lockedOut: false,
+          endingForced: false
+        },
+        B: {
+          affection: 20,
+          trust: 20,
+          storyTier: 0,
+          storyIndex: 0,
+          unlocked: true,
+          darkness: 30,
+          darknessCap: 100,
+          darknessRevealed: false,
+          lockedOut: false,
+          endingForced: false
+        },
+        C: {
+          affection: 20,
+          trust: 20,
+          storyTier: 0,
+          storyIndex: 0,
+          unlocked: false,
+          darkness: 0,
+          darknessCap: 100,
+          darknessRevealed: false,
+          lockedOut: false,
+          endingForced: false
+        }
+      },
+      stats: {
+        partTime: 0,
+        club: 0,
+        rest: 0,
+        itemsUsed: 0,
+        snackUsed: 0,
+        studyHelpCount: 0,
+        triangleCount: 0,
+        clubMaxBonusCount: 0,
+        lowEnergyClubCount: 0,
+        noRestStreak: 0,
+        moodHighStreak: 0,
+        noPartTimeWeeks: 0,
+        weekPartTime: 0,
+        parttimeLowMoodFlag: false,
+        parttimeLowMoodDay: 0,
+        parttimeHighPay: 0,
+        saveCount: 0,
+        loadCount: 0
+      },
+      streaks: { study: 0, homeWeeks: 0 },
+      milestoneIndex: 0,
+      extremeChoices: 0,
+      lowTrustDays: 0,
+      rewindTokens: 1,
+      daySummary: null,
+      forcedRest: false,
+      moodPenaltyTurns: 0,
+      weeklyGifted: { A: 0, B: 0, C: 0 },
+      flags: {
+        firstDate: false,
+        triangle: false,
+        nameHintShown: false,
+        firstDateRewarded: false,
+        openingPlayed: false,
+        restToday: false,
+        firstMeet: { A: false, B: false, C: false },
+        weeklyTutorOffered: false,
+        weeklyTutorUsed: false,
+        weeklyStalkUsed: false
+      },
+      settings: { showMainlineWarning: true },
+      gameOver: false,
+      relationshipStatus: { A: "none", B: "none", C: "none" },
+      confessionTriggered: { A: false, B: false, C: false },
+      secondConfessionTriggered: { A: false, B: false, C: false },
+      forcedEnding: null,
+      lastNeglectWeek: { A: 0, B: 0, C: 0 }
+    });
+
+    let state = stateTemplate();
+    let nameModalMode = "newgame";
+
+    updateWeek();
+    setActionsPerDay();
+
+    const storyEl = document.getElementById("story");
+    const choicesEl = document.getElementById("choices");
+    const taskListEl = document.getElementById("taskList");
+    const dayInfoEl = document.getElementById("dayInfo");
+    const actionInfoEl = document.getElementById("actionInfo");
+
+    const achievementModal = document.getElementById("achievementModal");
+    const inventoryModal = document.getElementById("inventoryModal");
+    const settlementModal = document.getElementById("settlementModal");
+    const settlementBody = document.getElementById("settlementBody");
+    const tutorialModal = document.getElementById("tutorialModal");
+    const tutorialBody = document.getElementById("tutorialBody");
+    const tutorialControls = document.getElementById("tutorialControls");
+    const nameModal = document.getElementById("nameModal");
+    const nameHintModal = document.getElementById("nameHintModal");
+    const mainlineWarningModal = document.getElementById("mainlineWarningModal");
+    const settingsModal = document.getElementById("settingsModal");
+    const achievementList = document.getElementById("achievementList");
+    const inventoryList = document.getElementById("inventoryList");
+
+    const resourceMap = {
+      energy: { value: document.getElementById("energyValue"), bar: document.getElementById("energyBar") },
+      money: { value: document.getElementById("moneyValue"), bar: document.getElementById("moneyBar") },
+      mood: { value: document.getElementById("moodValue"), bar: document.getElementById("moodBar") },
+      study: { value: document.getElementById("studyValue"), bar: document.getElementById("studyBar") },
+      project: { value: document.getElementById("projectValue"), bar: document.getElementById("projectBar") },
+      clubEff: { value: document.getElementById("clubEffValue"), bar: document.getElementById("clubEffBar") }
+    };
+    const resourceLabels = {
+      energy: "精力",
+      money: "金钱",
+      mood: "心情",
+      study: "学业",
+      project: "主线进度",
+      clubEff: "社团效率"
+    };
+
+    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+    openingStory();
+    initDaySummary();
+
+    function resetDailyActionCounts() {
+      state.dailyActionCounts = { study: 0, club: 0, parttime: 0, rest: 0, date: 0, useItem: 0, goHome: 0, tutor: 0 };
+    }
+
+    function resetWeekCounts() {
+      state.weekCounts = { study: 0, club: 0, parttime: 0, rest: 0, date: 0, goHome: 0, tutor: 0, useItem: 0 };
+    }
+
+    function getRepeatPenalty(actionId) {
+      if (!state.dailyActionCounts) {
+        resetDailyActionCounts();
+      }
+      const count = state.dailyActionCounts[actionId] || 0;
+      if (count === 0) return { multiplier: 1, moodPenalty: 0 };
+      if (count === 1) return { multiplier: 0.75, moodPenalty: 1 };
+      return { multiplier: 0.5, moodPenalty: 2 };
+    }
+
+    function getMoodMultiplier(mood) {
+      const clamped = clamp(mood, 0, 100);
+      if (clamped <= 50) {
+        return 0.7 + (clamped / 50) * 0.3;
+      }
+      return 1 + ((clamped - 50) / 50) * 0.05;
+    }
+
+    function getCallName(guyId, affection, trust) {
+      const base = state.playerName;
+      if (guyId === "B") {
+        if (affection < 20) return `${base}同学`;
+        if (affection < 55) return base;
+        if (affection < 80) return `${base}酱`;
+        return trust >= 70 ? base : `${base}酱`;
+      }
+      if (guyId === "A") {
+        if (affection < 20) return `${base}同学`;
+        if (affection < 55) return base;
+        if (affection < 80) return `${base}—`;
+        return trust >= 70 ? `—${base}` : `${base}—`;
+      }
+      if (guyId === "C") {
+        if (affection < 20) return base;
+        if (affection < 55) return `${base}、${base}`;
+        if (affection < 80) return `${base}—`;
+        return trust >= 70 ? `${base}—过来` : `${base}—`;
+      }
+      return base;
+    }
+
+    function getGuyDisplayName(guyId) {
+      return `${guyProfiles[guyId].name} (${guyProfiles[guyId].roman})`;
+    }
+
+    function cloneGuyStats(guys) {
+      return Object.fromEntries(Object.entries(guys).map(([id, g]) => [id, { affection: g.affection, trust: g.trust }]));
+    }
+
+    function initDaySummary() {
+      state.daySummary = {
+        startResources: { ...state.resources },
+        startGuys: cloneGuyStats(state.guys),
+        items: [],
+        clues: [],
+        logs: []
+      };
+    }
+
+    function openingStory() {
+      if (state.flags.openingPlayed) return;
+      const text = "清晨的校门口人流不急不慢，你背着书包站在校牌前，确认了教学楼方向。转学手续已经办完，理由不过是家庭工作调动、升学规划调整或你自己的选择，听起来平常，也足够说服人。你沿着走廊走进教学楼，墙上贴着课程表与值日安排，广播里传来当天的活动提醒。班主任把你带进教室，简单介绍了你的名字与年级安排：“这学期转来，请大家多关照。”同学们的视线一齐落过来，有人点头，有人悄悄打量。你被安排在靠窗的位置，桌面擦得很干净，窗外能看见操场和远处的社团楼。你把笔袋放好时，走廊尽头掠过一个熟悉的背影，像是很早就见过的同学，只是你还没来得及确认。老师顺便提起校庆企划，说接下来各班都会参与展台与舞台节目，名单与分工会陆续公布。你记下了时间与集合地点，心里开始盘算接下来的安排。系统提示：你的一天可以安排三项行动，请合理分配时间。";
+      state.storyLog.push(text);
+      renderStory();
+      state.flags.openingPlayed = true;
+    }
+
+    function addResource(s, key, amount) {
+      if (key === "money") {
+        s.resources[key] = Math.max(s.resources[key] + amount, 0);
+        return;
+      }
+      s.resources[key] = clamp(s.resources[key] + amount, 0, 100);
+      if (key === "project") {
+        s.resources.project = clamp(s.resources.project, 0, 100);
+        checkMilestones(s);
+      }
+    }
+
+    function addAffection(s, guy, amount) {
+      s.guys[guy].affection = clamp(s.guys[guy].affection + amount, 0, 100);
+      if (s.daySummary) {
+        s.daySummary.logs.push(`好感变动：${guyStories[guy].name} ${amount > 0 ? "+" : ""}${amount}`);
+      }
+    }
+
+    function addTrust(s, guy, amount) {
+      s.guys[guy].trust = clamp(s.guys[guy].trust + amount, 0, 100);
+      if (s.daySummary) {
+        s.daySummary.logs.push(`信任变动：${guyStories[guy].name} ${amount > 0 ? "+" : ""}${amount}`);
+      }
+    }
+
+    function getMoodEffectMultipliers() {
+      const mood = state.resources.mood;
+      const veryLow = mood <= 10;
+      const low = mood <= 20;
+      const high = mood >= 70;
+      const penalty = state.moodPenaltyTurns > 0 ? 0.9 : 1;
+      const moodMultiplier = getMoodMultiplier(mood);
+      return {
+        veryLow,
+        low,
+        high,
+        moodMultiplier,
+        studyMultiplier: moodMultiplier * penalty,
+        clubMultiplier: moodMultiplier * penalty
+      };
+    }
+
+    function calcRestRecovery(energy, offset = 0) {
+      let recovery = 12;
+      if (energy <= 20) recovery = 40;
+      else if (energy <= 40) recovery = 33;
+      else if (energy <= 60) recovery = 25;
+      else if (energy <= 80) recovery = 17;
+      else recovery = 7;
+      let result = Math.max(5, recovery + offset);
+      if (energy >= 80) {
+        result = Math.max(4, Math.floor(result / 2));
+      }
+      return result;
+    }
+
+    function addDarkness(guyId, amount, reason = "") {
+      const guy = state.guys[guyId];
+      if (!guy) return;
+      if (guy.lockedOut || guy.endingForced) return;
+      const before = guy.darkness;
+      guy.darkness = clamp(guy.darkness + amount, 0, guy.darknessCap);
+      if (state.daySummary && amount !== 0) {
+        state.daySummary.logs.push(`黑化变动：${guyStories[guyId].name} ${amount > 0 ? "+" : ""}${amount}`);
+      }
+      if (reason && amount !== 0) {
+        state.storyLog.push(`【情绪变化】${reason}`);
+      }
+      if (guy.darkness !== before) {
+        checkDarknessConsequences(guyId);
+      }
+    }
+
+    function revealDarkness(guyId) {
+      const guy = state.guys[guyId];
+      if (!guy || guy.darknessRevealed) return;
+      guy.darknessRevealed = true;
+      state.storyLog.push("【提示】你察觉到他情绪深处的变化。");
+    }
+
+    function checkDarknessConsequences(guyId) {
+      const guy = state.guys[guyId];
+      if (!guy || guy.endingForced) return;
+      if (guyId === "A") {
+        if (guy.darkness >= guy.darknessCap && !guy.lockedOut) {
+          guy.lockedOut = true;
+          guy.endingForced = true;
+          triggerEnding("leave", guyId);
+        }
+        return;
+      }
+      if (guy.darkness >= guy.darknessCap) {
+        triggerEnding("imprison", guyId);
+      }
+    }
+
+    function triggerEnding(type, guyId) {
+      if (type === "leave") {
+        const text = "【离开结局】白澤凛司没有再来找你。你在资料室看到他把最后一份文件归档，神情一如既往地平静，却像把某段关系折进抽屉。他说：“我会把校庆走到最后，但我不再适合出现在你的视线里。”你想开口，却发现他已经将目光移向了更远的前途。他低声补了一句：“我一直选择最稳妥的路，也该为自己负责。”他的背影干净而克制，没有愤怒、没有指责，只像把你们之间的可能性切断，安静地退出。你明白这不是惩罚，而是他最后的自我保护。";
+        state.storyLog.push(text);
+        renderAll();
+        return;
+      }
+      const isB = guyId === "B";
+      const title = isB ? "【囚禁结局·只属于我们的旧时光】" : "【囚禁结局·你不必再选择】";
+      const text = isB
+        ? "操场的灯光还亮着，你却发现自己被带进一间熟悉的活动室。浅羽朔把门轻轻合上，笑得像过去每一次陪你回家的晚上：“我们以前就是这样，不是吗？”他的语气温柔得像在哄你回忆，却把你的退路悄悄收走。他说你累了，外面的世界会把你扯裂，所以他替你挡住所有杂音。桌上的水杯总是温的，窗帘总是合着，手机也被他收好，“免得你被打扰”。他用“我们”替你做决定，说这才是安全感，说你只需要安心待在他身边。你偶尔试着提起校庆，他会握住你的手，认真地说：“有我在就够了。”他把旧照片摆成一条线，像把你们的过去圈成一个温室，让你不知不觉忘了外面的时间。你听见他轻声问你是否还会离开，而你知道回答的空间已经被他的温柔填满。"
+        : "广播站的灯还亮着，久世伶把你带进最深的储藏间，像把你藏进只有他知道的频率里。他说话仍旧轻柔，像一层薄雾：“你不必再选择。”你想反驳，却发现他已经替你安排了所有方向。他把你的排班表整理得只有一个名字，把你能接触到的消息过滤得干净，只留下他亲手递来的讯息。他说自己只是想靠近你，想把你护在规则里，免得别人打断你们的步调。你伸手去开门，他就站在门边，笑着提醒你外面很乱，“你会受伤”。灯光下，他的眼神温顺，却像一张无声的网，把你的日常一点点收拢。他会在你困惑时轻声问：“你更偏向谁？”然后把你的回答按回他的怀里。他不生气，不逼迫，只是把选择的可能性逐渐移除，直到你发现自己只能听见他的声音。";
+      state.storyLog.push(`${title}${text}`);
+      state.guys[guyId].endingForced = true;
+      state.gameOver = true;
+      state.forcedEnding = { type, guyId };
+      renderAll();
+      renderChoices([
+        { label: "重新开始", onClick: newGame },
+        { label: "读档", onClick: loadGame }
+      ]);
+    }
+
+    function giftTo(s, guy, amount) {
+      addAffection(s, guy, amount);
+      addTrust(s, guy, Math.floor(amount / 2));
+    }
+
+    function randomTrust(s, amount) {
+      const keys = Object.keys(s.guys);
+      const pick = keys[Math.floor(Math.random() * keys.length)];
+      addTrust(s, pick, amount);
+    }
+
+    function gainItem(s, itemId) {
+      s.inventory.push(itemId);
+      s.storyLog.push(`获得道具：${items[itemId].name}。`);
+      if (s.daySummary) {
+        s.daySummary.items.push(items[itemId].name);
+      }
+    }
+
+    function addClue(s, guy) {
+      const g = s.guys[guy];
+      const layer = guyStories[guy].layers[g.storyTier] || [];
+      const index = g.storyIndex;
+      if (layer[index]) {
+        s.storyLog.push(`【${guyStories[guy].name}背景】${layer[index]}`);
+        if (s.daySummary) {
+          s.daySummary.clues.push(`${guyStories[guy].name}：${layer[index]}`);
+        }
+        g.storyIndex += 1;
+        if (g.storyIndex >= 3 && g.storyTier < 2) {
+          g.storyTier += 1;
+          g.storyIndex = 0;
+        }
+      } else {
+        s.storyLog.push("故事线索已全部解锁。");
+      }
+    }
+
+    function checkMilestones(s) {
+      const next = milestoneEvents[s.milestoneIndex];
+      if (next && s.resources.project >= next.threshold) {
+        s.storyLog.push(next.text);
+        s.milestoneIndex += 1;
+      }
+    }
+
+    function getWeek() {
+      return state.calendar?.week || 1;
+    }
+
+    function getWeekdayName() {
+      const index = state.calendar?.weekdayIndex ?? 0;
+      return WEEKDAYS[index] || "周一";
+    }
+
+    function setActionsPerDay() {
+      state.actionsPerDay = getWeekdayName() === "周日" ? 3 : 2;
+    }
+
+    function updateWeek() {
+      state.week = getWeek();
+    }
+
+    function advanceDay() {
+      state.day += 1;
+      let nextIndex = (state.calendar?.weekdayIndex ?? 0) + 1;
+      if (nextIndex >= WEEKDAYS.length) {
+        nextIndex = 0;
+        state.calendar.week += 1;
+        updateWeek();
+        resetWeekCounts();
+        state.flags.weeklyTutorOffered = false;
+        state.flags.weeklyTutorUsed = false;
+        state.flags.weeklyStalkUsed = false;
+      }
+      state.calendar.weekdayIndex = nextIndex;
+      state.calendar.weekdayName = WEEKDAYS[nextIndex];
+      setActionsPerDay();
+      state.actionsTaken = 0;
+      state.flags.restToday = false;
+      resetDailyActionCounts();
+      initDaySummary();
+      checkSundayTutorOffer();
+    }
+
+    function renderResources() {
+      Object.entries(state.resources).forEach(([key, value]) => {
+        resourceMap[key].value.textContent = value;
+        if (key === "money") {
+          resourceMap[key].bar.style.width = "100%";
+        } else {
+          resourceMap[key].bar.style.width = `${value}%`;
+        }
+      });
+      document.getElementById("weekGoal").textContent = weekGoals[state.week - 1] || "";
+      const stageIndex = Math.min(Math.floor((state.week - 1) / 4) + 1, 5);
+      const stageLabel = stageIndex <= 4 ? `阶段${stageIndex}/4 · 第${stageIndex * 4}周结算` : "阶段5/5 · 校庆当日";
+      document.getElementById("stageInfo").textContent = `主线阶段：${stageLabel} · 当前进度${state.resources.project}%`;
+    }
+
+    function renderCharacters() {
+      const renderGuy = (id, elId) => {
+        const guy = state.guys[id];
+        const storyProgress = guy.storyTier * 3 + guy.storyIndex;
+        const lockedOut = guy.lockedOut;
+        const locked = !guy.unlocked || lockedOut;
+        const statusLabel = state.relationshipStatus[id] === "dating"
+          ? "恋人"
+          : state.relationshipStatus[id] === "rejected"
+            ? "保持距离"
+            : "未确认";
+        const canTrigger = guy.affection >= 80 && guy.unlocked && !lockedOut && state.relationshipStatus[id] === "none" && !state.confessionTriggered[id];
+        const canRetry = guy.affection >= 85 && guy.unlocked && !lockedOut && state.relationshipStatus[id] === "rejected" && !state.secondConfessionTriggered[id];
+        const warningText = guy.darknessRevealed
+          ? (id === "A"
+            ? (guy.darkness >= 35 ? "他在疏远你" : "")
+            : (guy.darkness >= 70 ? "关系正在变得危险" : ""))
+          : "";
+        const lockText = id === "A"
+          ? "第4周：流程/预算审核卡死，需要白澤凛司签字解锁"
+          : "第6周：宣传位危机，需与久世伶合作解锁";
+        const darknessText = guy.darknessRevealed ? `${guy.darkness} / ${guy.darknessCap}` : "？？？";
+        const darknessWidth = guy.darknessRevealed ? `${(guy.darkness / guy.darknessCap) * 100}%` : "100%";
+        const darknessStyle = guy.darknessRevealed
+          ? ""
+          : "background:#2a2035;opacity:0.3;";
+        const text = `
+          <h3>${getGuyDisplayName(id)}</h3>
+          ${locked ? `<div class="small">🔒 ${lockedOut ? "已离开，无法攻略" : `未解锁：${lockText}`}</div>` : `
+          <div class="stat">好感 ${guy.affection}<div class="bar"><span style="width:${guy.affection}%"></span></div></div>
+          <div class="stat">信任 ${guy.trust}<div class="bar"><span style="width:${guy.trust}%"></span></div></div>
+          <div class="stat">黑化值 ${darknessText}<div class="bar darkness-bar"><span style="width:${darknessWidth};${darknessStyle}"></span></div></div>
+          <div class="small">背景故事解锁进度：${storyProgress}/9</div>`}
+          ${locked ? "" : `<div class="small">关系状态：${statusLabel}</div>`}
+          ${locked ? "" : canTrigger ? `<div class="small">关系事件可触发</div>` : ""}
+          ${locked ? "" : canRetry ? `<div class="small">关系事件可再次触发</div>` : ""}
+          ${locked ? "" : warningText ? `<div class="small">⚠️ ${warningText}</div>` : ""}
+        `;
+        const element = document.getElementById(elId);
+        element.innerHTML = text;
+        element.style.opacity = locked ? "0.5" : "1";
+      };
+      renderGuy("A", "charA");
+      renderGuy("B", "charB");
+      renderGuy("C", "charC");
+    }
+
+    function renderTasks() {
+      taskListEl.innerHTML = "";
+      tasks.filter((task) => task.condition(state)).forEach((task) => {
+        const div = document.createElement("div");
+        div.className = "task";
+        div.innerHTML = `<strong>${task.name}</strong><small>${task.desc}</small>`;
+        taskListEl.appendChild(div);
+      });
+    }
+
+    function renderStory() {
+      storyEl.innerHTML = state.storyLog.map((line) => `<p>${line}</p>`).join("");
+      storyEl.scrollTop = storyEl.scrollHeight;
+    }
+
+    function renderDayInfo() {
+      const weekday = getWeekdayName();
+      dayInfoEl.innerHTML = `第${state.calendar.week}周 · <span class="weekday">${weekday}</span> · 今日行动 ${state.actionsTaken}/${state.actionsPerDay}`;
+      actionInfoEl.textContent = weekday === "周日"
+        ? `周日为私人时间，不能推进校庆主线 · 今日行动 ${state.actionsTaken}/${state.actionsPerDay}`
+        : `今日行动 ${state.actionsTaken}/${state.actionsPerDay}`;
+    }
+
+    function renderChoices(options) {
+      choicesEl.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.innerHTML = option.hint
+          ? `${option.label}<span class="small"> ${option.hint}</span>`
+          : option.label;
+        if (option.disabled) {
+          button.disabled = true;
+          button.classList.add("disabled");
+        } else {
+          button.addEventListener("click", option.onClick);
+        }
+        choicesEl.appendChild(button);
+      });
+    }
+
+    function getRandomEvent() {
+      const pool = randomEvents.filter((evt) => evt.condition(state));
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function triggerRandomEvent() {
+      const chance = state.resources.energy < 25 ? 0.25 : 0.45;
+      if (state.resources.mood <= 20 && Math.random() < 0.25) {
+        state.storyLog.push("【状态影响】心情偏低，行动效率可能下降。");
+        state.moodPenaltyTurns = Math.max(state.moodPenaltyTurns, 1);
+      }
+      if (Math.random() < chance) {
+        const evt = getRandomEvent();
+        if (evt) {
+          state.storyLog.push(`【随机事件】${evt.text}`);
+          evt.effect(state);
+        }
+      }
+    }
+
+    function runTask(taskId) {
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task) return;
+      if (taskId === "useItem") {
+        openInventory(true);
+        return;
+      }
+      if (taskId === "date") {
+        renderChoices([
+          { label: "和浅羽朔见面", onClick: () => { tryMeeting("B"); }, disabled: state.guys.B.lockedOut },
+          {
+            label: state.guys.A.lockedOut ? "白澤凛司已离开，无法攻略" : "和白澤凛司见面",
+            onClick: () => { tryMeeting("A"); },
+            disabled: state.guys.A.lockedOut
+          },
+          { label: "和久世伶见面", onClick: () => { tryMeeting("C"); }, disabled: state.guys.C.lockedOut },
+          { label: "返回", onClick: () => { renderChoices(getDefaultChoices()); } }
+        ]);
+        return;
+      }
+      const actionCost = task.actionCost || 1;
+      if (state.actionsTaken + actionCost > state.actionsPerDay) {
+        state.storyLog.push("【行动不足】剩余行动次数不足。");
+        renderAll();
+        return;
+      }
+      task.effect(state);
+      afterAction(`${task.name}完成。`, taskId, null, actionCost);
+    }
+
+    function tryMeeting(guyId) {
+      if (state.guys[guyId].lockedOut) {
+        state.storyLog.push(`【无法见面】${guyStories[guyId].name}已离开，无法攻略。`);
+        renderAll();
+        return;
+      }
+      if (!state.guys[guyId].unlocked) {
+        const hint = guyId === "A"
+          ? "第4周：流程/预算审核卡死，需要白澤凛司签字解锁。"
+          : "第6周：宣传位危机，需要久世伶协作解锁。";
+        state.storyLog.push(`【未解锁】${hint}`);
+        renderAll();
+        return;
+      }
+      if (triggerTriangleEvent()) {
+        return;
+      }
+      startMeeting(guyId);
+    }
+
+    function triggerTriangleEvent() {
+      const candidates = Object.keys(state.guys).filter((id) => state.guys[id].unlocked && !state.guys[id].lockedOut && state.guys[id].affection >= 55 && state.guys[id].affection < 80);
+      if (candidates.length < 2) return false;
+      const chance = Math.min(0.2, 0.12 + (candidates.length - 2) * 0.04);
+      if (Math.random() > chance) return false;
+      state.flags.triangle = true;
+      state.stats.triangleCount += 1;
+      const buildTriangleText = (ids) => {
+        const hasA = ids.includes("A");
+        const hasB = ids.includes("B");
+        const hasC = ids.includes("C");
+        if (hasA && hasB && hasC) {
+          return "走廊的灯光在你头顶一盏盏亮起，像把人影切成几段，风声被关在窗外，只剩鞋底擦过地面的细响。你刚转身，浅羽朔就从另一侧快步走来，笑容温暖却带着一点不容置疑的熟稔：“我们以前不是一直一起走吗？”他伸手想替你挡住人潮，动作像把你护在记忆里。话音未落，白澤凛司已经站在你身侧，安静得像风停了，他的目光落在你们之间的距离上，冷静又精准：“你答应过要把流程改完。”他的手指轻轻点在资料夹上，像提醒也像占位。久世伶从广播室的门口靠近，手里捏着排班表，语气温柔得几乎像低语：“没关系，只要你选我就行。”他靠近时带着淡淡的皂香，视线却黏着你不放。三个人的目光像三条线交错，空气被拉紧，你的心跳被夹在缝隙里，既想安抚又怕偏向任何一边。你深吸一口气，听见自己的声音在走廊里回响，知道必须给出一个足够稳妥的收场。";
+        }
+        if (hasA && hasB) {
+          return "楼梯间的回声被风吹散，你刚停下脚步，浅羽朔就笑着迎上来：“我们以前一直一起走。”他的语气温暖，像把你带回熟悉的习惯。下一秒，白澤凛司站在你身侧，视线落在你们之间的距离上，语气平静却精准：“流程还没改完。”两人的节奏一快一慢，把你的步子夹在中间。你握紧资料夹，知道必须给出一个更稳妥的回应。";
+        }
+        if (hasA && hasC) {
+          return "走廊灯光偏冷，你刚抬眼，白澤凛司已经站在你身侧，声音低而清晰：“流程还没改完。”他像把你按回计划的轨道。久世伶从广播室门口靠近，语气温柔却不容回避：“没关系，只要你选我就行。”两道视线在你身上交错，你感觉自己被推向必须表态的位置。";
+        }
+        return "走廊的风从门缝穿过，你刚转身，浅羽朔就快步走来，笑容一如既往地熟稔：“我们以前不是一直一起走吗？”紧接着，久世伶靠近半步，声音轻得像贴着耳边：“你不必对别人解释，只要告诉我你的选择。”两人的温度一左一右逼近，你听见自己的心跳被迫加快。";
+      };
+      const text = buildTriangleText(candidates);
+      const sootheChoice = (guyId, summary) => {
+        addTrust(state, guyId, 2);
+        addDarkness(guyId, -3);
+        const others = ["A", "B", "C"].filter((id) => id !== guyId && state.guys[id].unlocked && !state.guys[id].lockedOut);
+        others.forEach((id) => {
+          if (state.lastNeglectWeek[id] !== state.week) {
+            state.lastNeglectWeek[id] = state.week;
+            addDarkness(id, 5);
+          }
+        });
+        afterAction(summary, "date");
+      };
+      state.storyLog.push(`【修罗场】${text}`);
+      renderChoices([
+        { label: "安抚浅羽朔", onClick: () => sootheChoice("B", "你温声让浅羽朔先冷静下来。") },
+        { label: "安抚白澤凛司", onClick: () => sootheChoice("A", "你向白澤凛司点头，表示会按流程走。") },
+        { label: "安抚久世伶", onClick: () => sootheChoice("C", "你靠近久世伶，示意他别太逼迫你。") }
+      ]);
+      return true;
+    }
+
+    function startMeeting(guyId) {
+      tasks.find((t) => t.id === "date").effect(state);
+      addResource(state, "energy", -8);
+      addResource(state, "mood", 3);
+      if (state.guys[guyId].affection >= 60) {
+        addResource(state, "energy", 3);
+      }
+      const pool = meetingEvents[guyId];
+      const event = pool[Math.floor(Math.random() * pool.length)];
+      const callName = getCallName(guyId, state.guys[guyId].affection, state.guys[guyId].trust);
+      const text = event.text.replace("{callName}", callName);
+      state.storyLog.push(`【${guyProfiles[guyId].name}见面】${text}`);
+      firstMeetNarration(guyId);
+      const giftOptions = getGiftOptions(guyId);
+      if (giftOptions.length) {
+        const giftChoices = giftOptions.map((gift) => ({
+          label: `赠送${items[gift].name}`,
+          onClick: () => {
+            if (gift === "giftSmall") {
+              addAffection(state, guyId, 1);
+              addTrust(state, guyId, 1);
+              removeItem(gift);
+            } else {
+              useItem(gift);
+              removeItem(gift);
+            }
+            state.storyLog.push(`你递出${items[gift].name}，对方视线微微一顿。`);
+            renderMeetingChoices(event, guyId);
+          }
+        }));
+        giftChoices.push({ label: "不送礼物", onClick: () => renderMeetingChoices(event, guyId) });
+        renderChoices(giftChoices);
+      } else {
+        renderMeetingChoices(event, guyId);
+      }
+    }
+
+    function renderMeetingChoices(event, guyId) {
+      const optionChoices = event.options.map((option) => ({
+        label: `${option.label}（${option.tags.join("/")}）`,
+        onClick: () => {
+          applyMeetingChoice(guyId, option.tags, event.id);
+          if (Math.random() < 0.3) {
+            gainItem(state, `clue${guyId}`);
+          }
+          afterAction(`你做出了选择。`, "date", guyId);
+        }
+      }));
+      renderChoices(optionChoices);
+    }
+
+    function getGiftOptions(guyId) {
+      const giftMap = { A: "bookmark", B: "sweets", C: "headset" };
+      const giftId = giftMap[guyId];
+      const options = [];
+      if (state.inventory.includes(giftId)) options.push(giftId);
+      if (state.inventory.includes("giftSmall")) options.push("giftSmall");
+      return options;
+    }
+
+    function firstMeetNarration(guyId) {
+      if (!state.flags.firstMeet || state.flags.firstMeet[guyId]) return;
+      let text = "";
+      if (guyId === "B") {
+        text = "你看着浅羽朔的侧脸，意识到你们不只是同学。你们是对门邻居，从小一起长大，早上一起出门，放学一起回家，零食会一人一半，作业本也常互相借过。家长们也彼此照看，谁家临时有事，另一个家就顺手帮忙。分开后时间像被切出一段空白，回想时只剩几个清楚的日常片段。现在重新见面，熟悉感很快回来，可又多了一点需要重新适应的距离。你知道他还是那个会顺手照顾你的人，也明白彼此已经不再是小时候的节奏。";
+      } else if (guyId === "A") {
+        text = "第一次正式和白澤凛司对话时，你几乎是下意识地把肩背挺直。他的表达简短、规则清晰，流程与审核像一条条线压在桌面上。同学提到他时多半是“可靠”“很难说话”，他本人也用距离感把人挡在外面。你认可他的能力，也感到一点压力，像每个环节都必须严丝合缝。你明白他不是在针对你，而是对所有人都保持同样的标准，这份标准让人尊重，也让人不容易靠近。";
+      } else {
+        text = "你第一次和久世伶单独互动时，礼貌的语气掩不住他靠近的距离。他能说出你今天的行程细节，像是一直在旁观察；他替你安排了宣传位和资源，动作干净利落，却让你有些不太自在。他说话时不高声，却会贴得很近，让你下意识退半步。你仍然礼貌地接受他的帮助，同时心里提醒自己要多留意节奏。那种温和里带着压迫感的靠近，让你觉得需要保持清醒。";
+      }
+      state.storyLog.push(text);
+      state.flags.firstMeet[guyId] = true;
+    }
+
+    function removeItem(itemId) {
+      const index = state.inventory.indexOf(itemId);
+      if (index >= 0) {
+        state.inventory.splice(index, 1);
+      }
+    }
+
+    function applyMeetingChoice(guyId, tags, eventId = "") {
+      const profile = guyProfiles[guyId];
+      const isFirstDate = !state.flags.firstDateRewarded;
+      const baseAffection = isFirstDate
+        ? 2
+        : state.guys[guyId].trust >= 70
+          ? 4
+          : 3;
+      let score = 0;
+      tags.forEach((tag) => {
+        if (profile.preferred.includes(tag)) score += 1;
+        if (profile.disliked.includes(tag)) score -= 1;
+      });
+      let affChange = 0;
+      let trustChange = 0;
+      if (score < 0) {
+        if (profile.mild) {
+          affChange = -clamp(1 + Math.abs(score), 1, 3);
+          trustChange = -clamp(1 + Math.abs(score), 1, 3);
+        } else {
+          affChange = 0;
+          trustChange = -clamp(4 + Math.abs(score), 4, 8);
+        }
+      } else if (score === 0) {
+        affChange = baseAffection;
+        trustChange = 0;
+      } else {
+        const bonus = score >= 2 && Math.random() < 0.2 ? 2 : 1;
+        affChange = clamp(baseAffection + bonus, 2, 5);
+        trustChange = profile.mild
+          ? clamp(1 + Math.floor(score / 2), 1, 2)
+          : clamp(2 + Math.floor(score / 2), 2, 4);
+      }
+      if (eventId && eventId.includes("_heart") && score > 0) {
+        affChange = clamp(affChange + 1, 2, 6);
+      }
+      if (isFirstDate) {
+        state.flags.firstDateRewarded = true;
+      }
+      addAffection(state, guyId, affChange);
+      addTrust(state, guyId, trustChange);
+    }
+
+    function getConfessionEvent(guyId, isRetry) {
+      if (guyId === "B") {
+        return {
+          text: `夜色落在操场边的栏杆上，浅羽朔把手里的饮料轻轻放到你面前。他看着你，声音比平时更低，“{callName}，我想把话说清楚。”你心里一紧，想起他一路的陪伴与那些不说出口的偏心。他向前一步，指尖停在半空，“我不是只想陪你走这段校庆，我想走得更久。”你抬眼，看到他眼里的紧张和认真。他又补了一句：“如果你愿意，我会把这份关系当成真正的约定。”你轻轻吸气，心里翻涌着温热的回忆。`,
+          accept: "轻声答应他，确认关系。",
+          reject: "保持距离，告诉他先把校庆走完。"
+        };
+      }
+      if (guyId === "A") {
+        return {
+          text: `走廊的灯光冷白，白澤凛司把最后一页资料合上，语气依旧简短，“{callName}，我有件事要说。”你心里一跳，抬头看他。他的目光很稳，“我不擅长表达，但我对你的在意不是工作上的责任。”他停了停，指尖在纸角轻敲，“我想确认我们之间，能不能不只是同伴。”你听见自己的呼吸，感觉他的克制里藏着一点小心翼翼。他补了一句：“如果你愿意，我会认真对待。”你沉默了几秒，心里像被轻轻推到选择面前。`,
+          accept: "点头确认，接受他的心意。",
+          reject: "拒绝关系确认，保持距离。"
+        };
+      }
+      return {
+        text: `广播站的灯光偏暗，久世伶靠在桌边，指尖慢慢绕着你名字的便签。他温柔地说：“{callName}，我不想再只当合作。”你抬眼，他的声音低得像贴着耳边，“我想要你把我放到更近的位置。”你心里一紧，感受到他温柔里带着明显的占有。他向前半步，语气仍然轻，却不肯退，“你不需要给别人理由，只要告诉我你的选择。”你沉默片刻，心里明白这一次拒绝不会换来他的疏远，反而会让他靠得更近。`,
+        accept: "答应他，确认关系。",
+        reject: "温和拒绝，维持距离。"
+      };
+    }
+
+    function triggerConfession(guyId) {
+      if (!state.guys[guyId].unlocked) return false;
+      if (state.guys[guyId].lockedOut || state.guys[guyId].endingForced) return false;
+      if (state.relationshipStatus[guyId] === "dating") return false;
+      const affection = state.guys[guyId].affection;
+      const isRetry = state.relationshipStatus[guyId] === "rejected" && affection >= 85 && !state.secondConfessionTriggered[guyId];
+      const isFirst = state.relationshipStatus[guyId] === "none" && affection >= 80 && !state.confessionTriggered[guyId];
+      if (!isFirst && !isRetry) return false;
+
+      if (isRetry) {
+        state.secondConfessionTriggered[guyId] = true;
+      } else {
+        state.confessionTriggered[guyId] = true;
+      }
+
+      const event = getConfessionEvent(guyId, isRetry);
+      const text = event.text.replace("{callName}", getCallName(guyId, affection, state.guys[guyId].trust));
+      state.storyLog.push(`【关系确认】${text}`);
+      renderChoices([
+        {
+          label: event.accept,
+          onClick: () => {
+            state.relationshipStatus[guyId] = "dating";
+            addAffection(state, guyId, 8);
+            state.storyLog.push("你们的关系被轻轻确认，像把手指交握在灯光里。");
+            renderAll();
+          }
+        },
+        {
+          label: event.reject,
+          hint: "拒绝可能带来不可逆后果",
+          onClick: () => {
+            state.relationshipStatus[guyId] = "rejected";
+            revealDarkness(guyId);
+            if (guyId === "C") {
+              addTrust(state, "C", -2);
+              addDarkness("C", 30);
+              state.storyLog.push("他表面接受你的距离，却在眼神里把你的影子收得更紧。");
+            } else {
+              state.guys[guyId].affection = 50;
+              addTrust(state, guyId, -7);
+              addDarkness(guyId, guyId === "B" ? 25 : 20);
+              state.storyLog.push("你们暂时保持距离，关系回到更稳妥的位置。");
+            }
+            renderAll();
+          }
+        }
+      ]);
+      return true;
+    }
+
+    function applyActionCostAndCounts(actionId, actionCost = 1) {
+      state.actionsTaken += actionCost;
+      if (!state.dailyActionCounts) resetDailyActionCounts();
+      if (!state.weekCounts) resetWeekCounts();
+      if (actionId) {
+        state.dailyActionCounts[actionId] = (state.dailyActionCounts[actionId] || 0) + 1;
+        state.weekCounts[actionId] = (state.weekCounts[actionId] || 0) + 1;
+      }
+    }
+
+    function afterAction(summary, actionId = "", guyId = null, actionCost = 1) {
+      state.storyLog.push(summary);
+      applyActionCostAndCounts(actionId, actionCost);
+      if (state.daySummary) {
+        state.daySummary.logs.push(summary);
+      }
+      if (actionId) {
+        triggerMiniEvent(actionId);
+      }
+      if (actionId === "date" && guyId) {
+        if (triggerConfession(guyId)) {
+          return;
+        }
+      }
+      if (actionId === "parttime" && getWeekdayName() === "周日") {
+        triggerStalkEvent(state);
+      }
+      if (state.moodPenaltyTurns > 0 && ["study", "club", "parttime"].includes(actionId)) {
+        state.moodPenaltyTurns -= 1;
+      }
+      triggerRandomEvent();
+      checkAchievements(state);
+      updateTrustStreak();
+      if (state.resources.energy <= 0) {
+        state.storyLog.push("【体力透支】你被强制休息一天，且获得1次回溯券。");
+        state.rewindTokens += 1;
+        state.forcedRest = true;
+        state.actionsTaken = state.actionsPerDay;
+      }
+      renderAll();
+    }
+
+    function updateTrustStreak() {
+      const lowTrust = Object.values(state.guys).some((g) => g.trust <= 25);
+      if (lowTrust) {
+        state.lowTrustDays += 1;
+      } else {
+        state.lowTrustDays = 0;
+      }
+    }
+
+    function triggerMiniEvent(actionId) {
+      if (actionId === "study" && state.guys.A.unlocked && !state.guys.A.lockedOut) {
+        const base = 0.04 + (state.buffs.tutoringDays > 0 ? 0.03 : 0);
+        const scaling = (state.guys.A.affection / 100) * 0.08;
+        const chance = Math.min(0.15, base + scaling);
+        if (Math.random() < chance) {
+          state.storyLog.push("【学习小事件】你卡在一道题，白澤凛司路过时停下说：“这里先把已知列出来。”他写了两步就停：“剩下你自己做。”你点头：“谢谢。”你把步骤记在纸上，打算课后再做一遍。");
+          addAffection(state, "A", 1);
+          addTrust(state, "A", 1);
+          addResource(state, "study", 1);
+          state.stats.studyHelpCount += 1;
+        }
+      }
+      if (actionId === "club") {
+        const moodMultiplier = getMoodMultiplier(state.resources.mood);
+        const base = 0.10 + state.resources.clubEff * 0.012;
+        const chance = clamp(base * moodMultiplier, 0, 0.35);
+        if (Math.random() < chance) {
+          state.storyLog.push("【社团小事件】浅羽朔帮你把物料搬到展台旁，还顺手把展架拧紧。他说：“我来就行。”你回：“谢了，等会儿请你喝水。”他把手套递给你，让你别刮到指尖。");
+          addAffection(state, "B", 1);
+          addResource(state, "mood", 1);
+          addResource(state, "project", 1);
+        }
+      }
+      if (actionId === "rest" && state.guys.C.unlocked) {
+        const base = 0.015;
+        const scaling = (state.guys.C.affection / 100) * 0.03;
+        const chance = Math.min(0.06, base + scaling);
+        if (Math.random() < chance) {
+          state.storyLog.push("【休息小事件】你在自习室打了个盹，久世伶路过轻声说：“别趴太久。”你抬头应了一声，他把窗帘拉开一点让你透气，还把小纸条压在桌角提醒你补水。");
+          addAffection(state, "C", 1);
+          addTrust(state, "C", 1);
+          addResource(state, "energy", 5);
+        }
+      }
+    }
+
+    function applyNightRecovery() {
+      let recovery = 25;
+      if (state.resources.mood >= 70) recovery += 5;
+      addResource(state, "energy", recovery);
+      state.storyLog.push(`夜间恢复：精力+${recovery}。`);
+    }
+
+    function moodThresholdEffects() {
+      if (state.resources.mood <= 10) {
+        state.storyLog.push("【状态】心情偏低，学习与主线推进效率下降。");
+      } else if (state.resources.mood <= 20) {
+        state.storyLog.push("【状态】心情偏低，行动效率可能下降。");
+      } else if (state.resources.mood >= 70) {
+        state.storyLog.push("【状态】心情不错，社团与主线推进效率提升。");
+      }
+    }
+
+    function checkSundayTutorOffer() {
+      if (getWeekdayName() !== "周日") return;
+      if (state.flags.weeklyTutorOffered || state.flags.weeklyTutorUsed) return;
+      if (!state.guys.A.unlocked || state.guys.A.affection < 40) return;
+      if (state.weekCounts?.study >= 2) return;
+      const trustBonus = Math.floor(state.guys.A.trust / 10) * 0.03;
+      const chance = clamp(0.35 + trustBonus, 0, 0.65);
+      if (Math.random() < chance) {
+        state.flags.weeklyTutorOffered = true;
+        state.storyLog.push("【提示】你收到一条简短消息：“今天要不要留下来复习？”（学霸补课）");
+        if (state.daySummary) {
+          state.daySummary.logs.push("学霸补课可选事件已出现。");
+        }
+      }
+    }
+
+    function triggerHomeConflict(s, moodSnapshot = s.resources.mood) {
+      let chance = 0.08;
+      if ((s.weekCounts?.parttime || 0) >= 3 || moodSnapshot <= 40) {
+        chance += 0.06;
+      }
+      chance = clamp(chance, 0, 0.2);
+      if (Math.random() < chance) {
+        addResource(s, "mood", -8);
+        addResource(s, "money", 10);
+        s.storyLog.push("【回家·争执】家里人说你最近总在外面跑，话说得直，你也顶了两句。气氛僵了一会儿，最后还是塞给你一张钞票。心情-8，零用钱+10。");
+        if (s.daySummary) {
+          s.daySummary.logs.push("回家争执：心情-8，零用钱+10。");
+        }
+      }
+    }
+
+    function triggerHomeBuddy(s) {
+      if (!s.guys.B.unlocked) return;
+      const bonus = Math.floor(s.guys.B.affection / 5) * 0.01;
+      const chance = clamp(0.2 + bonus, 0, 0.6);
+      if (Math.random() < chance) {
+        addAffection(s, "B", 2);
+        addTrust(s, "B", 1);
+        const text = "你在楼下换鞋时听见隔壁门也开了，浅羽朔拎着书包冲你点头：“刚好一起？”你笑着说“对门邻居就是方便”，他把你顺手落在门口的伞塞回你怀里。一路上你们聊得很散，从食堂今天的菜到广播站的音响，又聊回小时候放学一起买豆浆的事。你说早就忘了，他却记得清清楚楚，还能把你当年写错作业的理由学得很像，你忍不住笑出声。他看你笑也跟着放松，说“你一忙起来就会把自己放在最后”。你嘴上回他“哪有”，心里却觉得被看见了。快到小区时他忽然问你要不要换条路，说那条路路灯更亮。你说随便，他点头，走在你外侧，像是一直习惯这样。你们在门口聊了两句，他提醒你明天别忘了吃早饭，语气自然得像以前。你走到家门口时才发现心情很轻松，像是熟悉的人一直在你身边，位置没有变。";
+        s.storyLog.push(`【回家·同行】${text}`);
+        if (s.daySummary) {
+          s.daySummary.logs.push("竹马同行回家：好感+2，信任+1。");
+        }
+      }
+    }
+
+    function triggerStalkEvent(s) {
+      if (s.flags.weeklyStalkUsed) return;
+      if (!s.guys.C.unlocked || s.guys.C.affection < 40) return;
+      if ((s.weekCounts?.parttime || 0) < 4) return;
+      const bonus = Math.floor(s.guys.C.affection / 10) * 0.02;
+      const chance = clamp(0.25 + bonus, 0, 0.55);
+      if (Math.random() < chance) {
+        s.flags.weeklyStalkUsed = true;
+        addResource(s, "money", 10);
+        addAffection(s, "C", 2);
+        addTrust(s, "C", 1);
+        addResource(s, "mood", -2);
+        s.storyLog.push("【打工·被蹲点】下班刚出门就看见久世伶站在路边，离得有点近。他说他“刚好路过”，却把你今晚的班次说得很准。你把零钱塞进口袋，听他声音轻轻贴着你耳边。额外收入+10，好感小幅上升，但心情有点压。");
+        if (s.daySummary) {
+          s.daySummary.logs.push("打工被蹲点：额外收入+10，好感小幅上升，心情-2。");
+        }
+      }
+    }
+
+    function checkUnlocks() {
+      if (state.week >= 4 && !state.guys.A.unlocked) {
+        state.guys.A.unlocked = true;
+        state.storyLog.push("【主线解锁】校庆流程/预算审核卡死，你需要白澤凛司签字与校对，第一次正式对话就此展开。");
+      }
+      if (state.week >= 6 && !state.guys.C.unlocked) {
+        state.guys.C.unlocked = true;
+        state.storyLog.push("【主线解锁】宣传位被抢/谣言扩散，你不得不与久世伶交换信息与资源，合作关系正式建立。");
+      }
+    }
+
+    function checkMainlineCheckpoint(weekFinished = state.week) {
+      const stage = mainlineStages.find((item) => item.week === weekFinished);
+      if (!stage) return false;
+      if (state.resources.project < stage.target) {
+        state.gameOver = true;
+        state.storyLog.push(`【失败结局·${stage.title}】${stage.text}`);
+        renderAll();
+        renderChoices([{ label: "返回标题", onClick: showTitle }]);
+        return true;
+      }
+      if (stage.passText) {
+        state.storyLog.push(stage.passText);
+      }
+      return false;
+    }
+
+    function handleWeekEnd() {
+      const weekFinished = state.week;
+      state.storyLog.push(`【周总结】第${weekFinished}周结束，主线进度${state.resources.project}%。`);
+      const allowance = weekFinished <= 4 ? 50 : 30;
+      addResource(state, "money", allowance);
+      state.storyLog.push(`【零用钱】收到本周零用钱+${allowance}。`);
+      if (state.stats.weekPartTime === 0) {
+        state.stats.noPartTimeWeeks += 1;
+      }
+      state.stats.weekPartTime = 0;
+      const wentHome = state.weekCounts?.goHome > 0;
+      if (wentHome) {
+        state.streaks.homeWeeks = (state.streaks.homeWeeks || 0) + 1;
+      } else {
+        state.streaks.homeWeeks = 0;
+      }
+      ["A", "B", "C"].forEach((id) => {
+        const guy = state.guys[id];
+        if (!guy.unlocked || guy.affection <= 60) return;
+        if (state.weeklyGifted[id] === weekFinished) return;
+        if (Math.random() < 0.4) {
+          const gift = 50 + Math.floor(Math.random() * 51);
+          addResource(state, "money", gift);
+          state.storyLog.push(`【主动关照】${guyStories[id].name}悄悄塞给你${gift}金，说让你别太辛苦。`);
+          state.weeklyGifted[id] = weekFinished;
+        }
+      });
+      return checkMainlineCheckpoint(weekFinished);
+    }
+
+    function finalizeDay() {
+      moodThresholdEffects();
+      applyNightRecovery();
+      if (state.stats.parttimeLowMoodFlag) {
+        state.stats.parttimeLowMoodDay += 1;
+        state.stats.parttimeLowMoodFlag = false;
+      }
+      if (state.flags.restToday) {
+        state.stats.noRestStreak = 0;
+      } else {
+        state.stats.noRestStreak += 1;
+      }
+      if (state.resources.mood >= 70) {
+        state.stats.moodHighStreak += 1;
+      } else {
+        state.stats.moodHighStreak = 0;
+      }
+      if (state.forcedRest) {
+        state.storyLog.push("【强制休息】今天不计入日程，你重新整理状态。");
+        state.forcedRest = false;
+        state.actionsTaken = 0;
+        setActionsPerDay();
+        state.flags.restToday = false;
+        resetDailyActionCounts();
+        initDaySummary();
+        checkSundayTutorOffer();
+      } else {
+        if (getWeekdayName() === "周日") {
+          if (handleWeekEnd()) {
+            return;
+          }
+        }
+        advanceDay();
+        checkUnlocks();
+      }
+      if (state.day > maxDay || state.week > maxWeek) {
+        endGame();
+      } else {
+        state.storyLog.push(`第${state.week}周${getWeekdayName()}开始。`);
+        renderAll();
+      }
+      checkAchievements(state);
+    }
+
+    function openSettlement() {
+      const summary = state.daySummary;
+      if (!summary) return;
+      const resDelta = Object.entries(state.resources).map(([key, value]) => {
+        const delta = value - summary.startResources[key];
+        return `<div class="small">${resourceLabels[key]}：${delta >= 0 ? "+" : ""}${delta}</div>`;
+      }).join("");
+      const guyDelta = Object.keys(state.guys).map((id) => {
+        const start = summary.startGuys[id];
+        const current = state.guys[id];
+        const aff = current.affection - start.affection;
+        const trust = current.trust - start.trust;
+        return `<div class="small">${guyStories[id].name} 好感${aff >= 0 ? "+" : ""}${aff} / 信任${trust >= 0 ? "+" : ""}${trust}</div>`;
+      }).join("");
+      const itemsGained = summary.items.length ? summary.items.map((i) => `<li>${i}</li>`).join("") : "<li>无</li>";
+      const cluesGained = summary.clues.length ? summary.clues.map((c) => `<li>${c}</li>`).join("") : "<li>无</li>";
+      settlementBody.innerHTML = `
+        <div class="small">资源变化</div>
+        ${resDelta}
+        <hr />
+        <div class="small">男主变化</div>
+        ${guyDelta}
+        <hr />
+        <div class="small">获得道具</div>
+        <ul>${itemsGained}</ul>
+        <div class="small">解锁线索</div>
+        <ul>${cluesGained}</ul>
+      `;
+      settlementModal.classList.add("active");
+    }
+
+    function endGame() {
+      const mainSuccess = state.resources.project >= 100;
+      if (!mainSuccess) {
+        state.storyLog.push("【失败结局】校庆企划未达标，你不得不接受直接失败的结果。");
+        renderAll();
+        renderChoices([{ label: "返回标题", onClick: showTitle }]);
+        return;
+      }
+      state.storyLog.push(mainlineSuccessText);
+
+      const endings = [];
+      if (mainSuccess) {
+        const trueEndings = Object.entries(state.guys).filter(([, g]) => g.affection >= 80 && g.trust >= 70 && g.storyTier === 2 && g.storyIndex >= 3);
+        if (trueEndings.length > 0) {
+          endings.push(...trueEndings.map(([id]) => `【真结局】与${guyStories[id].name}的心意在校庆夜明朗。`));
+        }
+        const normalEndings = Object.entries(state.guys).filter(([, g]) => g.affection >= 60 && g.trust >= 50);
+        if (normalEndings.length > 0) {
+          endings.push(...normalEndings.map(([id]) => `【普通恋爱结局】你与${guyStories[id].name}在舞台幕布后相拥。`));
+        }
+        if (endings.length === 0) {
+          endings.push("【友情结局】校庆圆满结束，你收获了坚定的伙伴。" );
+        }
+      }
+      state.storyLog.push("\n" + endings.join("\n"));
+      renderAll();
+      renderChoices([{ label: "返回标题", onClick: showTitle }]);
+    }
+
+    function checkAchievements(s = state) {
+      achievements.forEach((ach) => {
+        if (!s.achievements.includes(ach.id) && ach.check(s)) {
+          s.achievements.push(ach.id);
+          s.storyLog.push(`【成就解锁】${ach.name}`);
+          if (ach.rewardItem) {
+            gainItem(s, ach.rewardItem);
+          }
+          if (ach.rewardRewind) {
+            s.rewindTokens += ach.rewardRewind;
+          }
+          if (ach.rewardMoney) {
+            addResource(s, "money", ach.rewardMoney);
+          }
+          if (ach.rewardMood) {
+            addResource(s, "mood", ach.rewardMood);
+          }
+          if (ach.rewardEnergy) {
+            addResource(s, "energy", ach.rewardEnergy);
+          }
+        }
+      });
+    }
+
+    function openAchievements() {
+      achievementList.innerHTML = achievements.map((ach) => {
+        const done = state.achievements.includes(ach.id);
+        const progress = ach.progress ? ach.progress(state) : null;
+        const progressText = done
+          ? "已完成"
+          : progress
+            ? `进度 ${progress.current}/${progress.target}`
+            : "未完成";
+        return `<div class="item"><strong>${done ? "✓" : "○"} ${ach.name}</strong><div class="small">${ach.desc}</div><div class="small">${progressText}</div></div>`;
+      }).join("");
+      achievementModal.classList.add("active");
+    }
+
+    function openInventory(allowUse = false) {
+      inventoryList.innerHTML = state.inventory.map((itemId, index) => {
+        const item = items[itemId];
+        const useBtn = allowUse ? `<button class="btn" data-index="${index}">使用</button>` : "";
+        return `<div class="item"><strong>${item.name}</strong> <span class="badge">${item.type}</span><div class="small">${item.desc}</div>${useBtn}</div>`;
+      }).join("");
+      inventoryModal.classList.add("active");
+      if (allowUse) {
+        inventoryList.querySelectorAll("button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const index = Number(btn.dataset.index);
+            useInventoryItem(state.inventory[index], index);
+          });
+        });
+      }
+    }
+
+    function useItem(itemId) {
+      const item = items[itemId];
+      if (item) {
+        item.effect(state);
+      }
+    }
+
+    function useInventoryItem(itemId, index) {
+      const item = items[itemId];
+      if (!item) return;
+      if (itemId === "giftSmall") {
+        state.storyLog.push("【提示】小礼物需要在见面时赠送。");
+        renderAll();
+        return;
+      }
+      item.effect(state);
+      state.stats.itemsUsed += 1;
+      if (itemId === "snack") {
+        state.stats.snackUsed += 1;
+      }
+      if (state.daySummary) {
+        state.daySummary.items.push(item.name);
+      }
+      state.inventory.splice(index, 1);
+      renderResources();
+      inventoryModal.classList.remove("active");
+      afterAction(`你使用了${item.name}。`, "useItem");
+    }
+
+    function openShop() {
+      document.getElementById("shopMoney").textContent = state.resources.money;
+      const list = document.getElementById("shopList");
+      list.innerHTML = shopItems.map((item) => {
+        const canBuy = state.resources.money >= item.cost;
+        return `
+          <div class="item">
+            <strong>${item.name}</strong>
+            <span class="badge">¥${item.cost}</span>
+            <div class="small">${item.desc}</div>
+            <button class="btn" data-id="${item.id}" ${canBuy ? "" : "disabled"}>购买</button>
+          </div>
+        `;
+      }).join("");
+      list.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          const item = shopItems.find((entry) => entry.id === id);
+          if (!item) return;
+          if (state.resources.money < item.cost) {
+            state.storyLog.push("金钱不足，无法购买。");
+            renderAll();
+            return;
+          }
+          addResource(state, "money", -item.cost);
+          if (item.type === "inventory") {
+            gainItem(state, id);
+          } else if (id === "notes") {
+            state.buffs.nextStudyBonus += 3;
+            state.storyLog.push("【购买】资料笔记已记录，下次学习额外+3学业。");
+          } else if (id === "resourcePack") {
+            state.buffs.nextClubBonus += 4;
+            state.storyLog.push("【购买】校庆资源包已备好，下次社团主线+4。");
+          } else if (id === "tutoring") {
+            state.buffs.tutoringDays = 7;
+            state.storyLog.push("【购买】补课已安排，7天内学习收益+10%且学霸事件+3%。");
+          }
+          openShop();
+        });
+      });
+      document.getElementById("shopModal").classList.add("active");
+    }
+
+    function renderAll() {
+      renderResources();
+      renderCharacters();
+      renderTasks();
+      renderStory();
+      renderDayInfo();
+      if (state.day === 1 && state.actionsTaken === 0 && state.playerName === defaultName && !state.flags.nameHintShown
+        && !nameModal.classList.contains("active") && !mainlineWarningModal.classList.contains("active")) {
+        state.flags.nameHintShown = true;
+        document.getElementById("nameHintModal").classList.add("active");
+      }
+      if (!state.gameOver && state.day <= maxDay) {
+        renderChoices(getDefaultChoices());
+      } else if (state.gameOver) {
+        if (state.forcedEnding) {
+          renderChoices([
+            { label: "重新开始", onClick: newGame },
+            { label: "读档", onClick: loadGame }
+          ]);
+        } else {
+          renderChoices([{ label: "返回标题", onClick: showTitle }]);
+        }
+      }
+    }
+
+    function getDefaultChoices() {
+      if (state.actionsTaken >= state.actionsPerDay) {
+        return [{ label: "结束今天", onClick: () => openSettlement() }];
+      }
+      let priorityTasks = tasks.filter((task) => task.condition(state));
+      if (state.resources.energy < 25) {
+        const urgentIds = ["emergencyRest", "canteen", "seekB"];
+        const urgentTasks = priorityTasks.filter((task) => urgentIds.includes(task.id));
+        const normalTasks = priorityTasks.filter((task) => !urgentIds.includes(task.id));
+        priorityTasks = [...urgentTasks, ...normalTasks];
+      }
+      const options = priorityTasks.map((task) => ({
+        label: task.name,
+        onClick: () => runTask(task.id)
+      }));
+      options.push({ label: "查看本周目标", onClick: () => state.storyLog.push(`【提示】${weekGoals[state.week - 1]}`) || renderAll() });
+      options.push({ label: "查看回溯次数", onClick: () => { state.storyLog.push(`当前回溯次数：${state.rewindTokens}`); renderAll(); } });
+      return options.slice(0, 5);
+    }
+
+    function showTitle() {
+      state.storyLog.push("【标题】选择“新游戏”开始你的20周旅程。");
+      renderAll();
+    }
+
+    function openTutorial(startIndex = 0) {
+      let step = startIndex;
+      const renderStep = () => {
+        tutorialBody.innerHTML = `<p>${tutorialSteps[step]}</p>`;
+        tutorialControls.innerHTML = "";
+        const prevBtn = document.createElement("button");
+        prevBtn.className = "btn";
+        prevBtn.textContent = "上一步";
+        prevBtn.disabled = step === 0;
+        prevBtn.addEventListener("click", () => { step = Math.max(0, step - 1); renderStep(); });
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "btn";
+        nextBtn.textContent = step === tutorialSteps.length - 1 ? "完成" : "下一步";
+        nextBtn.addEventListener("click", () => {
+          if (step === tutorialSteps.length - 1) {
+            tutorialModal.classList.remove("active");
+          } else {
+            step += 1;
+            renderStep();
+          }
+        });
+        const skipBtn = document.createElement("button");
+        skipBtn.className = "btn";
+        skipBtn.textContent = "跳过";
+        skipBtn.addEventListener("click", () => tutorialModal.classList.remove("active"));
+        tutorialControls.append(prevBtn, nextBtn, skipBtn);
+      };
+      renderStep();
+      tutorialModal.classList.add("active");
+    }
+
+    function openNameModal(mode = "rename") {
+      nameModalMode = mode;
+      const input = document.getElementById("nameInput");
+      input.value = state.playerName || defaultName;
+      nameModal.classList.add("active");
+    }
+
+    function applyPlayerName(name) {
+      state.playerName = name && name.trim() ? name.trim() : defaultName;
+      if (nameModalMode === "newgame") {
+        state.storyLog = [];
+        state.flags.openingPlayed = false;
+        openingStory();
+        initDaySummary();
+        renderAll();
+        openTutorial(0);
+        if (state.settings.showMainlineWarning) {
+          mainlineWarningModal.classList.add("active");
+        }
+      } else {
+        state.storyLog.push(`【改名】你决定使用新的名字：${state.playerName}。`);
+        renderAll();
+      }
+    }
+
+    function newGame() {
+      state = stateTemplate();
+      openNameModal("newgame");
+      renderAll();
+    }
+
+    function saveGame() {
+      const slot = prompt("存档位：1/2/3", "1");
+      if (!slot) return;
+      state.stats.saveCount += 1;
+      localStorage.setItem(`otome_save_${slot}`, JSON.stringify(state));
+      state.storyLog.push(`【存档】已保存到存档位${slot}。`);
+      checkAchievements(state);
+      renderAll();
+    }
+
+    function loadGame() {
+      const slot = prompt("读档位：1/2/3", "1");
+      if (!slot) return;
+      const data = localStorage.getItem(`otome_save_${slot}`);
+      if (data) {
+        state = JSON.parse(data);
+        if (!state.calendar) {
+          const index = Math.max(0, (state.day || 1) - 1);
+          const week = Math.floor(index / WEEKDAYS.length) + 1;
+          const weekdayIndex = index % WEEKDAYS.length;
+          state.calendar = { week, weekdayIndex, weekdayName: WEEKDAYS[weekdayIndex] };
+        }
+        if (!state.calendar.weekdayName) {
+          state.calendar.weekdayName = WEEKDAYS[state.calendar.weekdayIndex] || "周一";
+        }
+        state.week = state.calendar.week;
+        if (!state.playerName) {
+          state.playerName = state.name || defaultName;
+        }
+        ["A", "B", "C"].forEach((id) => {
+          if (state.guys[id] && state.guys[id].unlocked == null) {
+            state.guys[id].unlocked = id === "B";
+          }
+        });
+        if (state.guys.A) {
+          if (state.guys.A.darkness == null) state.guys.A.darkness = 0;
+          if (state.guys.A.darknessCap == null) state.guys.A.darknessCap = 50;
+          if (state.guys.A.darknessRevealed == null) state.guys.A.darknessRevealed = false;
+          if (state.guys.A.lockedOut == null) state.guys.A.lockedOut = false;
+          if (state.guys.A.endingForced == null) state.guys.A.endingForced = false;
+        }
+        if (state.guys.B) {
+          if (state.guys.B.darkness == null) state.guys.B.darkness = 30;
+          if (state.guys.B.darknessCap == null) state.guys.B.darknessCap = 100;
+          if (state.guys.B.darknessRevealed == null) state.guys.B.darknessRevealed = false;
+          if (state.guys.B.lockedOut == null) state.guys.B.lockedOut = false;
+          if (state.guys.B.endingForced == null) state.guys.B.endingForced = false;
+        }
+        if (state.guys.C) {
+          if (state.guys.C.darkness == null) state.guys.C.darkness = 0;
+          if (state.guys.C.darknessCap == null) state.guys.C.darknessCap = 100;
+          if (state.guys.C.darknessRevealed == null) state.guys.C.darknessRevealed = false;
+          if (state.guys.C.lockedOut == null) state.guys.C.lockedOut = false;
+          if (state.guys.C.endingForced == null) state.guys.C.endingForced = false;
+        }
+        if (state.actionsPerDay == null) {
+          setActionsPerDay();
+        } else {
+          setActionsPerDay();
+        }
+        if (state.actionsTaken == null) state.actionsTaken = 0;
+        if (state.forcedRest == null) state.forcedRest = false;
+        if (state.moodPenaltyTurns == null) state.moodPenaltyTurns = 0;
+        if (!state.daySummary) {
+          initDaySummary();
+        }
+        if (!state.settings) state.settings = { showMainlineWarning: true };
+        if (!state.flags) {
+          state.flags = {
+            firstDate: false,
+            triangle: false,
+            nameHintShown: false,
+            firstDateRewarded: false,
+            openingPlayed: false,
+            restToday: false,
+            firstMeet: { A: false, B: false, C: false },
+            weeklyTutorOffered: false,
+            weeklyTutorUsed: false,
+            weeklyStalkUsed: false
+          };
+        }
+        if (state.flags.firstDateRewarded == null) state.flags.firstDateRewarded = false;
+        if (state.flags.openingPlayed == null) state.flags.openingPlayed = state.storyLog && state.storyLog.length > 0;
+        if (state.flags.restToday == null) state.flags.restToday = false;
+        if (!state.flags.firstMeet) state.flags.firstMeet = { A: false, B: false, C: false };
+        if (state.flags.weeklyTutorOffered == null) state.flags.weeklyTutorOffered = false;
+        if (state.flags.weeklyTutorUsed == null) state.flags.weeklyTutorUsed = false;
+        if (state.flags.weeklyStalkUsed == null) state.flags.weeklyStalkUsed = false;
+        if (!state.stats) state.stats = {};
+        if (!state.streaks) state.streaks = { study: 0, homeWeeks: 0 };
+        if (state.streaks.study == null) state.streaks.study = 0;
+        if (state.streaks.homeWeeks == null) state.streaks.homeWeeks = 0;
+        if (state.stats.itemsUsed == null) state.stats.itemsUsed = 0;
+        if (state.stats.snackUsed == null) state.stats.snackUsed = 0;
+        if (state.stats.studyHelpCount == null) state.stats.studyHelpCount = 0;
+        if (state.stats.triangleCount == null) state.stats.triangleCount = 0;
+        if (state.stats.clubMaxBonusCount == null) state.stats.clubMaxBonusCount = 0;
+        if (state.stats.lowEnergyClubCount == null) state.stats.lowEnergyClubCount = 0;
+        if (state.stats.noRestStreak == null) state.stats.noRestStreak = 0;
+        if (state.stats.moodHighStreak == null) state.stats.moodHighStreak = 0;
+        if (state.stats.noPartTimeWeeks == null) state.stats.noPartTimeWeeks = 0;
+        if (state.stats.weekPartTime == null) state.stats.weekPartTime = 0;
+        if (state.stats.parttimeLowMoodFlag == null) state.stats.parttimeLowMoodFlag = false;
+        if (state.stats.parttimeLowMoodDay == null) state.stats.parttimeLowMoodDay = 0;
+        if (state.stats.parttimeHighPay == null) state.stats.parttimeHighPay = 0;
+        if (state.stats.saveCount == null) state.stats.saveCount = 0;
+        if (state.stats.loadCount == null) state.stats.loadCount = 0;
+        if (state.stats.club == null) state.stats.club = 0;
+        if (state.stats.partTime == null) state.stats.partTime = 0;
+        if (state.stats.rest == null) state.stats.rest = 0;
+        if (state.stats.rest === 0) state.flags.restToday = false;
+        state.stats.loadCount += 1;
+        if (!state.buffs) {
+          state.buffs = { nextStudyBonus: 0, nextClubBonus: 0, nextPartTimeBonus: 0, tutoringDays: 0, rewindFragments: 0 };
+        }
+        if (state.buffs.nextStudyBonus == null) state.buffs.nextStudyBonus = 0;
+        if (state.buffs.nextClubBonus == null) state.buffs.nextClubBonus = 0;
+        if (state.buffs.nextPartTimeBonus == null) state.buffs.nextPartTimeBonus = 0;
+        if (state.buffs.tutoringDays == null) state.buffs.tutoringDays = 0;
+        if (state.buffs.rewindFragments == null) state.buffs.rewindFragments = 0;
+        if (!state.dailyActionCounts) {
+          state.dailyActionCounts = { study: 0, club: 0, parttime: 0, rest: 0, date: 0, useItem: 0, goHome: 0, tutor: 0 };
+        }
+        if (!state.weekCounts) {
+          state.weekCounts = { study: 0, club: 0, parttime: 0, rest: 0, date: 0, goHome: 0, tutor: 0, useItem: 0 };
+        }
+        if (!state.weeklyGifted) state.weeklyGifted = { A: 0, B: 0, C: 0 };
+        if (state.gameOver == null) state.gameOver = false;
+        if (state.resources.clubEff == null) state.resources.clubEff = 0;
+        if (!state.relationshipStatus) state.relationshipStatus = { A: "none", B: "none", C: "none" };
+        if (!state.confessionTriggered) state.confessionTriggered = { A: false, B: false, C: false };
+        if (!state.secondConfessionTriggered) state.secondConfessionTriggered = { A: false, B: false, C: false };
+        if (!state.forcedEnding) state.forcedEnding = null;
+        if (!state.lastNeglectWeek) state.lastNeglectWeek = { A: 0, B: 0, C: 0 };
+        checkUnlocks();
+        state.storyLog.push(`【读档】已读取存档位${slot}。`);
+        checkAchievements(state);
+      } else {
+        state.storyLog.push("【读档】该存档位为空。");
+      }
+      renderAll();
+    }
+
+    document.getElementById("newGame").addEventListener("click", newGame);
+    document.getElementById("saveGame").addEventListener("click", saveGame);
+    document.getElementById("loadGame").addEventListener("click", loadGame);
+    document.getElementById("toTitle").addEventListener("click", showTitle);
+    document.getElementById("openTutorial").addEventListener("click", () => openTutorial(0));
+    document.getElementById("renamePlayer").addEventListener("click", () => openNameModal("rename"));
+    document.getElementById("openShop").addEventListener("click", () => openShop());
+    document.getElementById("openSettings").addEventListener("click", () => {
+      document.getElementById("toggleMainlineWarning").checked = state.settings.showMainlineWarning;
+      settingsModal.classList.add("active");
+    });
+    document.getElementById("openAchievements").addEventListener("click", openAchievements);
+    document.getElementById("closeAchievements").addEventListener("click", () => achievementModal.classList.remove("active"));
+    document.getElementById("openInventory").addEventListener("click", () => openInventory(false));
+    document.getElementById("closeInventory").addEventListener("click", () => inventoryModal.classList.remove("active"));
+    document.getElementById("confirmSettlement").addEventListener("click", () => {
+      settlementModal.classList.remove("active");
+      finalizeDay();
+    });
+    document.getElementById("confirmName").addEventListener("click", () => {
+      const value = document.getElementById("nameInput").value;
+      nameModal.classList.remove("active");
+      applyPlayerName(value);
+    });
+    document.getElementById("skipName").addEventListener("click", () => {
+      nameModal.classList.remove("active");
+      applyPlayerName(defaultName);
+    });
+    document.getElementById("renameNow").addEventListener("click", () => {
+      nameHintModal.classList.remove("active");
+      openNameModal("rename");
+    });
+    document.getElementById("renameLater").addEventListener("click", () => {
+      nameHintModal.classList.remove("active");
+    });
+    document.getElementById("ackWarning").addEventListener("click", () => {
+      mainlineWarningModal.classList.remove("active");
+      renderAll();
+    });
+    document.getElementById("skipWarning").addEventListener("click", () => {
+      state.settings.showMainlineWarning = false;
+      mainlineWarningModal.classList.remove("active");
+      renderAll();
+    });
+    document.getElementById("toggleMainlineWarning").addEventListener("change", (event) => {
+      state.settings.showMainlineWarning = event.target.checked;
+    });
+    document.getElementById("closeSettings").addEventListener("click", () => {
+      settingsModal.classList.remove("active");
+    });
+    document.getElementById("closeShop").addEventListener("click", () => {
+      document.getElementById("shopModal").classList.remove("active");
+    });
+
+    // 如何添加新事件/新道具/新成就/新行动：
+    // 1) 新行动：在 tasks 中新增对象，并配置 desc/effect/condition（行动点会自动计数）。
+    // 2) 新事件：在 randomEvents 或 meetingEvents 中追加对象，包含 text/options。
+    // 3) 新道具：在 items 中新增条目，并可在事件或成就奖励里 gainItem。
+    // 4) 新成就：在 achievements 中追加对象，提供 check 逻辑与奖励。
+    // 5) 精力曲线：修改 tasks 的精力消耗、applyNightRecovery 的恢复值、或补给道具的恢复量。
+    // 6) 称呼分段：调整 getCallName 内各阶段返回值。
+    // 7) 小事件概率：调整 triggerMiniEvent 内的 base/scaling/上限。
+
+    renderAll();
+  </script>
+</body>
+</html>
