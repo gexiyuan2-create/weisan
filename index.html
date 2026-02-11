@@ -360,6 +360,8 @@
     const maxWeek = 20;
     const WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
     const maxDay = maxWeek * WEEKDAYS.length;
+    const MAINLINE_TARGET = 500;
+    const stageThresholds = [125, 250, 375, 500];
     const MOOD_LOCK = 30;
     const ITEM_DROP_RATE = 0.05;
     const defaultName = "未散";
@@ -368,19 +370,19 @@
       "第1周：立项准备，稳住节奏",
       "第2周：主题确认，开始分工",
       "第3周：展台与节目初稿",
-      "第4周：立项结算，进度≥25%",
+      "第4周：立项结算，进度≥125",
       "第5周：素材收集与试排",
       "第6周：节目与展台细化",
       "第7周：赞助与宣传铺垫",
-      "第8周：资源结算，进度≥50%",
+      "第8周：资源结算，进度≥250",
       "第9周：第一轮彩排",
       "第10周：执行细节落地",
       "第11周：流程与人员磨合",
-      "第12周：执行结算，进度≥75%",
+      "第12周：执行结算，进度≥375",
       "第13周：危机预案与补强",
       "第14周：二轮彩排",
       "第15周：物资到位",
-      "第16周：最终结算，进度≥100%",
+      "第16周：最终结算，进度≥500",
       "第17周：校庆冲刺",
       "第18周：最后检查",
       "第19周：总彩排",
@@ -388,51 +390,51 @@
     ];
 
     const milestoneEvents = [
-      { threshold: 10, text: "【主线】校庆企划正式立项，你被推为展台联络人。" },
-      { threshold: 18, text: "【主线】主题确认：粉黑学院恋爱剧场。" },
-      { threshold: 26, text: "【主线】赞助谈判开局，白澤凛司默默递来预算模板。" },
-      { threshold: 34, text: "【主线】节目定案：相关人物联动的校园舞台剧。" },
-      { threshold: 50, text: "【主线】展台制作开工，材料清单排到爆。" },
-      { threshold: 58, text: "【主线】第一次彩排，浅羽朔把气氛带得像派对。" },
-      { threshold: 66, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
-      { threshold: 74, text: "【主线】二轮彩排，久世伶的台词改得更“贴近你”。" },
-      { threshold: 82, text: "【主线】物资到位，展台初成型。" },
-      { threshold: 90, text: "【主线】最终彩排，你站在舞台中央。" },
-      { threshold: 100, text: "【主线】校庆当日，所有人都在等你的指挥。" }
+      { threshold: 50, text: "【主线】校庆企划正式立项，你被推为展台联络人。" },
+      { threshold: 90, text: "【主线】主题确认：粉黑学院恋爱剧场。" },
+      { threshold: 130, text: "【主线】赞助谈判开局，白澤凛司默默递来预算模板。" },
+      { threshold: 170, text: "【主线】节目定案：相关人物联动的校园舞台剧。" },
+      { threshold: 250, text: "【主线】展台制作开工，材料清单排到爆。" },
+      { threshold: 290, text: "【主线】第一次彩排，浅羽朔把气氛带得像派对。" },
+      { threshold: 330, text: "【主线】突发危机：赞助缩水，需要临时补救。" },
+      { threshold: 370, text: "【主线】二轮彩排，久世伶的台词改得更“贴近你”。" },
+      { threshold: 410, text: "【主线】物资到位，展台初成型。" },
+      { threshold: 450, text: "【主线】最终彩排，你站在舞台中央。" },
+      { threshold: 500, text: "【主线】校庆当日，所有人都在等你的指挥。" }
     ];
 
     const mainlineStages = [
       {
         week: 4,
-        target: 20,
+        target: stageThresholds[0],
         title: "立项未通过",
         text: "立项评审会上，方案被指出流程不清、预算不完整，老师要求先补齐材料再讨论。你看见同学们的期待慢慢变成迟疑，会议室里只剩翻纸的声音。你知道这不是终点，但必须先把资料整理清楚，再重新争取通过。",
         passText: "【阶段过场】老师翻完材料，点头说：“立项先通过，后续细化。”你松了口气，赶紧记下要补的细节。有人小声说：“终于能动起来了。”你回到走廊，给社团群发了进度，提醒大家先把分工表更新。"
       },
       {
         week: 8,
-        target: 45,
+        target: stageThresholds[1],
         title: "资源断裂",
         text: "赞助名单被退回，材料报价也上涨，你手里的清单一改再改。你努力补缺口，却发现能用的资源越来越少。你深吸一口气，告诉自己还有机会，只是校庆的时间比预想更紧。",
         passText: "【阶段过场】你把更新后的赞助表贴在白板上，和同学逐条确认费用。有人问：“进度还稳吗？”你点头：“先顶住，再想办法。”浅羽朔笑着说：“那就一起扛。”你拿起笔，把下一周的任务分到每个人手里。"
       },
       {
         week: 12,
-        target: 70,
+        target: stageThresholds[2],
         title: "执行崩塌",
         text: "排练接连出错，人员安排和流程对不上，问题越堆越多。你试着把大家拉回同一节奏，却发现疲惫已经影响了士气。你看着空荡的舞台，知道必须重新梳理流程，把执行细节再抓紧。",
         passText: "【阶段过场】你和同学把道具清点一遍，重新按流程摆好位置。白澤凛司递来新版流程表：“先把节奏找回来。”你点头：“我会盯住。”有人在后台说：“再练一次就好。”你把名单贴在墙上，重新排了时间。"
       },
       {
         week: 16,
-        target: 90,
+        target: stageThresholds[3],
         title: "临门止步",
         text: "你距离完成只差最后一步，却被审批与物资卡住。报表、签字、采购清单一条条压下来，让你不得不停下脚步。你已经走到这里，只能承认这次没能跨过终点线。",
         passText: "【阶段过场】你在清单上勾完最后一项，抬头时看见大家表情放松。有人说：“终于齐了。”你答：“还剩冲刺。”久世伶在一旁补一句：“宣传位我会守着。”你把文件收好，提醒自己最后一段更要稳。"
       },
       {
         week: 20,
-        target: 100,
+        target: MAINLINE_TARGET,
         title: "冲刺未达标",
         text: "校庆当天的清单还空着几项，你跑完最后一圈确认，却发现关键物资和流程没能及时补齐。你看着操场的灯光一点点亮起，心里明白这一次还是差了一口气。",
         passText: "【阶段过场】你把最后一份表格交到老师手里，确认清单全部到位。有人问：“还能撑住吗？”你笑着回：“最后一周了，稳住就好。”你整理好对讲机和日程表，带着大家进入最终冲刺。"
@@ -530,11 +532,11 @@
       { id: "study7", name: "学霸养成", desc: "连续学习7次", reward: "灵感便笺", rewardItem: "note", check: (s) => s.streaks.study >= 7, progress: (s) => ({ current: Math.min(s.streaks.study, 7), target: 7 }) },
       { id: "studyHelp3", name: "借一题", desc: "学习小事件触发3次", reward: "书签", rewardItem: "bookmark", check: (s) => s.stats.studyHelpCount >= 3, progress: (s) => ({ current: Math.min(s.stats.studyHelpCount, 3), target: 3 }) },
 
-      { id: "stage25", name: "阶段一通过", desc: "第4周结算达标(≥25%)", reward: "灵感便笺", rewardItem: "note", check: (s) => s.resources.project >= 25 && s.week >= 4 },
-      { id: "stage50", name: "阶段二通过", desc: "第8周结算达标(≥50%)", reward: "演出券", rewardItem: "ticket", check: (s) => s.resources.project >= 50 && s.week >= 8 },
-      { id: "stage75", name: "阶段三通过", desc: "第12周结算达标(≥75%)", reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.project >= 75 && s.week >= 12 },
-      { id: "stage100", name: "阶段四通过", desc: "第16周结算达标(≥100%)", reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.project >= 100 && s.week >= 16 },
-      { id: "project100", name: "主线完成", desc: "主线进度达到100%", reward: "心情+8", rewardMood: 8, check: (s) => s.resources.project >= 100 },
+      { id: "stage25", name: "阶段一通过", desc: `第4周结算达标(≥${stageThresholds[0]})`, reward: "灵感便笺", rewardItem: "note", check: (s) => s.resources.project >= stageThresholds[0] && s.week >= 4 },
+      { id: "stage50", name: "阶段二通过", desc: `第8周结算达标(≥${stageThresholds[1]})`, reward: "演出券", rewardItem: "ticket", check: (s) => s.resources.project >= stageThresholds[1] && s.week >= 8 },
+      { id: "stage75", name: "阶段三通过", desc: `第12周结算达标(≥${stageThresholds[2]})`, reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.project >= stageThresholds[2] && s.week >= 12 },
+      { id: "stage100", name: "阶段四通过", desc: `第16周结算达标(≥${stageThresholds[3]})`, reward: "回溯+1", rewardRewind: 1, check: (s) => s.resources.project >= stageThresholds[3] && s.week >= 16 },
+      { id: "project100", name: "主线完成", desc: `主线进度达到${MAINLINE_TARGET}`, reward: "心情+8", rewardMood: 8, check: (s) => s.resources.project >= MAINLINE_TARGET },
       { id: "week20", name: "坚持到底", desc: "完成20周", reward: "终局回溯+1", rewardRewind: 1, check: (s) => s.day > maxDay },
 
       { id: "unlockA", name: "流程负责人", desc: "解锁白澤凛司", reward: "书签", rewardItem: "bookmark", check: (s) => s.guys.A.unlocked },
@@ -619,6 +621,12 @@
       { id: "sleepy", condition: (s) => s.resources.energy <= 40, text: "午休时你趴在桌上眯了一会儿，铃声响起才起身。同桌笑你“醒了”，你回“嗯”，喝了口水继续整理资料。", effect: (s) => addResource(s, "energy", 8) },
       { id: "volunteer", condition: () => true, text: "新生志愿者来帮忙搬物料，你指给他们位置。有人问“这样放可以吗”，你点头说可以，把清单上已完成的项目勾掉。", effect: (s) => addResource(s, "project", 2) }
     ];
+
+    const firstMeetFace = {
+      B: "你在社团门口签字时，有人敲了敲门框。抬头那一瞬间，你愣住了。他比记忆里成熟很多，五官长开了。短发被风吹得微乱，额前碎发落下来一点。眼睛还是那种很亮的形状，笑起来时眼尾会往下弯，看起来没有攻击性，却很容易让人放松。鼻梁挺直但线条柔和，唇角总是带一点若有若无的笑意。你脑子里只闪过一句话——这人怎么长得比以前还好看了。",
+      A: "会议室门被推开时，你下意识抬头。那一瞬间视线被定住。他的五官线条很干净，像被精确勾过。黑发整齐压着眉骨，让眼神显得更冷。眼睛不算大，但瞳色很深，专注看人时压迫感很强。鼻梁高而笔直，把整张脸的轮廓撑得利落。唇线偏薄，说话时几乎不多动，却让人不敢打断。你当时只觉得——这张脸太犯规了，难怪没人敢在他面前松懈。",
+      C: "广播站的门悄无声息地开了。你回头时先看到他的脸。发色偏浅，让肤色显得更白。刘海落在眉眼之间，遮住一部分视线，却让目光更集中。他的眼睛很深，盯人时不会躲，但也不会压迫，只是停得太久。鼻梁线条细直，唇形柔软，说话时弧度很轻。整张脸给人的第一感觉不是冷，而是太温和——温和到让人本能警惕。你当时只想了一下——这张脸如果笑久一点，会让人误会很多事。"
+    };
 
     const meetingEvents = {
       B: [
@@ -995,7 +1003,7 @@
         condition: (s) => s.day >= 3 && canTakeAction(s) },
       { id: "tutor", name: "学霸补课", desc: "周日限定 · 学业+10 好感+2 信任+2 心情-1（消耗2次行动）", actionCost: 2, effect: (s) => { addResource(s, "study", 10); addAffection(s, "A", 2); addTrust(s, "A", 2); addResource(s, "mood", -1); s.flags.weeklyTutorUsed = true; s.storyLog.push("【学霸补课】白澤凛司把课本摊开，口气冷淡但很认真：“这里按步骤来，不要跳。”你坐在他旁边复习到晚一点，他把重点圈好才收拾书包。你小声说：“谢谢。”他只点了点头，像是在确认你把规则记住了。"); if (s.daySummary) { s.daySummary.logs.push("学霸补课：学业+10，好感+2，信任+2，心情-1。"); } },
         condition: (s) => getWeekdayLabel(state.day) === "周日" && s.flags.weeklyTutorOffered && !s.flags.weeklyTutorUsed && canTakeAction(s) },
-      { id: "useItem", name: "使用道具", desc: "使用背包内道具", effect: () => {}, condition: (s) => s.inventory.length > 0 && canTakeAction(s) },
+      { id: "useItem", name: "使用道具", desc: "使用背包内道具", effect: () => {}, condition: (s) => !s.gameOver && s.inventory && s.inventory.length > 0 && s.actionsTaken < s.actionsPerDay },
       { id: "emergencyRest", name: "强制休整", desc: "精力恢复（低精力） 心情+3（低精力时解锁）", effect: (s) => { const base = calcRestRecovery(s.resources.energy, -5); addResource(s, "energy", base); addResource(s, "mood", 3); s.stats.rest++; s.flags.restToday = true; },
         condition: (s) => s.resources.energy < 25 && canTakeAction(s) },
       { id: "canteen", name: "食堂补给", desc: "精力恢复（低精力） 心情+3（低精力时解锁）", effect: (s) => { const base = calcRestRecovery(s.resources.energy, -5); addResource(s, "energy", base); addResource(s, "mood", 3); },
@@ -1110,6 +1118,7 @@
         restToday: false,
         passiveEncounterToday: false,
         firstMeet: { A: false, B: false, C: false },
+        firstFaceShown: { A: false, B: false, C: false },
         weeklyTutorOffered: false,
         weeklyTutorUsed: false,
         weeklyStalkUsed: false
@@ -1261,9 +1270,10 @@
         s.resources[key] = s.resources[key] + amount;
         return;
       }
-      s.resources[key] = clamp(s.resources[key] + amount, 0, 100);
+      const maxValue = key === "project" ? MAINLINE_TARGET : 100;
+      s.resources[key] = clamp(s.resources[key] + amount, 0, maxValue);
       if (key === "project") {
-        s.resources.project = clamp(s.resources.project, 0, 100);
+        s.resources.project = clamp(s.resources.project, 0, MAINLINE_TARGET);
         checkMilestones(s);
       }
     }
@@ -1473,14 +1483,15 @@
         resourceMap[key].value.textContent = value;
         if (key === "money") {
           resourceMap[key].bar.style.width = "100%";
+        } else if (key === "project") {
+          const projectPercent = clamp((value / MAINLINE_TARGET) * 100, 0, 100);
+          resourceMap[key].bar.style.width = `${projectPercent}%`;
         } else {
           resourceMap[key].bar.style.width = `${value}%`;
         }
       });
       document.getElementById("weekGoal").textContent = weekGoals[state.week - 1] || "";
-      const stageIndex = Math.min(Math.floor((state.week - 1) / 4) + 1, 5);
-      const stageLabel = stageIndex <= 4 ? `阶段${stageIndex}/4 · 第${stageIndex * 4}周结算` : "阶段5/5 · 校庆当日";
-      document.getElementById("stageInfo").textContent = `主线阶段：${stageLabel} · 当前进度${state.resources.project}%`;
+      document.getElementById("stageInfo").textContent = `主线进度：${state.resources.project} / ${MAINLINE_TARGET}`;
     }
 
     function renderCharacters() {
@@ -1602,6 +1613,8 @@
         return;
       }
       if (taskId === "useItem") {
+        if (state.actionsTaken >= state.actionsPerDay) return;
+        if (!state.inventory || state.inventory.length === 0) return;
         openInventory(true);
         return;
       }
@@ -1704,6 +1717,7 @@
       const callName = getCallName(guyId, state.guys[guyId].affection, state.guys[guyId].trust);
       const text = event.text.replace("{callName}", callName);
       state.storyLog.push(`【${guyProfiles[guyId].name}见面】${text}`);
+      firstFaceNarration(guyId);
       firstMeetNarration(guyId);
       const giftOptions = getGiftOptions(guyId);
       if (giftOptions.length) {
@@ -1750,6 +1764,14 @@
       if (state.inventory.includes(giftId)) options.push(giftId);
       if (state.inventory.includes("giftSmall")) options.push("giftSmall");
       return options;
+    }
+
+
+    function firstFaceNarration(guyId) {
+      if (!state.flags.firstFaceShown || state.flags.firstFaceShown[guyId]) return;
+      if (!firstMeetFace[guyId]) return;
+      state.storyLog.push(firstMeetFace[guyId]);
+      state.flags.firstFaceShown[guyId] = true;
     }
 
     function firstMeetNarration(guyId) {
@@ -2183,7 +2205,7 @@
 
     function handleWeekEnd() {
       const weekFinished = state.week;
-      state.storyLog.push(`【周总结】第${weekFinished}周结束，主线进度${state.resources.project}%。`);
+      state.storyLog.push(`【周总结】第${weekFinished}周结束，主线进度${state.resources.project}/${MAINLINE_TARGET}。`);
       const allowance = weekFinished <= 4 ? 50 : 30;
       addResource(state, "money", allowance);
       state.storyLog.push(`【零用钱】收到本周零用钱+${allowance}。`);
@@ -2264,12 +2286,12 @@
 
     function renderWeeklySettlementBody() {
       const stageIndex = Math.min(Math.floor((state.week - 1) / 4), mainlineStages.length - 1);
-      const target = mainlineStages[stageIndex]?.target ?? 100;
+      const target = mainlineStages[stageIndex]?.target ?? MAINLINE_TARGET;
       const project = state.resources.project;
       const need = target - project;
       const text = need > 0
-        ? `本阶段目标：${target}% ；当前：${project}% ；还差：${need}%`
-        : `本阶段目标已达成：${project}% / ${target}%（已超出 ${Math.abs(need)}%）`;
+        ? `本阶段目标：${target}；当前：${project}；还差：${need}`
+        : `本阶段目标已达成：${project} / ${target}（已超出 ${Math.abs(need)}）`;
       settlementBody.innerHTML = `
         <div class="small">周结算</div>
         <div class="small">${text}</div>
@@ -2283,7 +2305,7 @@
     }
 
     function endGame() {
-      const mainSuccess = state.resources.project >= 100;
+      const mainSuccess = state.resources.project >= MAINLINE_TARGET;
       if (!mainSuccess) {
         state.storyLog.push("【失败结局】校庆企划未达标，你不得不接受直接失败的结果。");
         renderAll();
@@ -2477,7 +2499,8 @@
       }
       const options = priorityTasks.map((task) => {
         const moodLocked = ["study", "club"].includes(task.id) && state.resources.mood < MOOD_LOCK;
-        const disabled = !canTakeAction(state);
+        const enabledByCondition = task.condition ? task.condition(state) : true;
+        const disabled = !enabledByCondition || !canTakeAction(state);
         return {
           label: task.name,
           locked: moodLocked,
@@ -2639,6 +2662,7 @@
             restToday: false,
             passiveEncounterToday: false,
             firstMeet: { A: false, B: false, C: false },
+            firstFaceShown: { A: false, B: false, C: false },
             weeklyTutorOffered: false,
             weeklyTutorUsed: false,
             weeklyStalkUsed: false
@@ -2649,6 +2673,7 @@
         if (state.flags.restToday == null) state.flags.restToday = false;
         if (state.flags.passiveEncounterToday == null) state.flags.passiveEncounterToday = false;
         if (!state.flags.firstMeet) state.flags.firstMeet = { A: false, B: false, C: false };
+        if (!state.flags.firstFaceShown) state.flags.firstFaceShown = { A: false, B: false, C: false };
         if (state.flags.weeklyTutorOffered == null) state.flags.weeklyTutorOffered = false;
         if (state.flags.weeklyTutorUsed == null) state.flags.weeklyTutorUsed = false;
         if (state.flags.weeklyStalkUsed == null) state.flags.weeklyStalkUsed = false;
